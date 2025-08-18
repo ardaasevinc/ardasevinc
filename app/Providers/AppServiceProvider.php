@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use App\Models\Setting;
 use App\Models\BlogPost;
 use Illuminate\Support\Facades\View;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\App;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +25,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
        
+
+        Carbon::setLocale('tr');
+    App::setLocale('tr');
+
         $settings = Setting::pluck('value', 'key')->toArray();
         View::share('settings', $settings);
 

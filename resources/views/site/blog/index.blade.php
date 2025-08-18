@@ -113,7 +113,8 @@
                                                     </div>
                                                     <div class="mil-badges">
                                                         <div class="mil-category">{{$item->category->name}}</div>
-                                                        <div class="mil-date">{{ $item->created_At }}</div>
+                                                        <div class="mil-date">{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}
+</div>
                                                     </div>
                                                 </div>
                                                 <a href="{{route('site.blog.detail', ['slug' => $item->slug])}}" class="mil-descr mil-c-gone">
