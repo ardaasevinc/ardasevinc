@@ -1,133 +1,132 @@
 @if (session('success') || session('warning'))
     @if (session('success'))
-    <div id="successToast" class="toast-message success-toast">
-      <div class="toast-content">
+    <div class="toast-message toast-success">
       <img src="{{ asset('site/assets/img/success.svg') }}" alt="Success Icon" class="toast-icon">
       <span class="toast-text">{{ session('success') }}</span>
-      <button class="close-toast">&times;</button>
-      </div>
+      <button class="close-toast" aria-label="Kapat">&times;</button>
     </div>
     @endif
 
-    @if (session('warning'))
-    <div id="warningToast" class="toast-message warning-toast">
-      <div class="toast-content">
+      @if (session('warning'))
+      <div class="toast-message toast-warning">
       <img src="{{ asset('site/assets/img/warning.svg') }}" alt="Warning Icon" class="toast-icon">
       <span class="toast-text">{{ session('warning') }}</span>
-      <button class="close-toast">&times;</button>
+      <button class="close-toast" aria-label="Kapat">&times;</button>
       </div>
-    </div>
     @endif
 
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-      const toasts = document.querySelectorAll(".toast-message");
-      toasts.forEach((toast, i) => {
-        const closeBtn = toast.querySelector(".close-toast");
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        const toasts = document.querySelectorAll(".toast-message");
+        toasts.forEach((toast, i) => {
+          const closeBtn = toast.querySelector(".close-toast");
 
-        // Açılış
-        setTimeout(() => {
-        toast.style.opacity = "1";
-        toast.style.transform = "translateY(0)";
-        }, 100 + i * 80); // birden fazla toasta ufak gecikme
+          setTimeout(() => {
+          toast.style.opacity = "1";
+          toast.style.transform = "translateY(0)";
+          }, 100 + i * 80);
 
-        // Otomatik kapanış
-        const hide = () => {
-        toast.style.opacity = "0";
-        toast.style.transform = "translateY(20px)";
-        setTimeout(() => toast.remove(), 450);
-        };
-        setTimeout(hide, 10000);
+          const hide = () => {
+          toast.style.opacity = "0";
+          toast.style.transform = "translateY(20px)";
+          setTimeout(() => toast.remove(), 450);
+          };
 
-        // Kapat butonu güvenli bağlama
-        if (closeBtn) {
-        closeBtn.addEventListener("click", hide);
+          setTimeout(hide, 10000);
+
+          if (closeBtn) closeBtn.addEventListener("click", hide);
+        });
+        });
+      </script>
+
+      <style>
+        .toast-message {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        display: grid;
+        grid-template-columns: 24px 1fr auto;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 16px 14px 14px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+        z-index: 99999;
+        max-width: min(92vw, 480px);
+        box-sizing: border-box;
+        backdrop-filter: blur(15px) saturate(180%);
+        -webkit-backdrop-filter: blur(15px) saturate(180%);
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.45s ease, transform 0.45s ease;
+
+        background: linear-gradient(120deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.15));
+        color: #1f2937;
         }
-      });
-      });
 
-    </script>
+        .toast-icon {
+        width: 24px;
+        height: 24px;
+        object-fit: contain;
+        }
 
-    <style>
-      .toast-message {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      /* Cam efekti */
-      background: linear-gradient(120deg,
-        rgba(255, 255, 255, 0.35),
-        rgba(255, 255, 255, 0.15));
-      backdrop-filter: blur(15px) saturate(180%);
-      -webkit-backdrop-filter: blur(15px) saturate(180%);
+        .toast-text {
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 1.25;
+        word-break: break-word;
+        color: inherit;
+        }
 
-      /* Grid yerleşim: ikon | metin | kapat */
-      display: grid;
-      grid-template-columns: 24px 1fr auto;
-      align-items: center;
-      gap: 12px;
+        .close-toast {
+        appearance: none;
+        border: 0;
+        background: transparent;
+        font-size: 20px;
+        line-height: 1;
+        cursor: pointer;
+        padding: 2px 4px;
+        border-radius: 10px;
+        opacity: .7;
+        transition: opacity .2s ease, transform .15s ease;
+        }
 
-      /* Kalan stiller */
-      padding: 14px 16px 14px 14px;
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.45);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
-      z-index: 99999;
+        .close-toast:hover {
+        opacity: 1;
+        transform: scale(1.05);
+        }
 
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity .45s ease, transform .45s ease;
-      /* Metin/ikon taşmalarını engelle */
-      max-width: min(92vw, 480px);
-      box-sizing: border-box;
-      }
+        .toast-message+.toast-message {
+        margin-top: 12px;
+        }
 
-      .toast-icon {
-      width: 24px;
-      height: 24px;
-      display: block;
-      object-fit: contain;
-      /* SVG/PNG fark etmez, kaymaz */
-      }
+        /* Tema uyumu */
+        @media (prefers-color-scheme: dark) {
+        .toast-message {
+          background: linear-gradient(120deg, rgba(30, 30, 30, 0.6), rgba(0, 0, 0, 0.4));
+          border-color: rgba(255, 255, 255, 0.2);
+          color: #f3f4f6;
+        }
 
-      .toast-text {
-      margin: 0;
-      /* grid’de fazladan boşluk olmasın */
-      line-height: 1.25;
-      /* dikey hizayı sabitler */
-      font-size: 15px;
-      font-weight: 600;
-      color: #1f2937;
-      /* #222 yerine daha nötr koyu gri */
-      word-break: break-word;
-      /* uzun metin taşmasın */
-      }
+        .toast-text {
+          color: #f3f4f6;
+        }
+        }
 
-      .close-toast {
-      appearance: none;
-      border: 0;
-      background: transparent;
-      font-size: 20px;
-      line-height: 1;
-      /* hizalama için kritik */
-      cursor: pointer;
-      padding: 2px 4px;
-      border-radius: 10px;
-      opacity: .7;
-      transition: opacity .2s ease, transform .15s ease;
-      }
+        /* Tip renkleri */
+        .toast-success {
+        border-left: 5px solid #22c55e;
+        }
 
-      .close-toast:hover {
-      opacity: 1;
-      transform: scale(1.05);
-      }
+        .toast-warning {
+        border-left: 5px solid #facc15;
+        }
 
-      /* Birden fazla toast üst üste gelsin, kaymasın */
-      .toast-message+.toast-message {
-      margin-top: 12px;
-      }
-
-      /* Erişilebilirlik: animasyonu azalt */
-      @media
-
+        @media (prefers-reduced-motion: reduce) {
+        .toast-message {
+          transition: none;
+        }
+        }
     </style>
 @endif
