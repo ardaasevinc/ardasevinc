@@ -8,7 +8,7 @@ use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
 
 class SettingResource extends Resource
@@ -16,7 +16,6 @@ class SettingResource extends Resource
     protected static ?string $model = Setting::class;
     protected static ?string $navigationLabel = 'Genel Ayarlar';
     protected static ?string $navigationIcon = 'heroicon-o-cog';
-
     protected static ?string $pluralModelLabel = 'Genel Ayarlar';
     protected static ?string $navigationGroup = 'Site Yönetimi';
     protected static ?string $modelLabel = 'Ayar';
@@ -41,11 +40,10 @@ class SettingResource extends Resource
                     'CONTACT_WORKING_HOURS' => 'Çalışma Saatleri',
                     'CONTACT_GOOGLE_MAP_IFRAME' => 'Google Harita Embed Kodu',
 
+                    // CSS JS
+                    'CUSTOM_CSS' => 'Özel CSS',
+                    'CUSTOM_JS' => 'Özel JS',
 
-
-                    //css js
-                    'CUSTOM_CSS'=>'Özel css',
-                    'CUSTOM_JS' =>'özel js',
                     // Sosyal Medya
                     'SOCIAL_FACEBOOK' => 'Facebook Sayfası',
                     'SOCIAL_INSTAGRAM' => 'Instagram Hesabı',
@@ -60,49 +58,43 @@ class SettingResource extends Resource
                     'GOOGLE_RECAPTCHA_SECRET_KEY' => 'Google reCAPTCHA Secret Key',
                     'GOOGLE_MAPS_API_KEY' => 'Google Maps API Key',
 
-                    // Facebook Entegrasyonu
+                    // Facebook
                     'FACEBOOK_PIXEL_ID' => 'Facebook Pixel Kimliği',
 
-                    // SMTP Mail Ayarları
-                    'MAIL_MAILER' => 'Mail Sürücüsü (SMTP, Mailgun vs.)',
+                    // Mail Ayarları
+                    'MAIL_MAILER' => 'Mail Sürücüsü',
                     'MAIL_HOST' => 'Mail Sunucusu',
                     'MAIL_PORT' => 'Mail Portu',
                     'MAIL_USERNAME' => 'Mail Kullanıcı Adı',
                     'MAIL_PASSWORD' => 'Mail Şifresi',
-                    'MAIL_ENCRYPTION' => 'Mail Şifreleme Türü (tls, ssl)',
+                    'MAIL_ENCRYPTION' => 'Mail Şifreleme Türü',
                     'MAIL_FROM_ADDRESS' => 'Gönderici Mail Adresi',
                     'MAIL_FROM_NAME' => 'Gönderici Adı',
 
-                    // Bakım Modu ve Kayıt Ayarları
+                    // Diğer
                     'ENABLE_MAINTENANCE_MODE' => 'Bakım Modu Aktif mi? (true/false)',
                     'ALLOW_USER_REGISTRATION' => 'Kullanıcı Kaydı Açık mı? (true/false)',
                 ])
                 ->required()
                 ->searchable()
-                ->reactive()
-                ->html()
-                ->default('APP_NAME'),
+                ->default('APP_NAME')
+                ->reactive(),
 
-            // RichEditor ile HTML destekli metin alanı
-            RichEditor::make('value')
+            TextInput::make('value')
                 ->label('Ayar Değeri')
-                ->nullable()
                 ->required()
-                ->html()
-                
-                ->disableToolbarButtons(['strike', 'code', 'blockquote', 'link'])
                 ->columnSpanFull(),
         ]);
     }
 
     public static function table(Tables\Table $table): Tables\Table
     {
-        return $table->columns([
-            TextColumn::make('key')->label('Ayar Anahtarı')->sortable(),
-            TextColumn::make('value')->label('Değer')->limit(50)->sortable(),
-            TextColumn::make('updated_at')->label('Güncellenme Tarihi')->sortable(),
-        ])
-            ->filters([])
+        return $table
+            ->columns([
+                TextColumn::make('key')->label('Ayar Anahtarı')->sortable()->searchable(),
+                TextColumn::make('value')->label('Değer')->limit(50)->sortable()->searchable(),
+                TextColumn::make('updated_at')->label('Güncellenme Tarihi')->sortable(),
+            ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
@@ -118,12 +110,5 @@ class SettingResource extends Resource
             'create' => Pages\CreateSetting::route('/create'),
             'edit' => Pages\EditSetting::route('/{record}/edit'),
         ];
-    }
-
-    public static function afterSave($record)
-    {
-        if (!empty($record) && !empty($record->key)) {
-            Setting::updateEnv($record->key, $record->value);
-        }
     }
 }
