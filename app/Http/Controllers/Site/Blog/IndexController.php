@@ -10,7 +10,7 @@ class IndexController extends Controller
 {
     public function index(){
         $page_title = 'Bloglar';
-        $blog =BlogPost::paginate(5);
+        $blog =BlogPost::paginate(6);
         return view('site.blog.index',compact('page_title','blog'));
     }
 
