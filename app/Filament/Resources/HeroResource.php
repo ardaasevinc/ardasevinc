@@ -39,24 +39,29 @@ class HeroResource extends Resource
                             ->schema([
                                 FileUpload::make('img1')
                                     ->label('Resim 1')
+                                    ->disk('uploads')
+                                    
                                     ->image()
 
                                     ->directory('hero')
                                     ->nullable(),
                                 FileUpload::make('img2')
                                     ->label('Resim 2')
+                                    ->disk('uploads')
                                     ->image()
 
                                     ->directory('hero')
                                     ->nullable(),
                                 FileUpload::make('img3')
                                     ->label('Resim 3')
+                                    ->disk('uploads')
                                     ->image()
 
                                     ->directory('hero')
                                     ->nullable(),
                                 FileUpload::make('img4')
                                     ->label('Resim 4')
+                                    ->disk('uploads')
                                     ->image()
 
                                     ->directory('hero')
@@ -64,6 +69,7 @@ class HeroResource extends Resource
 
                                 FileUpload::make('img5')
                                     ->label('Resim 5')
+                                    ->disk('uploads')
                                     ->image()
 
                                     ->directory('hero')
@@ -99,11 +105,11 @@ class HeroResource extends Resource
                 // TextColumn::make('top_text')->label('Üst Metin'),
                 // TextColumn::make('bottom_text')->label('Alt Metin'),
 
-                ImageColumn::make('img1')->label('Resim 1')->size(50),
-                ImageColumn::make('img2')->label('Resim 2')->size(50),
-                ImageColumn::make('img3')->label('Resim 3')->size(50),
-                ImageColumn::make('img4')->label('Resim 4')->size(50),
-                ImageColumn::make('img5')->label('Resim 5')->size(50),
+                ImageColumn::make('img1')->label('Resim 1')->size(50)->disk('uploads'),
+                ImageColumn::make('img2')->label('Resim 2')->size(50)->disk('uploads'),
+                ImageColumn::make('img3')->label('Resim 3')->size(50)->disk('uploads'),
+                ImageColumn::make('img4')->label('Resim 4')->size(50)->disk('uploads'),
+                ImageColumn::make('img5')->label('Resim 5')->size(50)->disk('uploads'),
 
                 TextColumn::make('word1')->label('Kelime 1'),
                 TextColumn::make('word2')->label('Kelime 2'),
