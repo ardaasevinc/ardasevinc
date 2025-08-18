@@ -30,35 +30,51 @@
 
     <div class="mil-p-0-100">
         <div class="container">
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque illum accusantium ipsam quaerat aliquam, animi
-                distinctio architecto atque, omnis labore in necessitatibus, dolorum corrupti alias! Sunt pariatur rerum
-                maxime. Atque doloribus molestiae quaerat voluptates veritatis laudantium aliquid veniam rerum vel nihil
-                ducimus quisquam repellendus recusandae culpa blanditiis accusantium nulla modi enim saepe cum, consequuntur
-                sit alias ex. Facilis aliquam tempora sunt reiciendis excepturi placeat fuga, et quasi expedita ratione sit
-                alias laborum assumenda dicta mollitia earum. Error eveniet voluptas eum quo voluptatum sequi dolorum rerum
-                tempore, molestiae nostrum odio ab sit illo id voluptatibus tempora quaerat fuga eaque sed iusto earum
-                voluptate facere vero! Impedit delectus quae nobis tempora repellat, commodi quod? Nobis nisi veniam nihil
-                cumque inventore sunt tenetur quos excepturi perferendis dolorem, vitae quidem in praesentium est
-                temporibus! Aliquid est hic, magnam repellat doloremque nihil eligendi amet facilis, dolores vel saepe
-                cumque tempora quaerat fugit sunt? Laudantium in dicta ducimus obcaecati modi exercitationem libero quam
-                officia sequi culpa! Facere et molestias, minus fuga facilis corrupti in laborum numquam atque nam,
-                voluptate reiciendis provident quam autem adipisci laudantium aliquid eum aut perferendis. Laborum tempora
-                officia illo numquam totam necessitatibus voluptatum quae illum in hic incidunt odit consequatur, id rem,
-                cum voluptatem magnam nostrum accusamus? Illo alias, hic perferendis exercitationem facere delectus.
-                Perspiciatis commodi adipisci sint dignissimos ab? Corporis quos eaque quis dolor et recusandae delectus
-                voluptate atque hic, ex rerum alias repudiandae, dolores fugit omnis commodi explicabo debitis dolorum
-                deleniti repellat distinctio! Molestiae quasi sunt quos quam omnis minus, enim recusandae asperiores,
-                quaerat perspiciatis porro qui totam architecto labore eos corrupti dolore, ipsa neque ratione tempora
-                veritatis! Natus obcaecati magni officia commodi repudiandae reiciendis sunt doloribus, quasi est, aut
-                nulla? Recusandae, itaque! Officiis, minima ratione quisquam nostrum rem vitae. Molestias, amet? Quo
-                blanditiis tempora labore mollitia quidem, vero cumque? Corrupti amet architecto nobis nihil, vero
-                reiciendis facilis deserunt impedit ad eaque dolorum, nostrum esse veritatis consequatur? Ipsam optio cumque
-                ullam ipsum doloribus. Ducimus modi doloremque iure est? Excepturi reiciendis, impedit pariatur
-                exercitationem fugit explicabo natus culpa corporis, maxime iusto consequuntur! Sit numquam iste laudantium
-                at. Nesciunt a eveniet corrupti dolores optio odit quasi nostrum minus dolorem non. Dicta aspernatur
-                repellendus nemo laudantium quis, est saepe impedit totam ab perspiciatis veniam nam hic molestiae eius
-                dolorum. Pariatur porro vel, nisi quo, earum eligendi nobis ipsa molestiae suscipit harum soluta, quod dolor
-                praesentium. Repellendus, minima tempora! Eius minima aperiam ex est.</p>
+            <b>Kişisel Verilerin Korunması Aydınlatma Metni</b><br><br>
+
+            <b>Arda Sevinç</b> olarak; 6698 sayılı <b>Kişisel Verilerin Korunması Kanunu (KVKK)</b> kapsamında kişisel
+            verilerinizin güvenliği ve gizliliğini sağlamayı önemsiyoruz.<br><br>
+
+            <b>1. Veri Sorumlusu</b><br>
+            Bu internet sitesi (<b>ardasevinc.com.tr</b>) üzerinden elde edilen kişisel verileriniz, veri sorumlusu
+            sıfatıyla <b>Arda Sevinç</b> tarafından işlenmektedir.<br><br>
+
+            <b>2. İşlenen Kişisel Veriler</b><br>
+            Sitemiz üzerinden form doldurmanız, iletişim kurmanız veya üyelik/abonelik işlemleriniz kapsamında aşağıdaki
+            kişisel verileriniz işlenebilir:<br>
+            - Kimlik Bilgileri (Ad, Soyad)<br>
+            - İletişim Bilgileri (E-posta, Telefon)<br>
+            - İşlem Güvenliği Bilgileri (IP adresi, log kayıtları, tarayıcı bilgileri)<br>
+            - Mesaj içerikleri ve talepler<br><br>
+
+            <b>3. Kişisel Verilerin İşlenme Amaçları</b><br>
+            Toplanan kişisel verileriniz aşağıdaki amaçlarla işlenmektedir:<br>
+            - İletişim taleplerinizi yanıtlamak, hizmet sunmak<br>
+            - Ürün/hizmet tanıtımı ve bilgilendirme yapmak (onay vermeniz halinde)<br>
+            - Yasal yükümlülüklerimizi yerine getirmek<br><br>
+
+            <b>4. Kişisel Verilerin Aktarımı</b><br>
+            Kişisel verileriniz, yalnızca mevzuat gereklilikleri çerçevesinde ve gerekli durumlarda yetkili kurum ve
+            kuruluşlarla paylaşılabilir. Bunun dışında üçüncü kişilerle paylaşılmaz.<br><br>
+
+            <b>5. Kişisel Veri Toplama Yöntemi ve Hukuki Sebep</b><br>
+            Kişisel verileriniz; internet sitemizdeki formlar, iletişim kanalları, çerezler ve benzeri teknolojiler
+            aracılığıyla, KVKK’nın 5. ve 6. maddelerinde belirtilen hukuki sebepler doğrultusunda toplanmaktadır.<br><br>
+
+            <b>6. Haklarınız</b><br>
+            KVKK’nın 11. maddesi uyarınca, veri sahibi olarak;<br>
+            - Kişisel verilerinizin işlenip işlenmediğini öğrenme,<br>
+            - İşlenmişse buna ilişkin bilgi talep etme,<br>
+            - İşleme amacını öğrenme ve amacına uygun kullanılıp kullanılmadığını sorgulama,<br>
+            - Kişisel verilerinizin silinmesini veya anonim hale getirilmesini talep etme,<br>
+            haklarına sahipsiniz.<br><br>
+
+            Haklarınızı kullanmak için bizimle <b>info@ardasevinc.com.tr</b> adresi üzerinden iletişime
+            geçebilirsiniz.<br><br>
+
+            <b>Arda Sevinç</b><br>
+            <b>ardasevinc.com.tr</b><br>
+
         </div>
     </div>
 @endsection
