@@ -116,7 +116,7 @@
                                                         <div class="mil-date">{{ $item->created_At }}</div>
                                                     </div>
                                                 </div>
-                                                <a href="{{route('site.blog.detail', ['id' => $item->id])}}" class="mil-descr mil-c-gone">
+                                                <a href="{{route('site.blog.detail', ['slug' => $item->slug])}}" class="mil-descr mil-c-gone">
                                                     <div class="mil-text-frame">
                                                         <h4 class="mil-head3 mil-max-2row-text mil-mb30 mil-up">{{$item->title}}</h4>
                                                         <p class="mil-text-md mil-max-2row-text mil-mb40 mil-up">{!! Str::limit(strip_tags($item->desc), 200) !!}
