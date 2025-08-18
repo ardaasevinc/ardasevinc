@@ -71,7 +71,7 @@
                                 </a>
                             </div>
                             <div class="mil-hero-img mil-up">
-                                <img src="{{ asset('site/assets/img/home-1/1.jpg') }}" alt="hero" class="mil-scale-img" data-value-1="1.25" data-value-2="1">
+                                <img src="{{ asset('site/assets/img/home-1/1.webp') }}" alt="hero" class="mil-scale-img" data-value-1="1.25" data-value-2="1">
                             </div>
                         </div>
                     </div>
