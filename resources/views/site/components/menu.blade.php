@@ -59,7 +59,7 @@
                         <div class="swiper-wrapper">
                         @foreach($blog_menu as $item)
                             <div class="swiper-slide">
-                                <a href="{{route('site.blog.detail', ['id' => $item->id])}}" class="mil-blog-card-sm mil-c-gone">
+                                <a href="{{route('site.blog.detail', ['slug' => $item->slug])}}" class="mil-blog-card-sm mil-c-gone">
                                     <div class="mil-cover">
                                         <div class="mil-hover-frame">
                                             <img src="{{ asset('uploads/' . $item->img1) }}" alt="cover">

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ServiceResource\Pages;
@@ -11,21 +10,22 @@ use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
+use Illuminate\Support\Str;
+use Filament\Forms\Set;
 
 class ServiceResource extends Resource
 {
     protected static ?string $model = Service::class;
-    
+
     protected static ?string $navigationLabel = 'Hizmetler';
     protected static ?string $navigationIcon = 'heroicon-o-briefcase';
-    
+
     protected static ?string $pluralModelLabel = 'Hizmetler';
     protected static ?string $navigationGroup = 'Site Yönetimi';
     protected static ?string $modelLabel = 'Hizmet';
@@ -54,7 +54,21 @@ class ServiceResource extends Resource
                             ->schema([
                                 TextInput::make('title')
                                     ->label('Başlık')
-                                    ->required(),
+                                    ->required()
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(function (Set $set, $state) {
+                                        if (!filled($set('slug'))) {
+                                            $set('slug', Str::slug((string) $state));
+                                        }
+                                    }),
+
+                                TextInput::make('slug')
+                                    ->label('Slug')
+                                    ->helperText('Başlıktan otomatik oluşur, istersen düzenleyebilirsin.')
+                                    ->rule('alpha_dash')
+                                    ->unique(table: Service::class, column: 'slug', ignorable: fn($record) => $record)
+                                    ->dehydrateStateUsing(fn($state) => Str::slug((string) $state))
+                                    ->nullable(),
 
                                 RichEditor::make('desc')
                                     ->label('Açıklama')
@@ -68,11 +82,6 @@ class ServiceResource extends Resource
                                 RichEditor::make('desc1')->label('Ek Açıklama 1')->nullable(),
                                 RichEditor::make('desc2')->label('Ek Açıklama 2')->nullable(),
                                 RichEditor::make('desc3')->label('Ek Açıklama 3')->nullable(),
-
-                                // Toggle::make('is_published')
-                                //     ->label('Yayınlandı mı?')
-                                //     ->default(false)
-                                //     ->live(),
                             ])
                             ->columnSpan(8),
                     ]),
@@ -89,7 +98,7 @@ class ServiceResource extends Resource
                             ->label('Numara Başlığı')
                             ->nullable(),
                     ])
-                    ->collapsible(), // Bu kartı isteğe bağlı açılır kapanır hale getirdim
+                    ->collapsible(),
             ]);
     }
 
@@ -97,15 +106,51 @@ class ServiceResource extends Resource
     {
         return $table
             ->columns([
-                ImageColumn::make('icon')->label('İkon')->size(50),
-                TextColumn::make('title')->label('Başlık')->sortable(),
-                TextColumn::make('desc')->label('Açıklama')->limit(50),
-                TextColumn::make('number')->label('Numara')->sortable(),
-                TextColumn::make('number_title')->label('Numara Başlığı')->sortable(),
+                ImageColumn::make('icon')
+                    ->label('İkon')
+                    ->size(50)
+                    ->toggleable(),
 
-                // Yayın Durumu Toggle Butonu
+                TextColumn::make('title')
+                    ->label('Başlık')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
+
+                TextColumn::make('slug')
+                    ->label('Slug')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
+
+                TextColumn::make('desc')
+                    ->label('Açıklama')
+                    ->limit(50)
+                    ->wrap()
+                    ->searchable()
+                    ->toggleable(),
+
+                TextColumn::make('number')
+                    ->label('Numara')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
+
+                TextColumn::make('number_title')
+                    ->label('Numara Başlığı')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
+
                 ToggleColumn::make('is_published')
-                    ->label('Yayın Durumu'),
+                    ->label('Yayın Durumu')
+                    ->toggleable(),
+
+                TextColumn::make('created_at')
+                    ->label('Oluşturulma')
+                    ->dateTime('d.m.Y H:i')
+                    ->sortable()
+                    ->toggleable(),
             ])
             ->filters([])
             ->actions([

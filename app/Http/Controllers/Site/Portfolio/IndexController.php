@@ -17,19 +17,23 @@ class IndexController extends Controller
         return view('site.portfolio.index', compact('page_title', 'portfolio'));
     }
 
-    public function detail($id)
+    public function detail($slug)
     {
         $page_title = 'Proje Detayı';
 
-        // PortfolioPost'u ID ile bul ve ilişkili media dosyalarını getir
-        $portfolio = PortfolioPost::with('media')->findOrFail($id);
-        
-    $nextportfolio = PortfolioPost::where('id', '>', $id)
+        // Slug ile projeyi bul ve ilişkili media'yı getir
+        $portfolio = PortfolioPost::with('media')
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        // Bir sonrakini slug'a göre değil, ID sırasına göre bulmak istiyorsan:
+        $nextportfolio = PortfolioPost::where('id', '>', $portfolio->id)
         ->where('is_published', 1)
         ->orderBy('id', 'asc')
         ->first();
 
-        return view('site.portfolio.detail', compact('page_title', 'portfolio','nextportfolio'));
+        return view('site.portfolio.detail', compact('page_title', 'portfolio', 'nextportfolio'));
     }
+
 }
 

@@ -97,7 +97,7 @@
                                 {{ Str::limit($nextportfolio->desc, 100) }}
                             </p>
                             <div class="mil-up">
-                                <a href="{{ route('site.portfolio.detail', ['id' => $nextportfolio->id]) }}"
+                                <a href="{{ route('site.portfolio.detail', ['slug' => $nextportfolio->slug]) }}"
                                     class="mil-btn mil-btn-border mil-m4 mil-c-gone">
                                     Projeyi Gör
                                 </a>

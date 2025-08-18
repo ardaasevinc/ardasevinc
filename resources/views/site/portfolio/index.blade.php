@@ -48,8 +48,8 @@
                                                         </div>
                                                     </div>
                                                     <div class="mil-hover-overlay">
-                                                        @if(!empty($item->id) )
-                                                            <a href="{{ route('site.portfolio.detail', ['id' => $item->id]) }}" class="mil-descr">
+                                                        
+                                                            <a href="{{ route('site.portfolio.detail', ['slug' => $item->slug]) }}" class="mil-descr">
                                                                 <div class="mil-text-frame">
                                                                     <h4 class="mil-head4 mil-max-1row-text mil-m4 mil-c-gone">{{ $item->title }}</h4>
                                                                 </div>
@@ -60,9 +60,7 @@
                                                                     </div>
                                                                 </div>
                                                             </a>
-                                                        @else
-                                                            <p>Başlık veya ID eksik.</p>
-                                                        @endif
+                                                     
                                                     </div>
                                                 </div>
                                             </div>

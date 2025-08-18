@@ -35,7 +35,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <a href="{{ route('site.blog.detail', ['id' => $item->id]) }}" class="mil-descr mil-c-gone">
+                            <a href="{{ route('site.blog.detail', ['slug' => $item->slug]) }}" class="mil-descr mil-c-gone">
                                 <div class="mil-text-frame">
                                     <h4 class="mil-head4 mil-max-2row-text mil-mb20 mil-up">
                                         {{ $item->title ?? 'Başlık Yok' }}

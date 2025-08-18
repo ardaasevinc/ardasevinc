@@ -15,11 +15,13 @@ class IndexController extends Controller
         return view ('site.services.index', compact('page_title','service'));
     }
 
-    public function detail($id){
+   public function detail($slug)
+{
+    $page_title = 'Hizmet Detayı';
+    $service = Service::where('slug', $slug)->firstOrFail();
+    $iconbox = Icon::where('is_published', 1)->paginate(3);
 
-        $page_title = 'Hizmet Detayı';
-        $service= Service::get()->findOrFail($id);
-        $iconbox =Icon::Where('is_published',1)->paginate(3);
-        return view('site.services.detail',compact('page_title','iconbox','service'));
-    }
+    return view('site.services.detail', compact('page_title', 'iconbox', 'service'));
+}
+
 }

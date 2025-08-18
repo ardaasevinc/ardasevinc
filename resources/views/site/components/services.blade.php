@@ -21,7 +21,7 @@
 
                             </div>
                             <div class="mil-mb30 mil-up">
-                                <a href="{{ route('site.services.detail', ['id' => $item->id]) }}"
+                                <a href="{{ route('site.services.detail', ['slug' => $item->slug]) }}"
                                     class="mil-stylized-btn mil-c-gone">
                                     <i class="fal fa-arrow-up"></i>
                                     <span>Daha Fazlası</span>

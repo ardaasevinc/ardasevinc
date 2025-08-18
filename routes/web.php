@@ -24,21 +24,21 @@ use App\Models\About;
 
 Route::get('/',[SiteController::class,'index'])->name('site.index');
 
-Route::get('/blog', [BlogController::class, 'index'])->name('site.blog');
-Route::get('/blog/{id}', [BlogController::class, 'detail'])->name('site.blog.detail');
+Route::get('/yazi', [BlogController::class, 'index'])->name('site.blog');
+Route::get('/yazi/{slug}', [BlogController::class, 'detail'])->name('site.blog.detail');
 
-Route::get('/contact', [ContactController::class, 'index'])->name('site.contact');
-Route::post('/contact/store', [ContactController::class, 'store'])->name('site.contact.store');
+Route::get('/bize-ulasin', [ContactController::class, 'index'])->name('site.contact');
+Route::post('/bize-ulasin/form-gonderildi', [ContactController::class, 'store'])->name('site.contact.store');
 
-Route::get('/portfolio', [PortfolioController::class, 'index'])->name('site.portfolio');
-Route::get('/portfolio/{id}', [PortfolioController::class, 'detail'])->name('site.portfolio.detail');
+Route::get('/projeler', [PortfolioController::class, 'index'])->name('site.portfolio');
+Route::get('/projeler/{slug}', [PortfolioController::class, 'detail'])->name('site.portfolio.detail');
 
-Route::get('/services', [ServicesController::class, 'index'])->name('site.services');
-Route::get('/services/{id}', [ServicesController::class, 'detail'])->name('site.services.detail');
+Route::get('/hizmetler', [ServicesController::class, 'index'])->name('site.services');
+Route::get('/hizmetler/{slug}', [ServicesController::class, 'detail'])->name('site.services.detail');
 
 Route::get('/kvkk-metni', [KvkkController::class, 'index'])->name('site.kvkk');
 
-Route::post('/subscribe', [SubscribeController::class, 'store'])->name('subscribe.store');
+Route::post('/haberdar-ol', [SubscribeController::class, 'store'])->name('subscribe.store');
 
 
 

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PortfolioPostResource\Pages;
@@ -20,6 +19,8 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
+use Illuminate\Support\Str;
+use Filament\Forms\Set;
 
 class PortfolioPostResource extends Resource
 {
@@ -36,7 +37,7 @@ class PortfolioPostResource extends Resource
             ->schema([
                 Grid::make(12)
                     ->schema([
-                        // Sol tarafta resim yükleme alanları (columnSpan 4)
+                        // Sol: Görseller
                         Section::make('Portfolio Görselleri')
                             ->schema([
                                 FileUpload::make('img1')
@@ -53,40 +54,56 @@ class PortfolioPostResource extends Resource
                             ])
                             ->columnSpan(4),
 
-                        // Sağ tarafta metin alanları (columnSpan 8)
+                        // Sağ: Bilgiler
                         Section::make('Portfolio Bilgileri')
                             ->schema([
                                 Select::make('portfolio_category_id')
                                     ->label('Kategori')
-                                    ->options(PortfolioCategory::where('is_published', true)->get()->pluck('name', 'id')) // Sorgu düzeltildi
+                                    ->options(
+                                        PortfolioCategory::where('is_published', true)
+                                            ->pluck('name', 'id')
+                                    )
                                     ->searchable()
                                     ->required(),
 
                                 TextInput::make('title')
                                     ->label('Başlık')
                                     ->required()
-                                    ->maxLength(255),
+                                    ->maxLength(255)
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(function (Set $set, $state) {
+                                        if (!filled($set('slug'))) {
+                                            $set('slug', Str::slug((string) $state));
+                                        }
+                                    }),
+
+                                TextInput::make('slug')
+                                    ->label('Slug')
+                                    ->helperText('Başlıktan otomatik oluşur, istersen düzenleyebilirsin.')
+                                    ->rule('alpha_dash')
+                                    ->unique(
+                                        table: PortfolioPost::class,
+                                        column: 'slug',
+                                        ignorable: fn($record) => $record
+                                    )
+                                    ->dehydrateStateUsing(fn($state) => Str::slug((string) $state))
+                                    ->nullable(),
 
                                 RichEditor::make('desc')
                                     ->label('Açıklama')
                                     ->nullable(),
-
-                                // Toggle::make('is_published')
-                                //     ->label('Yayınlandı mı?')
-                                //     ->default(false)
-                                //     ->live(),
                             ])
                             ->columnSpan(8),
                     ]),
 
-                // Çoklu resimler için ayrı bir bölüm
+                // Galeri
                 Section::make('Galeri Resimleri')
                     ->schema([
                         Repeater::make('media')
                             ->label('Galeri Resimleri')
                             ->relationship('media')
                             ->schema([
-                                FileUpload::make('media_path') // `image` yerine `media_path` kullanıldı
+                                FileUpload::make('media_path')
                                     ->label('Resim')
                                     ->image()
                                     ->directory('portfolio/media')
@@ -104,10 +121,38 @@ class PortfolioPostResource extends Resource
     {
         return $table
             ->columns([
-                ImageColumn::make('img1')->label('Ana Resim')->size(50),
-                TextColumn::make('category.name')->label('Kategori')->sortable()->default('Kategori Yok'),
-                TextColumn::make('desc')->label('Açıklama')->limit(50),
-                ToggleColumn::make('is_published')->label('Yayın Durumu'),
+                ImageColumn::make('img1')
+                    ->label('Ana Resim')
+                    ->size(50)
+                    ->toggleable(),
+
+                TextColumn::make('title')
+                    ->label('Başlık')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
+
+                TextColumn::make('slug')
+                    ->label('Slug')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
+
+                TextColumn::make('category.name')
+                    ->label('Kategori')
+                    ->sortable()
+                    ->toggleable()
+                    ->formatStateUsing(fn($state) => $state ?? 'Kategori Yok'),
+
+                TextColumn::make('desc')
+                    ->label('Açıklama')
+                    ->limit(50)
+                    ->searchable()
+                    ->toggleable(),
+
+                ToggleColumn::make('is_published')
+                    ->label('Yayın Durumu')
+                    ->toggleable(),
             ])
             ->filters([])
             ->actions([

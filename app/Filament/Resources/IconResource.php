@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\IconResource\Pages;
@@ -17,6 +16,8 @@ use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
+use Illuminate\Support\Str;
+use Filament\Forms\Set;
 
 class IconResource extends Resource
 {
@@ -40,7 +41,7 @@ class IconResource extends Resource
                                     ->label('İkon')
                                     ->image()
                                     ->helperText('İkon boyutu 100x100 piksel olmalıdır.')
-                                    ->directory('icons') // Yeni modelin dizini
+                                    ->directory('icons')
                                     ->nullable(),
                             ])
                             ->columnSpan(4),
@@ -50,11 +51,29 @@ class IconResource extends Resource
                             ->schema([
                                 TextInput::make('title')
                                     ->label('Başlık')
-                                    ->required(),
+                                    ->required()
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(function (Set $set, $state) {
+                                        if (!filled($set('slug'))) {
+                                            $set('slug', Str::slug((string) $state));
+                                        }
+                                    }),
+
+                                TextInput::make('slug')
+                                    ->label('Slug')
+                                    ->helperText('Başlıktan otomatik oluşur, istersen düzenleyebilirsin.')
+                                    ->rule('alpha_dash')
+                                    ->unique(table: Icon::class, column: 'slug', ignorable: fn($record) => $record)
+                                    ->dehydrateStateUsing(fn($state) => Str::slug((string) $state))
+                                    ->nullable(),
 
                                 Textarea::make('desc')
                                     ->label('Açıklama')
                                     ->nullable(),
+
+                                Toggle::make('is_published')
+                                    ->label('Yayın Durumu')
+                                    ->default(true),
                             ])
                             ->columnSpan(8),
                     ]),
@@ -65,13 +84,39 @@ class IconResource extends Resource
     {
         return $table
             ->columns([
-                ImageColumn::make('icon')->label('İkon')->size(50),
-                TextColumn::make('title')->label('Başlık')->sortable(),
-                TextColumn::make('desc')->label('Açıklama')->limit(50),
+                ImageColumn::make('icon')
+                    ->label('İkon')
+                    ->size(50)
+                    ->toggleable(),
 
-                // Yayın Durumu Toggle Butonu
+                TextColumn::make('title')
+                    ->label('Başlık')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
+
+                TextColumn::make('slug')
+                    ->label('Slug')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
+
+                TextColumn::make('desc')
+                    ->label('Açıklama')
+                    ->limit(50)
+                    ->wrap()
+                    ->searchable()
+                    ->toggleable(),
+
                 ToggleColumn::make('is_published')
-                    ->label('Yayın Durumu'),
+                    ->label('Yayın Durumu')
+                    ->toggleable(),
+
+                TextColumn::make('created_at')
+                    ->label('Oluşturulma')
+                    ->dateTime('d.m.Y H:i')
+                    ->sortable()
+                    ->toggleable(),
             ])
             ->filters([])
             ->actions([

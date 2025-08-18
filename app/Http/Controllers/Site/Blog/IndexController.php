@@ -14,11 +14,15 @@ class IndexController extends Controller
         return view('site.blog.index',compact('page_title','blog'));
     }
 
-   public function detail($id){
+public function detail($slug)
+{
     $page_title = 'Blog Detayı';
-    $blog = BlogPost::with('media')->findOrFail($id);
-    
+    $blog = BlogPost::with('media')
+        ->where('slug', $slug)
+        ->firstOrFail();
+
     return view('site.blog.detail', compact('page_title', 'blog'));
 }
+
 
 }

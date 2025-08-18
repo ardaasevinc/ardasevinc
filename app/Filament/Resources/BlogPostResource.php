@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\BlogPostResource\Pages;
 use App\Models\BlogPost;
 use App\Models\BlogCategory;
-use App\Models\BlogMedia;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
@@ -20,6 +19,8 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
+use Illuminate\Support\Str;
+use Filament\Forms\Set;
 
 class BlogPostResource extends Resource
 {
@@ -42,14 +43,12 @@ class BlogPostResource extends Resource
                                 FileUpload::make('img1')
                                     ->label('Ana Resim')
                                     ->image()
-
                                     ->directory('blog')
                                     ->nullable(),
 
                                 FileUpload::make('img2')
                                     ->label('İkincil Resim')
                                     ->image()
-                                   
                                     ->directory('blog')
                                     ->nullable(),
                             ])
@@ -66,6 +65,20 @@ class BlogPostResource extends Resource
 
                                 TextInput::make('title')
                                     ->label('Başlık')
+                                    ->nullable()
+                                    ->live(onBlur: true) // başlıktan slug üret
+                                    ->afterStateUpdated(function (Set $set, $state) {
+                                        if (! filled($set('slug'))) {
+                                            $set('slug', Str::slug((string) $state));
+                                        }
+                                    }),
+
+                                TextInput::make('slug')
+                                    ->label('Slug')
+                                    ->helperText('Başlıktan otomatik oluşur, istersen düzenleyebilirsin.')
+                                    ->rule('alpha_dash')
+                                    ->unique(table: BlogPost::class, column: 'slug', ignorable: fn ($record) => $record)
+                                    ->dehydrateStateUsing(fn ($state) => Str::slug((string) $state))
                                     ->nullable(),
 
                                 RichEditor::make('desc')
@@ -78,7 +91,6 @@ class BlogPostResource extends Resource
                                     ->live(),
                             ])
                             ->columnSpan(8),
-
                     ]),
 
                 // Çoklu resimler için ayrı bir bölüm
@@ -91,7 +103,6 @@ class BlogPostResource extends Resource
                                 FileUpload::make('image')
                                     ->label('Resim')
                                     ->image()
-                                    
                                     ->directory('blog/media')
                                     ->required(),
                             ])
@@ -107,10 +118,46 @@ class BlogPostResource extends Resource
     {
         return $table
             ->columns([
-                ImageColumn::make('img1')->label('Ana Resim')->size(50),
-                TextColumn::make('category.name')->label('Kategori')->sortable(),
-                TextColumn::make('desc')->label('İçerik')->limit(50),
-                ToggleColumn::make('is_published')->label('Yayın Durumu'),
+                ImageColumn::make('img1')
+                    ->label('Ana Resim')
+                    ->size(50)
+                    ->toggleable(),
+
+                TextColumn::make('title')
+                    ->label('Başlık')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
+
+                TextColumn::make('slug')
+                    ->label('Slug')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
+
+                TextColumn::make('category.name')
+                    ->label('Kategori')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable()
+                    ->formatStateUsing(fn ($state) => $state ?? 'Kategori Yok'),
+
+                TextColumn::make('desc')
+                    ->label('İçerik')
+                    ->limit(50)
+                    ->wrap()
+                    ->searchable()
+                    ->toggleable(),
+
+                ToggleColumn::make('is_published')
+                    ->label('Yayın Durumu')
+                    ->toggleable(),
+
+                TextColumn::make('created_at')
+                    ->label('Oluşturulma')
+                    ->dateTime('d.m.Y H:i')
+                    ->sortable()
+                    ->toggleable(),
             ])
             ->filters([])
             ->actions([
@@ -130,9 +177,9 @@ class BlogPostResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListBlogPosts::route('/'),
+            'index'  => Pages\ListBlogPosts::route('/'),
             'create' => Pages\CreateBlogPost::route('/create'),
-            'edit' => Pages\EditBlogPost::route('/{record}/edit'),
+            'edit'   => Pages\EditBlogPost::route('/{record}/edit'),
         ];
     }
 }

@@ -9,6 +9,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
 
 class ContactMessageResource extends Resource
 {
@@ -16,9 +17,9 @@ class ContactMessageResource extends Resource
     
     protected static ?string $navigationLabel = 'İletişim Formu';
     protected static ?string $navigationIcon = 'heroicon-o-envelope';
-    protected static ?string $pluralModelLabel = 'İletşim Formu Mesajları';
+    protected static ?string $pluralModelLabel = 'İletişim Formu Mesajları';
     protected static ?string $navigationGroup = 'Site Yönetimi';
-    protected static ?string $modelLabel = 'Form';
+    protected static ?string $modelLabel = 'Form Mesajı';
 
     public static function form(Forms\Form $form): Forms\Form
     {
@@ -46,14 +47,34 @@ class ContactMessageResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->label('Ad Soyad')->sortable(),
-                Tables\Columns\TextColumn::make('email')->label('E-posta')->sortable(),
-                Tables\Columns\TextColumn::make('message')->label('Mesaj')->limit(50),
-                Tables\Columns\TextColumn::make('created_at')->label('Gönderim Tarihi')->sortable(),
+                TextColumn::make('name')
+                    ->label('Ad Soyad')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
+
+                TextColumn::make('email')
+                    ->label('E-posta')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
+
+                TextColumn::make('message')
+                    ->label('Mesaj')
+                    ->limit(50)
+                    ->wrap()
+                    ->searchable()
+                    ->toggleable(),
+
+                TextColumn::make('created_at')
+                    ->label('Gönderim Tarihi')
+                    ->dateTime('d.m.Y H:i')
+                    ->sortable()
+                    ->toggleable(),
             ])
             ->filters([])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(), // mesajları hızlıca görüntülemek için
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
