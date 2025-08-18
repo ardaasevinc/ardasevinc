@@ -11,8 +11,8 @@
         @if(!empty($settings['CONTACT_PHONE']))
             <p class="mil-stylized mil-m1 mil-phone"><span class="mil-m2">Telefon:</span> {{ strip_tags($settings['CONTACT_PHONE'])}}</p>
             @endif
-            <div class="mil-buttons">
-                <a href="{{ route('site.contact') }}" class="mil-tp-btn"><i class="fal fa-envelope"></i></a>
+            <div class="mil-buttons">1
+                <a href="mailto:{!! strip_tags($settings['CONTACT_EMAIL'])!!}" class="mil-tp-btn"><i class="fal fa-envelope"></i></a>
                 <div class="mil-tp-btn">
                     <div class="mil-menu-btn"><span></span></div>
                 </div>
