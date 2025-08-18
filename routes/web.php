@@ -24,8 +24,8 @@ use App\Models\About;
 
 Route::get('/',[SiteController::class,'index'])->name('site.index');
 
-Route::get('/yazi', [BlogController::class, 'index'])->name('site.blog');
-Route::get('/yazi/{slug}', [BlogController::class, 'detail'])->name('site.blog.detail');
+Route::get('/yazilar', [BlogController::class, 'index'])->name('site.blog');
+Route::get('/yazilar/{slug}', [BlogController::class, 'detail'])->name('site.blog.detail');
 
 Route::get('/bize-ulasin', [ContactController::class, 'index'])->name('site.contact');
 Route::post('/bize-ulasin/form-gonderildi', [ContactController::class, 'store'])->name('site.contact.store');
