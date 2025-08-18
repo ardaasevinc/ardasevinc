@@ -123,6 +123,7 @@ class PortfolioPostResource extends Resource
             ->columns([
                 ImageColumn::make('img1')
                     ->label('Ana Resim')
+                    ->disk('uploads')
                     ->size(50)
                     ->toggleable(),
 

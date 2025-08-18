@@ -87,6 +87,7 @@ class IconResource extends Resource
                 ImageColumn::make('icon')
                     ->label('İkon')
                     ->size(50)
+                    ->disk('uploads')
                     ->toggleable(),
 
                 TextColumn::make('title')
