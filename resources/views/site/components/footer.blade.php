@@ -23,7 +23,7 @@
                     <ul class="mil-social mil-c-gone">
 
                         <li><a href="https://x.com/ardaasevinc" target="_blank" data-no-swup><i class="fab fa-twitter"></i></a></li>
-                        <li><a href="https://ardaasevinca7d0.myportfolio.com/" target="_blank" data-no-swup><i class="fab fa-behance"></i></a></li>
+                        <li><a href="https://www.linkedin.com/in/ardaasevinc/" target="_blank" data-no-swup><i class="fab fa-linkedin"></i></a></li>
 
                     </ul>
                 </div>
