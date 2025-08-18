@@ -11,7 +11,7 @@
         </div>
         <div class="mil-image-box">
             <div class="mil-image-frame">
-                <img src="site/assets/img/home-1/2.jpg" alt="img" class="mil-scale-img" data-value-1="1.20"
+                <img src="{{asset('site/assets/img/home-1/2.webp')}}" alt="img" class="mil-scale-img" data-value-1="1.20"
                     data-value-2="1">
                 <div class="mil-overlay"></div>
             </div>
