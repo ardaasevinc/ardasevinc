@@ -42,11 +42,13 @@ class PortfolioPostResource extends Resource
                             ->image()
                             ->disk('uploads')
                             ->directory('portfolio')
+                            ->helperText('Bu resim portfolyonun ana görseli olarak kullanılacaktır.')
                             ->nullable(),
 
                         FileUpload::make('img2')
                             ->label('İkincil Resim')
                             ->image()
+                            ->helperText('Bu resim portfolyonun ikincil görseli (Kapak Fotoğrafı) olarak kullanılacaktır.')
                             ->disk('uploads')
                             ->directory('portfolio')
                             ->nullable(),

@@ -30,17 +30,18 @@
 
                         <!-- portfolio -->
                         <div class="mil-p-0-130">
-                            <div class="container-fluid">
-                                <div class="row">
+                        <div class="container-fluid">
+                            <div class="row">
+                                
 
                                     @if(!empty($portfolio) && $portfolio->isNotEmpty())
                                         @foreach($portfolio as $item)
-                                            <div class="col-md-4">
+                                           <div class="col-md-3">
                                                 <div class="mil-work-card mil-mb30">
                                                     <div class="mil-cover mil-port mil-up">
                                                         <div class="mil-hover-frame">
-                                                            @if(!empty($item->img1))
-                                                                <img src="{{ asset('uploads/' . $item->img1) }}" alt="cover" class="mil-scale-img" data-value-1="1.15"
+                                                            @if(!empty($item->img2))
+                                                                <img src="{{ asset('uploads/' . $item->img2) }}" alt="cover" class="mil-scale-img" data-value-1="1.15"
                                                                     data-value-2="1">
                                                             @else
                                                                 <img src="{{ asset('uploads/default.jpg') }}" alt="cover" class="mil-scale-img">

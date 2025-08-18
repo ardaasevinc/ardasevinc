@@ -4734,7 +4734,7 @@ portfolio
 }
 .mil-project-img img {
   position: absolute;
-  top: 100px;
+  top: 0px;
   left: 0;
   width: 100%;
  
