@@ -20,7 +20,7 @@ class IndexController extends Controller
     $about =About::Where('is_published',1)->first();
     $iconbox =Icon::Where('is_published',1)->paginate(3);
     $service = Service::Where('is_published',1)->paginate(3);
-    $blog = BlogPost::Where('is_published',1)->paginate(5);
+    $blog = BlogPost::Where('is_published',1)->paginate(6);
     $exp = Experience::paginate(3);
     
     return view('site.index', compact('page_title', 'hero','about','iconbox','service','blog','exp'));
