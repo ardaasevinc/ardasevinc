@@ -65,8 +65,7 @@
                                                 </div>
                                             </div>
                                         @endforeach
-                                    @else
-                                        <p>Henüz portfolyo eklenmemiş.</p>
+                                
                                     @endif
 
 

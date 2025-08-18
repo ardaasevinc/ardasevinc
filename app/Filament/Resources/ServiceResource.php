@@ -16,8 +16,6 @@ use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
-use Illuminate\Support\Str;
-use Filament\Forms\Set;
 
 class ServiceResource extends Resource
 {
@@ -32,74 +30,60 @@ class ServiceResource extends Resource
 
     public static function form(Forms\Form $form): Forms\Form
     {
-        return $form
-            ->schema([
-                Grid::make(12)
+        return $form->schema([
+            Grid::make(12)->schema([
+                Section::make('Hizmet Görseli')
                     ->schema([
-                        // Sol tarafta resim yükleme alanı (columnSpan 4)
-                        Section::make('Hizmet Görseli')
-                            ->schema([
-                                FileUpload::make('icon')
-                                    ->label('Hizmet İkonu')
-                                    ->image()
-                                    ->helperText('100x100 çözünürlüğünde olmalıdır.')
-                                    ->disk('uploads')
-                                    ->directory('services')
-                                    ->nullable(),
-                            ])
-                            ->columnSpan(4),
-
-                        // Sağ tarafta metin alanları (columnSpan 8)
-                        Section::make('Hizmet Detayları')
-                            ->schema([
-                                TextInput::make('title')
-                                    ->label('Başlık')
-                                    ->required()
-                                    ->live(onBlur: true)
-                                    ->afterStateUpdated(function (Set $set, $state) {
-                                        if (!filled($set('slug'))) {
-                                            $set('slug', Str::slug((string) $state));
-                                        }
-                                    }),
-
-                                TextInput::make('slug')
-                                    ->label('Slug')
-                                    ->helperText('Başlıktan otomatik oluşur, istersen düzenleyebilirsin.')
-                                    ->rule('alpha_dash')
-                                    ->unique(table: Service::class, column: 'slug', ignorable: fn($record) => $record)
-                                    ->dehydrateStateUsing(fn($state) => Str::slug((string) $state))
-                                    ->nullable(),
-
-                                RichEditor::make('desc')
-                                    ->label('Açıklama')
-                                    ->nullable(),
-
-                                TextInput::make('item1')->label('Öğe 1')->nullable(),
-                                TextInput::make('item2')->label('Öğe 2')->nullable(),
-                                TextInput::make('item3')->label('Öğe 3')->nullable(),
-                                TextInput::make('item4')->label('Öğe 4')->nullable(),
-
-                                RichEditor::make('desc1')->label('Ek Açıklama 1')->nullable(),
-                                RichEditor::make('desc2')->label('Ek Açıklama 2')->nullable(),
-                                RichEditor::make('desc3')->label('Ek Açıklama 3')->nullable(),
-                            ])
-                            ->columnSpan(8),
-                    ]),
-
-                // Yeni "Deneyim (Experience)" bölümü
-                Section::make('Deneyim (Experience)')
-                    ->schema([
-                        TextInput::make('number')
-                            ->label('Numara')
-                            ->numeric()
-                            ->nullable(),
-
-                        TextInput::make('number_title')
-                            ->label('Numara Başlığı')
+                        FileUpload::make('icon')
+                            ->label('Hizmet İkonu')
+                            ->image()
+                            ->helperText('100x100 çözünürlüğünde olmalıdır.')
+                            ->disk('uploads')
+                            ->directory('services')
                             ->nullable(),
                     ])
-                    ->collapsible(),
-            ]);
+                    ->columnSpan(4),
+
+                Section::make('Hizmet Detayları')
+                    ->schema([
+                        TextInput::make('title')
+                            ->label('Başlık')
+                            ->required()
+                            ->maxLength(255),
+
+                        RichEditor::make('desc')
+                            ->label('Açıklama')
+                            ->nullable(),
+
+                        TextInput::make('item1')->label('Öğe 1')->nullable(),
+                        TextInput::make('item2')->label('Öğe 2')->nullable(),
+                        TextInput::make('item3')->label('Öğe 3')->nullable(),
+                        TextInput::make('item4')->label('Öğe 4')->nullable(),
+
+                        RichEditor::make('desc1')->label('Ek Açıklama 1')->nullable(),
+                        RichEditor::make('desc2')->label('Ek Açıklama 2')->nullable(),
+                        RichEditor::make('desc3')->label('Ek Açıklama 3')->nullable(),
+
+                        Toggle::make('is_published')
+                            ->label('Yayın Durumu')
+                            ->default(true),
+                    ])
+                    ->columnSpan(8),
+            ]),
+
+            Section::make('Deneyim (Experience)')
+                ->schema([
+                    TextInput::make('number')
+                        ->label('Numara')
+                        ->numeric()
+                        ->nullable(),
+
+                    TextInput::make('number_title')
+                        ->label('Numara Başlığı')
+                        ->nullable(),
+                ])
+                ->collapsible(),
+        ]);
     }
 
     public static function table(Tables\Table $table): Tables\Table
@@ -108,6 +92,7 @@ class ServiceResource extends Resource
             ->columns([
                 ImageColumn::make('icon')
                     ->label('İkon')
+                    ->disk('uploads')
                     ->size(50)
                     ->toggleable(),
 
@@ -119,8 +104,9 @@ class ServiceResource extends Resource
 
                 TextColumn::make('slug')
                     ->label('Slug')
+                    ->limit(50)
+                    ->copyable()
                     ->sortable()
-                    ->searchable()
                     ->toggleable(),
 
                 TextColumn::make('desc')
