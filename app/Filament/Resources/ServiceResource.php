@@ -16,6 +16,8 @@ use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
+use Filament\Forms\Set;
+use Illuminate\Support\Str;
 
 class ServiceResource extends Resource
 {
@@ -23,7 +25,6 @@ class ServiceResource extends Resource
 
     protected static ?string $navigationLabel = 'Hizmetler';
     protected static ?string $navigationIcon = 'heroicon-o-briefcase';
-
     protected static ?string $pluralModelLabel = 'Hizmetler';
     protected static ?string $navigationGroup = 'Site Yönetimi';
     protected static ?string $modelLabel = 'Hizmet';
@@ -49,7 +50,21 @@ class ServiceResource extends Resource
                         TextInput::make('title')
                             ->label('Başlık')
                             ->required()
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (Set $set, $state) {
+                                if (!filled($state))
+                                    return;
+                                $set('slug', Str::slug($state));
+                            }),
+
+                        TextInput::make('slug')
+                            ->label('Slug')
+                            ->helperText('Başlıktan otomatik oluşur, istersen düzenleyebilirsin.')
+                            ->rules(['alpha_dash'])
+                            ->unique(ignoreRecord: true)
+                            ->dehydrateStateUsing(fn($state) => Str::slug((string) $state))
+                            ->nullable(),
 
                         RichEditor::make('desc')
                             ->label('Açıklama')
@@ -104,8 +119,8 @@ class ServiceResource extends Resource
 
                 TextColumn::make('slug')
                     ->label('Slug')
-                    ->limit(50)
                     ->copyable()
+                    ->limit(50)
                     ->sortable()
                     ->toggleable(),
 

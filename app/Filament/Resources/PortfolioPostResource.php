@@ -12,13 +12,15 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Repeater;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
-use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\TextInput;
+use Filament\Forms\Set;
+use Illuminate\Support\Str;
 
 class PortfolioPostResource extends Resource
 {
@@ -56,7 +58,9 @@ class PortfolioPostResource extends Resource
                         Select::make('portfolio_category_id')
                             ->label('Kategori')
                             ->options(
-                                fn() => PortfolioCategory::where('is_published', true)->pluck('name', 'id')->toArray()
+                                fn () => PortfolioCategory::where('is_published', true)
+                                    ->pluck('name', 'id')
+                                    ->toArray()
                             )
                             ->searchable()
                             ->required(),
@@ -64,7 +68,20 @@ class PortfolioPostResource extends Resource
                         TextInput::make('title')
                             ->label('Başlık')
                             ->required()
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (Set $set, $state) {
+                                if (!filled($state)) return;
+                                $set('slug', Str::slug($state));
+                            }),
+
+                        TextInput::make('slug')
+                            ->label('Slug')
+                            ->helperText('Başlıktan otomatik oluşur, istersen düzenleyebilirsin.')
+                            ->rules(['alpha_dash'])
+                            ->unique(ignoreRecord: true)
+                            ->dehydrateStateUsing(fn ($state) => Str::slug((string) $state))
+                            ->nullable(),
 
                         RichEditor::make('desc')
                             ->label('Açıklama')
@@ -124,7 +141,7 @@ class PortfolioPostResource extends Resource
                 TextColumn::make('category.name')
                     ->label('Kategori')
                     ->sortable()
-                    ->formatStateUsing(fn($state) => $state ?? 'Kategori Yok')
+                    ->formatStateUsing(fn ($state) => $state ?? 'Kategori Yok')
                     ->toggleable(),
 
                 TextColumn::make('desc')
