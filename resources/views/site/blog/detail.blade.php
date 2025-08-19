@@ -36,7 +36,7 @@
                         </div>
                     @endif
                 </div>
-                <div class="col-lg-8">
+                <div class="col-lg-8 mb-5">
                     @if(!empty($blog->desc))
                         <p class="mil-text-xl mil-m1 mil-mb60 mil-up">{!! $blog->desc !!}</p>
                     @endif
