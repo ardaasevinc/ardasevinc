@@ -35,9 +35,11 @@
                             </div>
                         </div>
                         <div class="col-lg-5 mil-mb160">
-                            <p class="mil-stylized mil-m2 mil-mb60 mil-up">Proje Hakkında</p>
-                            <h2 class="mil-head1 mil-mb60 mil-up"> <br><span class="mil-a1">{{$portfolio->title}}</span></h2>
-                            <p class="mil-text-md mil-mb60 mil-up">{!! $portfolio->desc !!}</p>
+                            <p>Proje Hakkında</p>
+                            <h2 class="mil-head1 mil mil-up"> <br><span class="mil-a1">{{$portfolio->title}}</span></h2>
+                            <div class=" mil-mb60 ">
+                                {!! $portfolio->desc !!}
+                            </div>
                             <div class="mil-team-quote mil-up">
 
                                 {{-- <div class="mil-portrait">
@@ -67,7 +69,7 @@
                 </div>
             </div>
         </div>
- 
+
     @endif
 
 
