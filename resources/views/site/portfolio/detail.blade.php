@@ -30,7 +30,7 @@
                     <div class="row mil-jcb mil-aic">
                         <div class="col-lg-6 mil-mb160">
                             <div class="mil-project-img mil-port ">
-                                <img src="{{ asset('uploads/' . $portfolio->img1) }}" alt="project" class="mil-scale-img" data-value-1="1.15"
+                                <img src="{{ asset('uploads/' . $portfolio->img1) }}" alt="project" 
                                     data-value-2="1">
                             </div>
                         </div>
