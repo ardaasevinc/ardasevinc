@@ -82,6 +82,8 @@ class BlogPostResource extends Resource
 
                         RichEditor::make('desc')
                             ->label('İçerik')
+                            ->fileAttachmentsDisk('uploads')
+                            ->fileAttachmentsDirectory('blog/richeditor')
                             ->nullable(),
 
                         Toggle::make('is_published')

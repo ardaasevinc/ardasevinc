@@ -60,7 +60,7 @@ class PortfolioPostResource extends Resource
                         Select::make('portfolio_category_id')
                             ->label('Kategori')
                             ->options(
-                                fn () => PortfolioCategory::where('is_published', true)
+                                fn() => PortfolioCategory::where('is_published', true)
                                     ->pluck('name', 'id')
                                     ->toArray()
                             )
@@ -73,7 +73,8 @@ class PortfolioPostResource extends Resource
                             ->maxLength(255)
                             ->live(onBlur: true)
                             ->afterStateUpdated(function (Set $set, $state) {
-                                if (!filled($state)) return;
+                                if (!filled($state))
+                                    return;
                                 $set('slug', Str::slug($state));
                             }),
 
@@ -82,12 +83,15 @@ class PortfolioPostResource extends Resource
                             ->helperText('Başlıktan otomatik oluşur, istersen düzenleyebilirsin.')
                             ->rules(['alpha_dash'])
                             ->unique(ignoreRecord: true)
-                            ->dehydrateStateUsing(fn ($state) => Str::slug((string) $state))
+                            ->dehydrateStateUsing(fn($state) => Str::slug((string) $state))
                             ->nullable(),
 
                         RichEditor::make('desc')
                             ->label('Açıklama')
-                            ->nullable(),
+                            ->nullable()
+                            ->fileAttachmentsDisk('uploads') // hangi disk kullanılacak
+                            ->fileAttachmentsDirectory('about/richeditor'), // dosyaların klasörü
+
 
                         Toggle::make('is_published')
                             ->label('Yayın Durumu')
@@ -143,7 +147,7 @@ class PortfolioPostResource extends Resource
                 TextColumn::make('category.name')
                     ->label('Kategori')
                     ->sortable()
-                    ->formatStateUsing(fn ($state) => $state ?? 'Kategori Yok')
+                    ->formatStateUsing(fn($state) => $state ?? 'Kategori Yok')
                     ->toggleable(),
 
                 TextColumn::make('desc')

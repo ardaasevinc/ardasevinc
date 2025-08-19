@@ -75,9 +75,15 @@ class ServiceResource extends Resource
                         TextInput::make('item3')->label('Öğe 3')->nullable(),
                         TextInput::make('item4')->label('Öğe 4')->nullable(),
 
-                        RichEditor::make('desc1')->label('Ek Açıklama 1')->nullable(),
-                        RichEditor::make('desc2')->label('Ek Açıklama 2')->nullable(),
-                        RichEditor::make('desc3')->label('Ek Açıklama 3')->nullable(),
+                        RichEditor::make('desc1')->label('Ek Açıklama 1')->nullable()
+                            ->fileAttachmentsDisk('uploads') 
+                            ->fileAttachmentsDirectory('service/richeditor'),
+                        RichEditor::make('desc2')->label('Ek Açıklama 2')->nullable()
+                            ->fileAttachmentsDisk('uploads') 
+                            ->fileAttachmentsDirectory('service/richeditor'),
+                        RichEditor::make('desc3')->label('Ek Açıklama 3')->nullable()
+                            ->fileAttachmentsDisk('uploads') 
+                            ->fileAttachmentsDirectory('Service/richeditor'),
 
                         Toggle::make('is_published')
                             ->label('Yayın Durumu')
