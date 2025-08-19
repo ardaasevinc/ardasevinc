@@ -38,7 +38,7 @@
                 </div>
                 <div class="col-lg-8">
                     @if(!empty($blog->desc))
-                        <p class="mil-text-xl mil-m1 mil-mb60 mil-up">{!! strip_tags($blog->desc) !!}</p>
+                        <p class="mil-text-xl mil-m1 mil-mb60 mil-up">{!! $blog->desc !!}</p>
                     @endif
                     @if (!empty($blog->media) && $blog->media->isNotEmpty())
                         <div class="row mil-mb60">
