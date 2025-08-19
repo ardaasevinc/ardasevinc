@@ -24,35 +24,43 @@
             </div>
             <!-- hero end -->
 
-            <!-- details -->
-            <div id="scroll">
-                <div class="container">
-                    <div class="row mil-jcb mil-aic">
-                        <div class="col-lg-6 mil-mb160">
-                            <div class="mil-project-img mil-port ">
-                                <img src="{{ asset('uploads/' . $portfolio->img1) }}" alt="project" 
-                                    data-value-2="1">
-                            </div>
+            <!-- publication -->
+    <div class="mil-p-0-160">
+        <div class="container">
+            <div class="row mil-jcc mil-aic">
+                <div class="col-lg-12">
+                    @if(!empty($portfolio->img1))
+                        <div class="mil-project-img mil-land mil-up">
+                            <img src="{{ asset('uploads/' . $portfolio->img1) }}" alt="project" class="mil-scale-img"
+                                data-value-1="1.15" data-value-2="1">
                         </div>
-                        <div class="col-lg-5 mil-mb160">
-                            <p>Proje Hakkında</p>
-                            <h2 class="mil-head1 mil mil-up"> <br><span class="mil-a1">{{$portfolio->title}}</span></h2>
-                            <div class=" mil-mb60 ">
-                                {!! $portfolio->desc !!}
-                            </div>
-                            <div class="mil-team-quote mil-up">
-
-                                {{-- <div class="mil-portrait">
-                                    <img src="{{ asset('site/assets/img/team/ceo.jpg') }}" alt="SEO portrait">
+                    @endif
+                </div>
+                <div class="col-lg-8">
+                    @if(!empty($portfolio->desc))
+                        <p class="mil-text-xl mil-m1 mil-mb60 mil-up">{!! $portfolio->desc !!}</p>
+                    @endif
+                    @if (!empty($portfolio->media) && $portfolio->media->isNotEmpty())
+                        <div class="row mil-mb60">
+                            @foreach($portfolio->media as $image)
+                                <div class="col-lg-6">
+                                    <div class="mil-project-img mil-land mil-up mil-mb30">
+                                        <img src="{{ asset(!empty($image->image) ? 'uploads/' . $image->image : 'uploads/default.jpg') }}"
+                                            alt="project" class="mil-scale-img" data-value-1="1.15" data-value-2="1">
+                                    </div>
                                 </div>
-
-                                <p class="mil-text-md mil-m1"><span class="mil-bold">Passionately Creating</span> Design Wonders:
-                                    <br><span class="mil-bold">Unleashing</span> Boundless Creativity</p> --}}
-                            </div>
+                            @endforeach
                         </div>
-                    </div>
+                    @else
+                        <p>Henüz resim eklenmemiş.</p>
+                    @endif
+
+
                 </div>
             </div>
+        </div>
+    </div>
+    <!-- publication end -->
 
     @if ($portfolio->media && $portfolio->media->isNotEmpty())
         <div class="mil-p-0-130">
@@ -118,7 +126,7 @@
                         </div>
                         <div class="col-lg-6 mil-992-gone">
                             <div class="mil-text-pad">
-                                <p class="mil-stylized mil-up">Daha İyi Bir Dünya Tasarlamak</p>
+                                <p class="mil-stylized mil-up">{{ $nextportfolio->title }}</p>
                             </div>
                         </div>
                     </div>
