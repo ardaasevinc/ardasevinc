@@ -9,6 +9,7 @@ use App\Http\Controllers\Site\Services\IndexController as ServicesController;
 use App\Http\Controllers\Site\Subscribe\IndexController as SubscribeController;
 
 use App\Http\Controllers\Site\Kvkk\IndexController as KvkkController;
+use App\Http\Controllers\Site\Cv\IndexController as CvController;
 
 //sitemap
 use Spatie\Sitemap\Sitemap;
@@ -39,6 +40,15 @@ Route::get('/hizmetler/{slug}', [ServicesController::class, 'detail'])->name('si
 Route::get('/kvkk-metni', [KvkkController::class, 'index'])->name('site.kvkk');
 
 Route::post('/haberdar-ol', [SubscribeController::class, 'store'])->name('subscribe.store');
+
+
+Route::prefix('cv')->name('site.cv.')->group(function () {
+  
+    Route::get('/', [CvController::class, 'index'])->name('index'); 
+    Route::post('/submit', [CvController::class, 'submit'])->name('submit');
+    Route::get('/{cv}/download', [CvController::class, 'download'])->name('download');
+});
+
 
 
 
