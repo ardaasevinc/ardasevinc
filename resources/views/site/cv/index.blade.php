@@ -47,7 +47,6 @@
                 @if(session('success'))
                     <p class="success-message">{{ session('success') }}</p>
                 @endif
-
                 <form method="POST" action="{{ route('site.cv.submit') }}" enctype="multipart/form-data">
                     @csrf
                     <div class="row mil-aic">
@@ -107,14 +106,20 @@
                                         <div class="col-md-4">
                                             <input type="text" name="education[{{ $i }}][school]" value="{{ $edu['school'] }}"
                                                 placeholder="Okul Adı">
+                                            @error("education.$i.school") <small class="text-danger">{{ $message }}</small>
+                                            @enderror
                                         </div>
                                         <div class="col-md-4">
                                             <input type="text" name="education[{{ $i }}][department]"
                                                 value="{{ $edu['department'] }}" placeholder="Bölüm/Program">
+                                            @error("education.$i.department") <small class="text-danger">{{ $message }}</small>
+                                            @enderror
                                         </div>
                                         <div class="col-md-4">
                                             <input type="text" name="education[{{ $i }}][year]" value="{{ $edu['year'] }}"
                                                 placeholder="Yıl (2018-2022)">
+                                            @error("education.$i.year") <small class="text-danger">{{ $message }}</small>
+                                            @enderror
                                         </div>
                                     </div>
                                 @endforeach
@@ -136,18 +141,26 @@
                                         <div class="col-md-4">
                                             <input type="text" name="experience[{{ $i }}][company]"
                                                 value="{{ $exp['company'] }}" placeholder="Şirket Adı">
+                                            @error("experience.$i.company") <small class="text-danger">{{ $message }}</small>
+                                            @enderror
                                         </div>
                                         <div class="col-md-4">
                                             <input type="text" name="experience[{{ $i }}][position]"
                                                 value="{{ $exp['position'] }}" placeholder="Pozisyon">
+                                            @error("experience.$i.position") <small class="text-danger">{{ $message }}</small>
+                                            @enderror
                                         </div>
                                         <div class="col-md-4">
                                             <input type="text" name="experience[{{ $i }}][year]" value="{{ $exp['year'] }}"
                                                 placeholder="Yıl (2021-2023)">
+                                            @error("experience.$i.year") <small class="text-danger">{{ $message }}</small>
+                                            @enderror
                                         </div>
                                         <div class="col-md-12 mil-mt10">
                                             <textarea name="experience[{{ $i }}][desc]"
                                                 placeholder="Görevler / Açıklama">{{ $exp['desc'] }}</textarea>
+                                            @error("experience.$i.desc") <small class="text-danger">{{ $message }}</small>
+                                            @enderror
                                         </div>
                                     </div>
                                 @endforeach
@@ -169,10 +182,14 @@
                                         <div class="col-md-6">
                                             <input type="text" name="languages[{{ $i }}][name]" value="{{ $lang['name'] }}"
                                                 placeholder="Dil (örn: İngilizce)">
+                                            @error("languages.$i.name") <small class="text-danger">{{ $message }}</small>
+                                            @enderror
                                         </div>
                                         <div class="col-md-6">
                                             <input type="text" name="languages[{{ $i }}][level]" value="{{ $lang['level'] }}"
                                                 placeholder="Seviye (örn: İyi)">
+                                            @error("languages.$i.level") <small class="text-danger">{{ $message }}</small>
+                                            @enderror
                                         </div>
                                     </div>
                                 @endforeach
@@ -194,10 +211,14 @@
                                         <div class="col-md-8">
                                             <input type="text" name="certificates[{{ $i }}][name]" value="{{ $cert['name'] }}"
                                                 placeholder="Sertifika/Kurs Adı">
+                                            @error("certificates.$i.name") <small class="text-danger">{{ $message }}</small>
+                                            @enderror
                                         </div>
                                         <div class="col-md-4">
                                             <input type="text" name="certificates[{{ $i }}][year]" value="{{ $cert['year'] }}"
                                                 placeholder="Yıl">
+                                            @error("certificates.$i.year") <small class="text-danger">{{ $message }}</small>
+                                            @enderror
                                         </div>
                                     </div>
                                 @endforeach
@@ -210,12 +231,14 @@
                         <!-- Hobiler -->
                         <div class="col-md-12 mil-mb30 mil-up">
                             <textarea name="hobbies" placeholder="Hobiler / İlgi Alanları">{{ old('hobbies') }}</textarea>
+                            @error('hobbies') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
 
                         <!-- Referanslar -->
                         <div class="col-md-12 mil-mb30 mil-up">
                             <textarea name="references"
                                 placeholder="Referanslar (İsim, Pozisyon, İletişim)">{{ old('references') }}</textarea>
+                            @error('references') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
 
                         <!-- Bilgilendirme -->
@@ -233,6 +256,7 @@
                         </div>
                     </div>
                 </form>
+
 
             </div>
         </div>
@@ -252,17 +276,17 @@
             document.getElementById("add-education").addEventListener("click", function () {
                 let wrapper = document.getElementById("education-wrapper");
                 let html = `
-                <div class="row mil-mb20">
-                    <div class="col-md-4">
-                        <input type="text" name="education[${educationIndex}][school]" placeholder="Okul Adı">
-                    </div>
-                    <div class="col-md-4">
-                        <input type="text" name="education[${educationIndex}][department]" placeholder="Bölüm/Program">
-                    </div>
-                    <div class="col-md-4">
-                        <input type="text" name="education[${educationIndex}][year]" placeholder="Yıl (2018-2022)">
-                    </div>
-                </div>`;
+                    <div class="row mil-mb20">
+                        <div class="col-md-4">
+                            <input type="text" name="education[${educationIndex}][school]" placeholder="Okul Adı">
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="education[${educationIndex}][department]" placeholder="Bölüm/Program">
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="education[${educationIndex}][year]" placeholder="Yıl (2018-2022)">
+                        </div>
+                    </div>`;
                 wrapper.insertAdjacentHTML("beforeend", html);
                 educationIndex++;
             });
@@ -271,20 +295,20 @@
             document.getElementById("add-experience").addEventListener("click", function () {
                 let wrapper = document.getElementById("experience-wrapper");
                 let html = `
-                <div class="row mil-mb20">
-                    <div class="col-md-4">
-                        <input type="text" name="experience[${experienceIndex}][company]" placeholder="Şirket Adı">
-                    </div>
-                    <div class="col-md-4">
-                        <input type="text" name="experience[${experienceIndex}][position]" placeholder="Pozisyon">
-                    </div>
-                    <div class="col-md-4">
-                        <input type="text" name="experience[${experienceIndex}][year]" placeholder="Yıl (2021-2023)">
-                    </div>
-                    <div class="col-md-12 mil-mt10">
-                        <textarea name="experience[${experienceIndex}][desc]" placeholder="Görevler / Açıklama"></textarea>
-                    </div>
-                </div>`;
+                    <div class="row mil-mb20">
+                        <div class="col-md-4">
+                            <input type="text" name="experience[${experienceIndex}][company]" placeholder="Şirket Adı">
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="experience[${experienceIndex}][position]" placeholder="Pozisyon">
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="experience[${experienceIndex}][year]" placeholder="Yıl (2021-2023)">
+                        </div>
+                        <div class="col-md-12 mil-mt10">
+                            <textarea name="experience[${experienceIndex}][desc]" placeholder="Görevler / Açıklama"></textarea>
+                        </div>
+                    </div>`;
                 wrapper.insertAdjacentHTML("beforeend", html);
                 experienceIndex++;
             });
@@ -293,14 +317,14 @@
             document.getElementById("add-language").addEventListener("click", function () {
                 let wrapper = document.getElementById("language-wrapper");
                 let html = `
-                <div class="row mil-mb20">
-                    <div class="col-md-6">
-                        <input type="text" name="languages[${languageIndex}][name]" placeholder="Dil (örn: İngilizce)">
-                    </div>
-                    <div class="col-md-6">
-                        <input type="text" name="languages[${languageIndex}][level]" placeholder="Seviye (örn: İyi)">
-                    </div>
-                </div>`;
+                    <div class="row mil-mb20">
+                        <div class="col-md-6">
+                            <input type="text" name="languages[${languageIndex}][name]" placeholder="Dil (örn: İngilizce)">
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" name="languages[${languageIndex}][level]" placeholder="Seviye (örn: İyi)">
+                        </div>
+                    </div>`;
                 wrapper.insertAdjacentHTML("beforeend", html);
                 languageIndex++;
             });
@@ -309,14 +333,14 @@
             document.getElementById("add-certificate").addEventListener("click", function () {
                 let wrapper = document.getElementById("certificate-wrapper");
                 let html = `
-                <div class="row mil-mb20">
-                    <div class="col-md-8">
-                        <input type="text" name="certificates[${certificateIndex}][name]" placeholder="Sertifika/Kurs Adı">
-                    </div>
-                    <div class="col-md-4">
-                        <input type="text" name="certificates[${certificateIndex}][year]" placeholder="Yıl">
-                    </div>
-                </div>`;
+                    <div class="row mil-mb20">
+                        <div class="col-md-8">
+                            <input type="text" name="certificates[${certificateIndex}][name]" placeholder="Sertifika/Kurs Adı">
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="certificates[${certificateIndex}][year]" placeholder="Yıl">
+                        </div>
+                    </div>`;
                 wrapper.insertAdjacentHTML("beforeend", html);
                 certificateIndex++;
             });
