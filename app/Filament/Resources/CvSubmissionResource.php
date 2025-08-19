@@ -31,7 +31,7 @@ class CvSubmissionResource extends Resource
                     FileUpload::make('photo_path')
                         ->label('Fotoğraf')
                         ->image()
-                        ->disk('public')
+                        ->disk('uploads')
                         ->directory('cv/photos')
                         ->visibility('public')
                         ->columnSpan(4),

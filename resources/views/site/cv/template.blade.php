@@ -131,7 +131,7 @@
         <div class="col col-3">
             @if(!empty($cv->photo_path))
                 {{-- DomPDF yerel dosya yolunu destekler --}}
-                <img class="avatar mb-6" src="{{ public_path('storage/' . ltrim($cv->photo_path, '/')) }}" alt="Fotoğraf">
+                <img class="avatar mb-6" src="{{ public_path('public/' . ltrim($cv->photo_path, '/')) }}" alt="Fotoğraf">
             @endif
 
             <div class="section">
