@@ -5,7 +5,7 @@
             <p class="mil-stylized mil-m2 mil-mb60 mil-up">İLETİŞİM</p>
             <h2 class="mil-display3 mil-mb60 mil-m4 mil-up">HADİ BİRLİKTE <span class="mil-a1">FARK</span><br>YARATALIM.
             </h2>
-            <p class="mil-text-md mil-deco-text mil-shortened mil-up"><span class="mil-a2">AS</span>'a hoş geldiniz!
+            <p class="mil-text-md mil-deco-text mil-shortened mil-up"><span class="mil-a2"> Hoş Geldiniz!</span>
                 Burada fikirleriniz gerçeğe dönüşüyor.
                 Özgün markalar oluşturuyor, etkileyici reklam kampanyaları tasarlıyor ve
                 etkili dijital stratejiler geliştiriyoruz.</p>
@@ -31,16 +31,16 @@
             </div>
         </div>
     </div>
-   
+
     <div class="container mil-relative mt-5">
-       
-       
-       <div class="mil-objects">
+
+
+        <div class="mil-objects">
             <div class="mil-obj-1"></div>
             <div class="mil-obj-2"></div>
         </div>
-    
-        
+
+
         <p class="mil-stylized mil-m2 mil-mb60 mil-tac mil-up">Uzmanlığımızı Keşfedin</p>
         <h2 class="mil-head1 mil-rubber mil-tac mil-mb60 mil-up">
             Biz, <span class="mil-a1">yazılım</span> geliştirme ekibiyiz;
@@ -53,7 +53,8 @@
         </h2>
         <div class="mil-text-with-button mil-mb60">
             <p class="mil-text-sm mil-tar mil-768-tac mil-up">
-               Yıllardır edindiğimiz deneyimle, çeşitliliğimizi ve yetkinliğimizi yansıtan bir portföy oluşturduk. Her projede yenilikçi çözümler üreterek müşterilerimize değer katmayı hedefliyoruz.
+                Yıllardır edindiğimiz deneyimle, çeşitliliğimizi ve yetkinliğimizi yansıtan bir portföy oluşturduk. Her
+                projede yenilikçi çözümler üreterek müşterilerimize değer katmayı hedefliyoruz.
             </p>
             <span class="mil-up"><a href="portfolio-1-frl.html" class="mil-btn mil-a2 mil-c-gone">Portföyü
                     Görüntüle</a></span>
@@ -99,7 +100,7 @@
             <h4 class="mil-head4">React Native</h4>
 
         </div>
-        <div class="mil-deco mil-up"><img src="site/assets/img/shapes/4.png" alt="shape" class="mil-parallax-img"
+        <div class="mil-deco mil-up"><img src="{{asset('site/assets/img/shapes/4.png')}}" alt="shape" class="mil-parallax-img"
                 data-value-1="20%" data-value-2="50%"></div>
     </div>
 </div>
