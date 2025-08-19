@@ -40,12 +40,12 @@
                             <p class="mil-text-md mil-mb60 mil-up">{!! $portfolio->desc !!}</p>
                             <div class="mil-team-quote mil-up">
 
-                                <div class="mil-portrait">
+                                {{-- <div class="mil-portrait">
                                     <img src="{{ asset('site/assets/img/team/ceo.jpg') }}" alt="SEO portrait">
                                 </div>
 
                                 <p class="mil-text-md mil-m1"><span class="mil-bold">Passionately Creating</span> Design Wonders:
-                                    <br><span class="mil-bold">Unleashing</span> Boundless Creativity</p>
+                                    <br><span class="mil-bold">Unleashing</span> Boundless Creativity</p> --}}
                             </div>
                         </div>
                     </div>
