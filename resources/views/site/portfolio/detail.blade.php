@@ -60,7 +60,7 @@
                         <div class="col-lg-6">
                             <div class="mil-project-img mil-square mil-mb30 mil-up">
                                 <img src="{{ asset($image->media_path ? 'uploads/' . $image->media_path : 'uploads/default.jpg') }}"
-                                    alt="project" class="mil-scale-img" data-value-1="1.15" data-value-2="1">
+                                    alt="project"  data-value-2="1">
                             </div>
                         </div>
                     @endforeach
