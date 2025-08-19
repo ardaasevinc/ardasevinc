@@ -36,14 +36,14 @@
                         </div>
                     @endif
                 </div>
-                <div class="col-lg-8 mb-5">
+                <div class="col-lg-8 ">
                     @if(!empty($blog->desc))
                         <p class="mil-text-xl mil-m1 mil-mb60 mil-up">{!! $blog->desc !!}</p>
                     @endif
                     @if (!empty($blog->media) && $blog->media->isNotEmpty())
                         <div class="row mil-mb60">
                             @foreach($blog->media as $image)
-                                <div class="col-lg-6">
+                                <div class="col-lg-6 mt-5">
                                     <div class="mil-project-img mil-land mil-up mil-mb30">
                                         <img src="{{ asset(!empty($image->image) ? 'uploads/' . $image->image : 'uploads/default.jpg') }}"
                                             alt="project" class="mil-scale-img" data-value-1="1.15" data-value-2="1">
