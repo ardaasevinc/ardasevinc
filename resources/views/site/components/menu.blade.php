@@ -40,6 +40,10 @@
                         <a href="{{ route('site.blog') }}">HABERLER</a>
 
                     </li>
+                         <li class="mil">
+                        <a href="{{ route('site.blog') }}">CV OLUŞTUR</a>
+
+                    </li>
                 </ul>
             </div>
             <div class="mil-bottom">

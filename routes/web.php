@@ -47,6 +47,7 @@ Route::prefix('cv')->name('site.cv.')->group(function () {
     Route::get('/', [CvController::class, 'index'])->name('index'); 
     Route::post('/submit', [CvController::class, 'submit'])->name('submit');
     Route::get('/{cv}/download', [CvController::class, 'download'])->name('download');
+    Route::get('/template', [CvController::class, 'show'])->name('template');
 });
 
 

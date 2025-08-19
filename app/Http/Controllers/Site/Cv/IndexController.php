@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
 
+
 class IndexController extends Controller
 {
     public function index()
@@ -61,5 +62,13 @@ class IndexController extends Controller
         $fileName = 'cv-' . Str::slug($cv->name) . '.pdf';
 
         return $pdf->download($fileName);
+    }
+
+    public function show()
+    {
+        $page_title = 'CV Şablonu';
+        $page_description = 'CV şablonunu görüntüleme sayfası.';
+        $cv =CvSubmission::first();
+        return view('site.cv.template', compact('page_title', 'page_description','cv'));
     }
 }
