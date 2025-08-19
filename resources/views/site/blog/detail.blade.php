@@ -28,7 +28,7 @@
     <div class="mil-p-0-160">
         <div class="container">
             <div class="row mil-jcc mil-aic">
-                <div class="col-lg-12 mil-mb160">
+                <div class="col-lg-12 mil-mb40">
                     @if(!empty($blog->img1))
                         <div class="mil-project-img mil-land mil-up">
                             <img src="{{ asset('uploads/' . $blog->img1) }}" alt="project" class="mil-scale-img"
