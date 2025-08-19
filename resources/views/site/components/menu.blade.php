@@ -41,7 +41,7 @@
 
                     </li>
                          <li class="mil">
-                        <a href="{{ route('site.blog') }}">CV OLUŞTUR</a>
+                        <a href="{{ route('site.cv.template') }}">CV OLUŞTUR</a>
 
                     </li>
                 </ul>
