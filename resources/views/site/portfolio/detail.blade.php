@@ -95,7 +95,7 @@
                             <p class="mil-stylized mil-a1 mil-mb60 mil-up">Sonraki Proje</p>
                             <h2 class="mil-display3 mil-mb60 mil-m4 mil-up">{{ $nextportfolio->title }}</h2>
                             <p class="mil-text-md mil-deco-text mil-shortened mil-mb60 mil-up">
-                                {{ Str::limit($nextportfolio->desc, 100) }}
+                                {!! Str::limit($nextportfolio->desc, 100) !!}
                             </p>
                             <div class="mil-up">
                                 <a href="{{ route('site.portfolio.detail', ['slug' => $nextportfolio->slug]) }}"
