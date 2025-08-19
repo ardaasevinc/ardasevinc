@@ -24,7 +24,9 @@
             </div>
             <!-- hero end -->
 
-            <!-- publication -->
+           
+
+   <!-- publication -->
     <div class="mil-p-0-160">
         <div class="container">
             <div class="row mil-jcc mil-aic">
@@ -40,20 +42,7 @@
                     @if(!empty($portfolio->desc))
                         <p class="mil-text-xl mil-m1 mil-mb60 mil-up">{!! $portfolio->desc !!}</p>
                     @endif
-                    @if (!empty($portfolio->media) && $portfolio->media->isNotEmpty())
-                        <div class="row mil-mb60">
-                            @foreach($portfolio->media as $image)
-                                <div class="col-lg-6">
-                                    <div class="mil-project-img mil-land mil-up mil-mb30">
-                                        <img src="{{ asset(!empty($image->image) ? 'uploads/' . $image->image : 'uploads/default.jpg') }}"
-                                            alt="project" class="mil-scale-img" data-value-1="1.15" data-value-2="1">
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    @else
-                        <p>Henüz resim eklenmemiş.</p>
-                    @endif
+                   
 
 
                 </div>
@@ -61,6 +50,8 @@
         </div>
     </div>
     <!-- publication end -->
+
+           
 
     @if ($portfolio->media && $portfolio->media->isNotEmpty())
         <div class="mil-p-0-130">
