@@ -54,12 +54,14 @@
                             </div> --}}
 
                         </div>
+                        @if(!empty($service->number))
                         <div class="mil-counter-item mil-mb160 mil-up">
                             <h4 class="mil-up">{{$service->number}}<span class="mil-a2">+</span></h4>
                             <div class="mil-counter-text">
                                 <h5 class="mil-head4 mil-m1 mil-up">{{$service->number_title}}</h5>
                             </div>
                         </div>
+                        @endif
                     </div>
                     <div class="col-md-6">
 
