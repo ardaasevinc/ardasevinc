@@ -72,8 +72,7 @@
                 @endif
             </div>
         </div>
-    </div>
-    
+    </div>  
     <!-- portfolio end -->
     @include('site.components.subscribe')
 @endsection
