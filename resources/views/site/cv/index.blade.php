@@ -79,7 +79,15 @@
                             <div class="file-drop-content">
                                 <div class="upload-icon" aria-hidden="true">
                                     <!-- Bootstrap Icons yoksa bile sorun çıkmasın diye fallback -->
-                                    <span style="font-size:40px;line-height:1;">☁️⬆️</span>
+                                    <span style="font-size:40px;line-height:1;"><img
+                                        src="{{ asset('site/assets/img/photo-upload.svg') }}"
+                                        class="img-fluid rounded-top"
+                                        alt=""
+                                        height="100px"
+                                        opacity="0.5"
+                                        
+                                    />
+                                    </span>
                                 </div>
                                 <p class="upload-text">Fotoğrafınızı buraya sürükleyin<br>veya seçmek için tıklayın</p>
                                 <span id="file-name" class="file-name">Henüz dosya seçilmedi</span>
