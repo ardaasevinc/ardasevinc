@@ -87,7 +87,7 @@
         .logo { position:absolute; left:0; top:0; }
         .logo img { height:50px; }               /* logonun boyu */
         .name-wrap { margin-top:50px; padding-top:42px; } /* isim bloğunu biraz aşağı/sağa al */
-        .footer { margin-top:24px; padding-top:10px; border-top:1px solid var(--soft); color:#555; font-size:10px; }
+        .footer { margin-top:12px; padding-top:10px; border-top:1px solid var(--soft); color:#555; font-size:10px; }
     </style>
 </head>
 
