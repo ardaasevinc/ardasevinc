@@ -236,17 +236,12 @@
     </div>
 
     <!-- FOOTER -->
-    <div class="footer">
-        <strong>ardasevinc.com.tr</strong> üzerinde {{ now()->year }} yılında hazırlanmıştır. 
-        Bu CV şablonu; yazılıma yeni başlayanlardan profesyonellere kadar herkesin 
-        hızlıca kaliteli bir özgeçmiş üretebilmesi için ücretsiz olarak paylaşılmaktadır. 
-        Öğrencilerin ve genç geliştiricilerin iş/staj başvurularında öne çıkmasına yardımcı olması hedeflenmiştir. 
-        Şablon; açık ve anlaşılır tipografi (Montserrat + Open Sans), sade çizgiler, baskı dostu yerleşim ve 
-        DomPDF uyumlu yapısıyla pratik kullanım sunar. Eğitim, sertifika ve deneyim alanları, modeldeki 
-        verilerden otomatik olarak doldurulur; görsel ve metinler gizli hiçbir alan gerektirmez. 
-        Kaynak gösterilerek kişisel kullanımda serbesttir; ticari yeniden satış ve marka izinsiz çoğaltma kapsam dışıdır. 
-        Geri bildirimleriniz ve katkılarınız için <em>ardasevinc.com.tr</em> üzerinden ulaşabilirsiniz.
-    </div>
+   <div class="footer" style="line-height:1.2;">
+    <strong>ardasevinc.com.tr</strong> üzerinde {{ now()->year }} yılında hazırlanmıştır. 
+    Bu CV şablonu; herkesin hızlı ve kaliteli bir özgeçmiş oluşturabilmesi için ücretsiz paylaşılmaktadır. 
+    Öğrencilerin ve genç geliştiricilerin iş ve staj başvurularında öne çıkmasına yardımcı olması amaçlanmıştır. 
+    Kaynak gösterilerek kişisel kullanımda serbesttir. Geri bildirimleriniz için <em>ardasevinc.com.tr</em> üzerinden ulaşabilirsiniz.
+</div>
 
 </body>
 </html>

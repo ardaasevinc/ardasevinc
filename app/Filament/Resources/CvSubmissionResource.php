@@ -11,10 +11,12 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\IconColumn;
 
 class CvSubmissionResource extends Resource
 {
@@ -128,6 +130,13 @@ class CvSubmissionResource extends Resource
 
                         Textarea::make('hobbies')->label('Hobiler')->nullable(),
                         Textarea::make('references')->label('Referanslar')->nullable(),
+
+                        // ---- KVKK Onayı
+                        Toggle::make('kvkk_onay')
+                            ->label('KVKK Onayı')
+                            ->inline(false)
+                            ->default(false)
+                            ->columnSpanFull(),
                     ]),
                 ]),
             ]);
@@ -140,6 +149,11 @@ class CvSubmissionResource extends Resource
                 TextColumn::make('name')->label('Ad Soyad')->searchable()->sortable(),
                 TextColumn::make('email')->label('E-posta')->searchable(),
                 TextColumn::make('phone')->label('Telefon')->toggleable(),
+                IconColumn::make('kvkk_onay')
+                    ->label('KVKK')
+                    ->boolean()
+                    ->trueIcon('heroicon-o-check-circle')
+                    ->falseIcon('heroicon-o-x-circle'),
                 TextColumn::make('created_at')->dateTime()->label('Oluşturulma'),
             ])
             ->filters([])

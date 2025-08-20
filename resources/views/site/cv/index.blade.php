@@ -16,7 +16,7 @@
                 </ul>
                 <div class="mil-word-frame">
                     <h1 class="mil-display2 mil-rubber">CV <span class="mil-a2">OLUŞTUR</span></h1>
-                   
+
                     <div class="mil-s-4"><img src="{{ asset('site/assets/img/shapes/4.png') }}" alt="shape"></div>
                 </div>
             </div>
@@ -34,18 +34,18 @@
     <div class="container">
         <div class="mil-half-container mil-up">
             <div class="mil-g-m1 mil-p-160-160">
-             <p class="mt-5 m-2">Bu formu doldurarak profesyonel bir CV oluşturabilirsiniz. Sizden istenen bilgileri
-                        eksiksiz
-                        girdikten sonra, tek tıkla A4 formatında PDF çıktısını indirmeniz mümkün olacaktır.
+                <p class="mt-5 m-2">Bu formu doldurarak profesyonel bir CV oluşturabilirsiniz. Sizden istenen bilgileri
+                    eksiksiz
+                    girdikten sonra, tek tıkla A4 formatında PDF çıktısını indirmeniz mümkün olacaktır.
 
-                        CV’niz yalnızca sizin için hazırlanır ve bilgileriniz hiçbir şekilde üçüncü kişilerle paylaşılmaz.
-                        Fotoğraf eklemek zorunlu değildir; eklerseniz yalnızca PDF oluşturulurken kullanılır ve sonrasında
-                        sistemden silinir.
+                    CV’niz yalnızca sizin için hazırlanır ve bilgileriniz hiçbir şekilde üçüncü kişilerle paylaşılmaz.
+                    Fotoğraf eklemek zorunlu değildir; eklerseniz yalnızca PDF oluşturulurken kullanılır ve sonrasında
+                    sistemden silinir.
 
-                        Eksik bırakılan alanlar CV’nizde boş olarak görünebilir. Daha etkili bir CV için tüm alanları
-                        doldurmanız tavsiye edilir.</p>
+                    Eksik bırakılan alanlar CV’nizde boş olarak görünebilir. Daha etkili bir CV için tüm alanları
+                    doldurmanız tavsiye edilir.</p>
 
-                @if(session('success'))
+                @if (session('success'))
                     <p class="success-message">{{ session('success') }}</p>
                 @endif
                 <form method="POST" action="{{ route('site.cv.submit') }}" enctype="multipart/form-data">
@@ -54,23 +54,34 @@
 
                         <!-- Kişisel Bilgiler -->
                         <div class="col-md-6 mil-mb30 mil-up">
-                            <input type="text" name="name" value="{{ old('name') }}" placeholder="Ad Soyad" required>
-                            @error('name') <small class="text-danger">{{ $message }}</small> @enderror
+                            <input type="text" name="name" value="{{ old('name') }}" placeholder="Ad Soyad"
+                                required>
+                            @error('name')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
                         </div>
 
                         <div class="col-md-6 mil-mb30 mil-up">
                             <input type="email" name="email" value="{{ old('email') }}" placeholder="E-Posta" required>
-                            @error('email') <small class="text-danger">{{ $message }}</small> @enderror
+                            @error('email')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
                         </div>
 
                         <div class="col-md-6 mil-mb30 mil-up">
-                            <input type="text" name="phone" value="{{ old('phone') }}" placeholder="Telefon" required>
-                            @error('phone') <small class="text-danger">{{ $message }}</small> @enderror
+                            <input type="text" name="phone" value="{{ old('phone') }}" placeholder="Telefon"
+                                required>
+                            @error('phone')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
                         </div>
 
                         <div class="col-md-6 mil-mb30 mil-up">
-                            <input type="date" name="birth_date" value="{{ old('birth_date') }}" placeholder="Doğum Tarihi">
-                            @error('birth_date') <small class="text-danger">{{ $message }}</small> @enderror
+                            <input type="date" name="birth_date" value="{{ old('birth_date') }}"
+                                placeholder="Doğum Tarihi">
+                            @error('birth_date')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
                         </div>
 
                         <!-- Fotoğraf -->
@@ -85,14 +96,17 @@
                                     <span id="file-name" class="file-name">Henüz dosya seçilmedi</span>
                                 </div>
                             </div>
-                            @error('photo') <small class="text-danger">{{ $message }}</small> @enderror
+                            @error('photo')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
                         </div>
 
                         <!-- Kariyer Hedefi -->
                         <div class="col-md-12 mil-mb30 mil-up">
-                            <textarea name="career_goal"
-                                placeholder="Kariyer Hedefiniz (Kendinizi kısaca tanıtın)">{{ old('career_goal') }}</textarea>
-                            @error('career_goal') <small class="text-danger">{{ $message }}</small> @enderror
+                            <textarea name="career_goal" placeholder="Kariyer Hedefiniz (Kendinizi kısaca tanıtın)">{{ old('career_goal') }}</textarea>
+                            @error('career_goal')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
                         </div>
 
                         <!-- Eğitim -->
@@ -102,24 +116,27 @@
                                 @php
                                     $education = old('education', [['school' => '', 'department' => '', 'year' => '']]);
                                 @endphp
-                                @foreach($education as $i => $edu)
+                                @foreach ($education as $i => $edu)
                                     <div class="row mil-mb20">
                                         <div class="col-md-4">
-                                            <input type="text" name="education[{{ $i }}][school]" value="{{ $edu['school'] }}"
-                                                placeholder="Okul Adı">
-                                            @error("education.$i.school") <small class="text-danger">{{ $message }}</small>
+                                            <input type="text" name="education[{{ $i }}][school]"
+                                                value="{{ $edu['school'] }}" placeholder="Okul Adı">
+                                            @error("education.$i.school")
+                                                <small class="text-danger">{{ $message }}</small>
                                             @enderror
                                         </div>
                                         <div class="col-md-4">
                                             <input type="text" name="education[{{ $i }}][department]"
                                                 value="{{ $edu['department'] }}" placeholder="Bölüm/Program">
-                                            @error("education.$i.department") <small class="text-danger">{{ $message }}</small>
+                                            @error("education.$i.department")
+                                                <small class="text-danger">{{ $message }}</small>
                                             @enderror
                                         </div>
                                         <div class="col-md-4">
-                                            <input type="text" name="education[{{ $i }}][year]" value="{{ $edu['year'] }}"
-                                                placeholder="Yıl (2018-2022)">
-                                            @error("education.$i.year") <small class="text-danger">{{ $message }}</small>
+                                            <input type="text" name="education[{{ $i }}][year]"
+                                                value="{{ $edu['year'] }}" placeholder="Yıl (2018-2022)">
+                                            @error("education.$i.year")
+                                                <small class="text-danger">{{ $message }}</small>
                                             @enderror
                                         </div>
                                     </div>
@@ -135,32 +152,37 @@
                             <label class="mil-text-sm">İş Deneyimleri</label>
                             <div id="experience-wrapper">
                                 @php
-                                    $experience = old('experience', [['company' => '', 'position' => '', 'year' => '', 'desc' => '']]);
+                                    $experience = old('experience', [
+                                        ['company' => '', 'position' => '', 'year' => '', 'desc' => ''],
+                                    ]);
                                 @endphp
-                                @foreach($experience as $i => $exp)
+                                @foreach ($experience as $i => $exp)
                                     <div class="row mil-mb20">
                                         <div class="col-md-4">
                                             <input type="text" name="experience[{{ $i }}][company]"
                                                 value="{{ $exp['company'] }}" placeholder="Şirket Adı">
-                                            @error("experience.$i.company") <small class="text-danger">{{ $message }}</small>
+                                            @error("experience.$i.company")
+                                                <small class="text-danger">{{ $message }}</small>
                                             @enderror
                                         </div>
                                         <div class="col-md-4">
                                             <input type="text" name="experience[{{ $i }}][position]"
                                                 value="{{ $exp['position'] }}" placeholder="Pozisyon">
-                                            @error("experience.$i.position") <small class="text-danger">{{ $message }}</small>
+                                            @error("experience.$i.position")
+                                                <small class="text-danger">{{ $message }}</small>
                                             @enderror
                                         </div>
                                         <div class="col-md-4">
-                                            <input type="text" name="experience[{{ $i }}][year]" value="{{ $exp['year'] }}"
-                                                placeholder="Yıl (2021-2023)">
-                                            @error("experience.$i.year") <small class="text-danger">{{ $message }}</small>
+                                            <input type="text" name="experience[{{ $i }}][year]"
+                                                value="{{ $exp['year'] }}" placeholder="Yıl (2021-2023)">
+                                            @error("experience.$i.year")
+                                                <small class="text-danger">{{ $message }}</small>
                                             @enderror
                                         </div>
                                         <div class="col-md-12 mil-mt10">
-                                            <textarea name="experience[{{ $i }}][desc]"
-                                                placeholder="Görevler / Açıklama">{{ $exp['desc'] }}</textarea>
-                                            @error("experience.$i.desc") <small class="text-danger">{{ $message }}</small>
+                                            <textarea name="experience[{{ $i }}][desc]" placeholder="Görevler / Açıklama">{{ $exp['desc'] }}</textarea>
+                                            @error("experience.$i.desc")
+                                                <small class="text-danger">{{ $message }}</small>
                                             @enderror
                                         </div>
                                     </div>
@@ -178,18 +200,20 @@
                                 @php
                                     $languages = old('languages', [['name' => '', 'level' => '']]);
                                 @endphp
-                                @foreach($languages as $i => $lang)
+                                @foreach ($languages as $i => $lang)
                                     <div class="row mil-mb20">
                                         <div class="col-md-6">
-                                            <input type="text" name="languages[{{ $i }}][name]" value="{{ $lang['name'] }}"
-                                                placeholder="Dil (örn: İngilizce)">
-                                            @error("languages.$i.name") <small class="text-danger">{{ $message }}</small>
+                                            <input type="text" name="languages[{{ $i }}][name]"
+                                                value="{{ $lang['name'] }}" placeholder="Dil (örn: İngilizce)">
+                                            @error("languages.$i.name")
+                                                <small class="text-danger">{{ $message }}</small>
                                             @enderror
                                         </div>
                                         <div class="col-md-6">
-                                            <input type="text" name="languages[{{ $i }}][level]" value="{{ $lang['level'] }}"
-                                                placeholder="Seviye (örn: İyi)">
-                                            @error("languages.$i.level") <small class="text-danger">{{ $message }}</small>
+                                            <input type="text" name="languages[{{ $i }}][level]"
+                                                value="{{ $lang['level'] }}" placeholder="Seviye (örn: İyi)">
+                                            @error("languages.$i.level")
+                                                <small class="text-danger">{{ $message }}</small>
                                             @enderror
                                         </div>
                                     </div>
@@ -207,18 +231,20 @@
                                 @php
                                     $certificates = old('certificates', [['name' => '', 'year' => '']]);
                                 @endphp
-                                @foreach($certificates as $i => $cert)
+                                @foreach ($certificates as $i => $cert)
                                     <div class="row mil-mb20">
                                         <div class="col-md-8">
-                                            <input type="text" name="certificates[{{ $i }}][name]" value="{{ $cert['name'] }}"
-                                                placeholder="Sertifika/Kurs Adı">
-                                            @error("certificates.$i.name") <small class="text-danger">{{ $message }}</small>
+                                            <input type="text" name="certificates[{{ $i }}][name]"
+                                                value="{{ $cert['name'] }}" placeholder="Sertifika/Kurs Adı">
+                                            @error("certificates.$i.name")
+                                                <small class="text-danger">{{ $message }}</small>
                                             @enderror
                                         </div>
                                         <div class="col-md-4">
-                                            <input type="text" name="certificates[{{ $i }}][year]" value="{{ $cert['year'] }}"
-                                                placeholder="Yıl">
-                                            @error("certificates.$i.year") <small class="text-danger">{{ $message }}</small>
+                                            <input type="text" name="certificates[{{ $i }}][year]"
+                                                value="{{ $cert['year'] }}" placeholder="Yıl">
+                                            @error("certificates.$i.year")
+                                                <small class="text-danger">{{ $message }}</small>
                                             @enderror
                                         </div>
                                     </div>
@@ -232,15 +258,38 @@
                         <!-- Hobiler -->
                         <div class="col-md-12 mil-mb30 mil-up">
                             <textarea name="hobbies" placeholder="Hobiler / İlgi Alanları">{{ old('hobbies') }}</textarea>
-                            @error('hobbies') <small class="text-danger">{{ $message }}</small> @enderror
+                            @error('hobbies')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
                         </div>
 
                         <!-- Referanslar -->
                         <div class="col-md-12 mil-mb30 mil-up">
-                            <textarea name="references"
-                                placeholder="Referanslar (İsim, Pozisyon, İletişim)">{{ old('references') }}</textarea>
-                            @error('references') <small class="text-danger">{{ $message }}</small> @enderror
+                            <textarea name="references" placeholder="Referanslar (İsim, Pozisyon, İletişim)">{{ old('references') }}</textarea>
+                            @error('references')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
                         </div>
+
+
+                        <div class="col-md-12 mil-mb30 mil-up d-flex justify-content-between">
+                            <div class="form-check d-flex justify-content-start ">
+                                <input class="form-check-input me-2" type="checkbox" id="kvkk_onay" name="kvkk_onay"
+                                    value="1" style="height: 24px; width:24px;" {{ old('kvkk_onay') ? 'checked' : '' }}
+                                    required>
+                                <label class="form-check-label" for="kvkk_onay">
+                                    <a href="{{ route('site.kvkk') }}" target="_blank">
+                                        KVKK Aydınlatma Metni
+                                    </a>'ni okudum, kabul ediyorum. <br>
+                                    <small class="text-muted">*Verileriniz yalnızca CV’nizi oluşturmak için
+                                        kullanılacaktır.</small>
+                                </label>
+                            </div>
+                            @error('kvkk_onay')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
 
                         <!-- Bilgilendirme -->
                         <div class="col-md-6 mil-mb30">
@@ -265,83 +314,96 @@
     <!-- CV Form End -->
 
 
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const kvkkCheckbox = document.getElementById("kvkk_onay");
+    kvkkCheckbox.addEventListener("change", function (e) {
+        if (this.checked) {
+            // Sadece işaretlendiğinde (tik atıldığında) KVKK sayfası açılır
+            window.open("{{ route('site.kvkk') }}", "_blank");
+        }
+    });
+});
+</script>
+
+
     <!-- Dinamik Alanlar JS -->
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             let educationIndex = 1;
             let experienceIndex = 1;
             let languageIndex = 1;
             let certificateIndex = 1;
 
             // Eğitim
-            document.getElementById("add-education").addEventListener("click", function () {
+            document.getElementById("add-education").addEventListener("click", function() {
                 let wrapper = document.getElementById("education-wrapper");
                 let html = `
-                    <div class="row mil-mb20">
-                        <div class="col-md-4">
-                            <input type="text" name="education[${educationIndex}][school]" placeholder="Okul Adı">
-                        </div>
-                        <div class="col-md-4">
-                            <input type="text" name="education[${educationIndex}][department]" placeholder="Bölüm/Program">
-                        </div>
-                        <div class="col-md-4">
-                            <input type="text" name="education[${educationIndex}][year]" placeholder="Yıl (2018-2022)">
-                        </div>
-                    </div>`;
+                        <div class="row mil-mb20">
+                            <div class="col-md-4">
+                                <input type="text" name="education[${educationIndex}][school]" placeholder="Okul Adı">
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" name="education[${educationIndex}][department]" placeholder="Bölüm/Program">
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" name="education[${educationIndex}][year]" placeholder="Yıl (2018-2022)">
+                            </div>
+                        </div>`;
                 wrapper.insertAdjacentHTML("beforeend", html);
                 educationIndex++;
             });
 
             // İş Deneyimi
-            document.getElementById("add-experience").addEventListener("click", function () {
+            document.getElementById("add-experience").addEventListener("click", function() {
                 let wrapper = document.getElementById("experience-wrapper");
                 let html = `
-                    <div class="row mil-mb20">
-                        <div class="col-md-4">
-                            <input type="text" name="experience[${experienceIndex}][company]" placeholder="Şirket Adı">
-                        </div>
-                        <div class="col-md-4">
-                            <input type="text" name="experience[${experienceIndex}][position]" placeholder="Pozisyon">
-                        </div>
-                        <div class="col-md-4">
-                            <input type="text" name="experience[${experienceIndex}][year]" placeholder="Yıl (2021-2023)">
-                        </div>
-                        <div class="col-md-12 mil-mt10">
-                            <textarea name="experience[${experienceIndex}][desc]" placeholder="Görevler / Açıklama"></textarea>
-                        </div>
-                    </div>`;
+                        <div class="row mil-mb20">
+                            <div class="col-md-4">
+                                <input type="text" name="experience[${experienceIndex}][company]" placeholder="Şirket Adı">
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" name="experience[${experienceIndex}][position]" placeholder="Pozisyon">
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" name="experience[${experienceIndex}][year]" placeholder="Yıl (2021-2023)">
+                            </div>
+                            <div class="col-md-12 mil-mt10">
+                                <textarea name="experience[${experienceIndex}][desc]" placeholder="Görevler / Açıklama"></textarea>
+                            </div>
+                        </div>`;
                 wrapper.insertAdjacentHTML("beforeend", html);
                 experienceIndex++;
             });
 
             // Yabancı Dil
-            document.getElementById("add-language").addEventListener("click", function () {
+            document.getElementById("add-language").addEventListener("click", function() {
                 let wrapper = document.getElementById("language-wrapper");
                 let html = `
-                    <div class="row mil-mb20">
-                        <div class="col-md-6">
-                            <input type="text" name="languages[${languageIndex}][name]" placeholder="Dil (örn: İngilizce)">
-                        </div>
-                        <div class="col-md-6">
-                            <input type="text" name="languages[${languageIndex}][level]" placeholder="Seviye (örn: İyi)">
-                        </div>
-                    </div>`;
+                        <div class="row mil-mb20">
+                            <div class="col-md-6">
+                                <input type="text" name="languages[${languageIndex}][name]" placeholder="Dil (örn: İngilizce)">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" name="languages[${languageIndex}][level]" placeholder="Seviye (örn: İyi)">
+                            </div>
+                        </div>`;
                 wrapper.insertAdjacentHTML("beforeend", html);
                 languageIndex++;
             });
 
             // Sertifikalar
-            document.getElementById("add-certificate").addEventListener("click", function () {
+            document.getElementById("add-certificate").addEventListener("click", function() {
                 let wrapper = document.getElementById("certificate-wrapper");
                 let html = `
-                    <div class="row mil-mb20">
-                        <div class="col-md-8">
-                            <input type="text" name="certificates[${certificateIndex}][name]" placeholder="Sertifika/Kurs Adı">
-                        </div>
-                        <div class="col-md-4">
-                            <input type="text" name="certificates[${certificateIndex}][year]" placeholder="Yıl">
-                        </div>
-                    </div>`;
+                        <div class="row mil-mb20">
+                            <div class="col-md-8">
+                                <input type="text" name="certificates[${certificateIndex}][name]" placeholder="Sertifika/Kurs Adı">
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" name="certificates[${certificateIndex}][year]" placeholder="Yıl">
+                            </div>
+                        </div>`;
                 wrapper.insertAdjacentHTML("beforeend", html);
                 certificateIndex++;
             });
@@ -391,7 +453,7 @@
     </style>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             const dropArea = document.getElementById("drop-area");
             const fileInput = document.getElementById("photoInput");
             const fileName = document.getElementById("file-name");
@@ -400,7 +462,7 @@
             dropArea.addEventListener("click", () => fileInput.click());
 
             // Dosya seçildiğinde göster
-            fileInput.addEventListener("change", function () {
+            fileInput.addEventListener("change", function() {
                 if (fileInput.files.length > 0) {
                     fileName.textContent = fileInput.files[0].name;
                 } else {
@@ -428,6 +490,4 @@
             });
         });
     </script>
-
-
 @endsection
