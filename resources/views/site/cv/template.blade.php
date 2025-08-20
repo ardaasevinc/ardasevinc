@@ -5,253 +5,243 @@
     <meta charset="UTF-8">
     <title>{{ $cv->name }} - CV</title>
     <style>
-        /* PDF için sade, A4'e uygun stil */
-        @page {
-            margin: 28mm 20mm;
+        /* ------- Sayfa ve font tanımları ------- */
+        @page { margin: 18mm 16mm; }
+
+        /* DomPDF'de local font için @font-face */
+        @font-face {
+            font-family: 'Montserrat';
+            src: url('{{ public_path('fonts/Montserrat-Regular.ttf') }}') format('truetype');
+            font-weight: 400; font-style: normal;
+        }
+        @font-face {
+            font-family: 'Montserrat';
+            src: url('{{ public_path('fonts/Montserrat-Bold.ttf') }}') format('truetype');
+            font-weight: 700; font-style: normal;
+        }
+        @font-face {
+            font-family: 'Open Sans';
+            src: url('{{ public_path('fonts/OpenSans-Regular.ttf') }}') format('truetype');
+            font-weight: 400; font-style: normal;
+        }
+
+        :root {
+            --yellow: #f1c40f;
+            --ink: #0f0f0f;
+            --muted: #666;
+            --line: #111;
+            --soft: #e9e9e9;
         }
 
         body {
-            font-family: DejaVu Sans, sans-serif;
-            color: #222;
+            font-family: 'Open Sans', DejaVu Sans, sans-serif;
+            color: var(--ink);
             font-size: 12px;
             line-height: 1.45;
+            padding: 30px;
         }
 
-        h1,
-        h2,
-        h3 {
-            margin: 0 0 8px;
-        }
+        /* Grid (DomPDF uyumlu) */
+        .row { display: table; width: 100%; table-layout: fixed; }
+        .col { display: table-cell; vertical-align: top; }
+        .col-left { width: 40%; padding-right: 14px; }
+        .col-right { width: 60%; padding-left: 18px; border-left: 1px solid var(--line); }
 
-        h1 {
-            font-size: 22px;
-        }
+        /* Üst başlık alanı */
+        .top-wrap { position: relative; height: 190px; }
+        .name { font-family: 'Montserrat'; font-weight: 700; font-size: 28px; letter-spacing: 1px; margin: 0; }
+        .subtitle { margin-top: 6px; font-size: 12px; color: #444; }
+        .line { height: 1px; background: var(--line); margin: 16px 0 0; width: 120px; }
 
-        h2 {
-            font-size: 14px;
-            border-bottom: 1px solid #e5e5e5;
-            padding-bottom: 6px;
-            margin-top: 18px;
-        }
+        /* Sağdaki sarı CV kutusu + foto çerçevesi (tasarım korunuyor) */
+        .cv-box { position: absolute; right: 0; top: 0; width: 50%; height: 200px; background: var(--yellow); z-index: -1; }
+        .cv-text { position: absolute; right: 24px; top: 24px; font-family: 'Montserrat'; font-weight: 700; font-size: 44px; letter-spacing: 2px; color: var(--ink); }
+        .photo-wrap { position: absolute; right: 50px; top: 14px; width: 165px; height: 165px; background: #fff; border: 1.5px solid #bbb; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+        .photo-wrap img { max-width: 100%; max-height: 100%; border-radius: 6px; }
+        .photo-ph { font-size: 12px; color: #777; display:flex; justify-content: end; margin-right: 10px; }
 
-        .muted {
-            color: #666;
-        }
+        /* Bölüm başlıkları */
+        .section { page-break-inside: avoid; }
+        .title-icon { display: inline-block; margin-right: 8px; font-weight: 700; color: var(--yellow); font-family: 'Montserrat'; }
+        .section-ttl { font-family: 'Montserrat'; font-weight: 700; font-size: 14px; letter-spacing: 2px; display: inline-block; }
+        .rule { height: 1px; background: var(--line); margin: 8px 0 14px; }
+        .rule-soft { height: 1px; background: var(--soft); margin: 8px 0 12px; }
 
-        .row {
-            display: table;
-            width: 100%;
-            table-layout: fixed;
-        }
+        /* Metin yardımcıları */
+        .muted { color: var(--muted); }
+        .small { font-size: 11px; }
+        .kv { margin: 0 0 6px; }
+        .kv b { display: inline-block; min-width: 70px; }
 
-        .col {
-            display: table-cell;
-            vertical-align: top;
-        }
+        /* Spacing */
+        .mt-10 { margin-top: 10px }
+        .mt-14 { margin-top: 14px }
+        .mt-18 { margin-top: 18px }
 
-        .col-3 {
-            width: 30%;
-            padding-right: 14px;
-        }
-
-        .col-9 {
-            width: 70%;
-            padding-left: 14px;
-            border-left: 1px solid #f0f0f0;
-        }
-
-        .avatar {
-            width: 100%;
-            max-width: 140px;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-        }
-
-        .mb-4 {
-            margin-bottom: 14px;
-        }
-
-        .mb-6 {
-            margin-bottom: 18px;
-        }
-
-        .list {
-            margin: 0;
-            padding-left: 16px;
-        }
-
-        .item {
-            margin-bottom: 8px;
-        }
-
-        .kv {
-            margin: 0 0 4px;
-        }
-
-        .kv b {
-            display: inline-block;
-            min-width: 86px;
-        }
-
-        .chip {
-            display: inline-block;
-            border: 1px solid #ddd;
-            border-radius: 16px;
-            padding: 3px 10px;
-            margin: 2px 6px 2px 0;
-            font-size: 11px;
-        }
-
-        .small {
-            font-size: 11px;
-        }
-
-        .section {
-            page-break-inside: avoid;
-        }
+        /* ------- EKLENEN KÜÇÜK YARDIMCI SINIFLAR ------- */
+        .logo { position:absolute; left:0; top:0; }
+        .logo img { height:50px; }               /* logonun boyu */
+        .name-wrap { margin-left:72px; padding-top:42px; } /* isim bloğunu biraz aşağı/sağa al */
+        .footer { margin-top:24px; padding-top:10px; border-top:1px solid var(--soft); color:#555; font-size:10px; }
     </style>
 </head>
 
 <body>
 
-    {{-- Üst Başlık --}}
-    <div class="mb-6">
-        <h1>{{ $cv->name }}</h1>
-        <div class="muted small">
-            @if($cv->email) {{ $cv->email }} @endif
-            @if($cv->email && $cv->phone) • @endif
-            @if($cv->phone) {{ $cv->phone }} @endif
-            @if($cv->birth_date) • Doğum Tarihi:
-            {{ \Illuminate\Support\Carbon::parse($cv->birth_date)->format('d.m.Y') }} @endif
+    <!-- ÜST BAŞLIK -->
+    <div class="top-wrap">
+
+        <!-- LOGO (sol üst) -->
+        <div class="logo">
+            <!-- kendi yolunu koy: images/logo.png -->
+            <img src="{{ asset('site/assets/logo.png') }}" alt="Logo" style="height:50px;">
+
+        </div>
+
+        <!-- İSİM BLOĞU (biraz aşağı kaydırıldı) -->
+        <div class="name-wrap">
+            <h1 class="name">{{ mb_strtoupper($cv->name) }}</h1>
+            <div class="subtitle">
+                {{ $cv->title ?? 'İBB Bilgi İşlem Dairesi Başkanlığı' }}<br>
+                {{ $cv->subtitle ?? 'Bilgi Teknolojileri Şube Müdürlüğü — Bilgisayar Programlama Elemanı' }}
+            </div>
+            <div class="line"></div>
+        </div>
+
+        <!-- Fotoğraf aynı yerde kalıyor -->
+        <div class="photo-wrap">
+            @if (!empty($cv->photo_path))
+                <img src="{{ public_path('public/' . ltrim($cv->photo_path, '/')) }}" alt="Photo">
+            @else
+                <span class="photo-ph">Photo</span>
+            @endif
         </div>
     </div>
 
-    <div class="row">
-        {{-- Sol Kolon: Foto + İletişim --}}
-        <div class="col col-3">
-            @if(!empty($cv->photo_path))
-                {{-- DomPDF yerel dosya yolunu destekler --}}
-                <img class="avatar mb-6" src="{{ public_path('public/' . ltrim($cv->photo_path, '/')) }}" alt="Fotoğraf">
+    <div class="row" style="margin-top:12px;">
+        <!-- SOL KOLON -->
+        <div class="col col-left">
+            @if (!empty($cv->career_goal))
+                <div class="section">
+                    <span class="title-icon">»</span><span class="section-ttl">HAKKIMDA</span>
+                    <div class="rule"></div>
+                    <div class="small">{{ $cv->career_goal }}</div>
+                </div>
             @endif
 
-            <div class="section">
-                <h2>İletişim</h2>
-                <p class="kv"><b>E-posta:</b> {{ $cv->email ?? '-' }}</p>
+            <div class="section mt-18">
+                <span class="title-icon">»</span><span class="section-ttl">İLETİŞİM</span>
+                <div class="rule"></div>
                 <p class="kv"><b>Telefon:</b> {{ $cv->phone ?? '-' }}</p>
-                @if($cv->birth_date)
-                    <p class="kv"><b>Doğum:</b> {{ \Illuminate\Support\Carbon::parse($cv->birth_date)->format('d.m.Y') }}
-                    </p>
+                <p class="kv"><b>E-posta:</b> {{ $cv->email ?? '-' }}</p>
+                @if (!empty($cv->birth_date))
+                    <p class="kv"><b>Doğum:</b> {{ \Illuminate\Support\Carbon::parse($cv->birth_date)->format('d.m.Y') }}</p>
                 @endif
             </div>
 
-            @if(!empty($cv->languages) && is_array($cv->languages))
-                <div class="section">
-                    <h2>Diller</h2>
-                    @foreach($cv->languages as $lang)
-                        @php
-                            $name = $lang['name'] ?? null;
-                            $level = $lang['level'] ?? null;
-                        @endphp
-                        @if($name || $level)
-                            <div class="item">{{ $name }} @if($name && $level) — @endif {{ $level }}</div>
+            @if (!empty($cv->languages) && is_array($cv->languages))
+                <div class="section mt-18">
+                    <span class="title-icon">»</span><span class="section-ttl">DİLLER</span>
+                    <div class="rule"></div>
+                    @foreach ($cv->languages as $lang)
+                        @php $name = $lang['name'] ?? ($lang['0'] ?? null); $level = $lang['level'] ?? null; @endphp
+                        @if ($name || $level)
+                            <div class="kv">{{ $name }} @if ($name && $level) — @endif {{ $level }}</div>
                         @endif
                     @endforeach
                 </div>
             @endif
+        </div>
 
-            @if(!empty($cv->certificates) && is_array($cv->certificates))
+        <!-- SAĞ KOLON -->
+        <div class="col col-right">
+            @if (!empty($cv->education) && is_array($cv->education))
                 <div class="section">
-                    <h2>Sertifikalar</h2>
-                    @foreach($cv->certificates as $cert)
-                        @php
-                            $cname = $cert['name'] ?? null;
-                            $cyear = $cert['year'] ?? null;
-                        @endphp
-                        @if($cname || $cyear)
-                            <div class="item">{{ $cname }} @if($cname && $cyear) ({{ $cyear }}) @elseif($cyear) {{ $cyear }} @endif
+                    <span class="title-icon">»</span><span class="section-ttl">EĞİTİM</span>
+                    <div class="rule"></div>
+                    @foreach ($cv->education as $edu)
+                        @php $school = $edu['school'] ?? null; $dept = $edu['department'] ?? null; $year = $edu['year'] ?? null; @endphp
+                        @if ($school || $dept || $year)
+                            <div class="kv">
+                                <b>{{ $school }}</b>
+                                @if ($dept) — {{ $dept }} @endif
+                                @if ($year) <span class="muted small"> • {{ $year }}</span> @endif
                             </div>
                         @endif
                     @endforeach
                 </div>
             @endif
-        </div>
 
-        {{-- Sağ Kolon: Hakkında, Deneyim, Eğitim vs. --}}
-        <div class="col col-9">
-            @if(!empty($cv->career_goal))
-                <div class="section">
-                    <h2>Hakkımda / Kariyer Hedefi</h2>
-                    <p>{{ $cv->career_goal }}</p>
+            @if (!empty($cv->certificates) && is_array($cv->certificates))
+                <div class="section mt-18">
+                    <span class="title-icon">»</span><span class="section-ttl">SERTİFİKALAR</span>
+                    <div class="rule"></div>
+                    @foreach ($cv->certificates as $cert)
+                        @php $cname = $cert['name'] ?? null; $cyear = $cert['year'] ?? null; @endphp
+                        @if ($cname || $cyear)
+                            <div class="kv">{{ $cname }} @if ($cyear) <span class="muted small">({{ $cyear }})</span> @endif</div>
+                        @endif
+                    @endforeach
                 </div>
             @endif
 
-            @if(!empty($cv->experience) && is_array($cv->experience))
-                <div class="section">
-                    <h2>İş Deneyimi</h2>
-                    @foreach($cv->experience as $exp)
+            @if (!empty($cv->experience) && is_array($cv->experience))
+                <div class="section mt-18">
+                    <span class="title-icon">»</span><span class="section-ttl">İŞ TECRÜBELERİ</span>
+                    <div class="rule"></div>
+                    @foreach ($cv->experience as $exp)
                         @php
                             $company = $exp['company'] ?? null;
                             $position = $exp['position'] ?? null;
                             $year = $exp['year'] ?? null;
                             $desc = $exp['desc'] ?? null;
                         @endphp
-                        @if($company || $position || $year || $desc)
-                            <div class="item">
-                                <b>{{ $position ?? 'Pozisyon' }}</b> @if($position && $company) — @endif {{ $company }}
-                                @if($year) <span class="muted small">• {{ $year }}</span> @endif
-                                @if($desc)
-                                    <div class="small" style="margin-top:4px;">{{ $desc }}</div>
-                                @endif
+                        @if ($company || $position || $year || $desc)
+                            <div class="kv">
+                                <b>{{ $company }}</b> @if ($position) — {{ $position }} @endif
+                                @if ($year) <span class="muted small"> • {{ $year }}</span> @endif
                             </div>
+                            @if ($desc) <div class="small" style="margin:4px 0 10px">{{ $desc }}</div> @endif
                         @endif
                     @endforeach
                 </div>
             @endif
 
-            @if(!empty($cv->education) && is_array($cv->education))
-                <div class="section">
-                    <h2>Eğitim</h2>
-                    @foreach($cv->education as $edu)
-                        @php
-                            $school = $edu['school'] ?? null;
-                            $dept = $edu['department'] ?? null;
-                            $year = $edu['year'] ?? null;
-                        @endphp
-                        @if($school || $dept || $year)
-                            <div class="item">
-                                <b>{{ $school }}</b>
-                                @if($dept) — {{ $dept }} @endif
-                                @if($year) <span class="muted small">• {{ $year }}</span> @endif
-                            </div>
-                        @endif
-                    @endforeach
+            @if (!empty($cv->hobbies))
+                <div class="section mt-18">
+                    <span class="title-icon">»</span><span class="section-ttl">HOBİLER / İLGİ ALANLARI</span>
+                    <div class="rule"></div>
+                    <div class="small">{{ $cv->hobbies }}</div>
                 </div>
             @endif
 
-            @if(!empty($cv->hobbies))
-                <div class="section">
-                    <h2>Hobiler / İlgi Alanları</h2>
-                    <p>{{ $cv->hobbies }}</p>
-                </div>
-            @endif
-
-            @if(!empty($cv->references))
-                <div class="section">
-                    <h2>Referanslar</h2>
-                    {{-- Çok satırlıysa satırlara bölüp madde madde gösterelim --}}
-                    @php
-                        $refs = preg_split('/\r\n|\r|\n/', trim($cv->references));
-                    @endphp
-                    <ul class="list">
-                        @foreach($refs as $r)
-                            @if(strlen(trim($r)))
-                            <li>{{ trim($r) }}</li> @endif
+            @if (!empty(trim($cv->references ?? '')))
+                <div class="section mt-18">
+                    <span class="title-icon">»</span><span class="section-ttl">REFERANSLAR</span>
+                    <div class="rule"></div>
+                    @php $refs = preg_split('/\r\n|\r|\n/', trim($cv->references)); @endphp
+                    <ul style="margin:0; padding-left:16px;">
+                        @foreach ($refs as $r)
+                            @if (strlen(trim($r))) <li style="margin-bottom:6px;">{{ trim($r) }}</li> @endif
                         @endforeach
                     </ul>
                 </div>
             @endif
         </div>
     </div>
-</body>
 
+    <!-- FOOTER -->
+    <div class="footer">
+        <strong>ardasevinc.com.tr</strong> üzerinde {{ now()->year }} yılında hazırlanmıştır. 
+        Bu CV şablonu; yazılıma yeni başlayanlardan profesyonellere kadar herkesin 
+        hızlıca kaliteli bir özgeçmiş üretebilmesi için ücretsiz olarak paylaşılmaktadır. 
+        Öğrencilerin ve genç geliştiricilerin iş/staj başvurularında öne çıkmasına yardımcı olması hedeflenmiştir. 
+        Şablon; açık ve anlaşılır tipografi (Montserrat + Open Sans), sade çizgiler, baskı dostu yerleşim ve 
+        DomPDF uyumlu yapısıyla pratik kullanım sunar. Eğitim, sertifika ve deneyim alanları, modeldeki 
+        verilerden otomatik olarak doldurulur; görsel ve metinler gizli hiçbir alan gerektirmez. 
+        Kaynak gösterilerek kişisel kullanımda serbesttir; ticari yeniden satış ve marka izinsiz çoğaltma kapsam dışıdır. 
+        Geri bildirimleriniz ve katkılarınız için <em>ardasevinc.com.tr</em> üzerinden ulaşabilirsiniz.
+    </div>
+
+</body>
 </html>

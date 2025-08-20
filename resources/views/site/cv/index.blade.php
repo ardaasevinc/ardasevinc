@@ -16,16 +16,7 @@
                 </ul>
                 <div class="mil-word-frame">
                     <h1 class="mil-display2 mil-rubber">CV <span class="mil-a2">OLUŞTUR</span></h1>
-                    <p class="mt-5 m-2">Bu formu doldurarak profesyonel bir CV oluşturabilirsiniz. Sizden istenen bilgileri
-                        eksiksiz
-                        girdikten sonra, tek tıkla A4 formatında PDF çıktısını indirmeniz mümkün olacaktır.
-
-                        CV’niz yalnızca sizin için hazırlanır ve bilgileriniz hiçbir şekilde üçüncü kişilerle paylaşılmaz.
-                        Fotoğraf eklemek zorunlu değildir; eklerseniz yalnızca PDF oluşturulurken kullanılır ve sonrasında
-                        sistemden silinir.
-
-                        Eksik bırakılan alanlar CV’nizde boş olarak görünebilir. Daha etkili bir CV için tüm alanları
-                        doldurmanız tavsiye edilir.</p>
+                   
                     <div class="mil-s-4"><img src="{{ asset('site/assets/img/shapes/4.png') }}" alt="shape"></div>
                 </div>
             </div>
@@ -43,6 +34,16 @@
     <div class="container">
         <div class="mil-half-container mil-up">
             <div class="mil-g-m1 mil-p-160-160">
+             <p class="mt-5 m-2">Bu formu doldurarak profesyonel bir CV oluşturabilirsiniz. Sizden istenen bilgileri
+                        eksiksiz
+                        girdikten sonra, tek tıkla A4 formatında PDF çıktısını indirmeniz mümkün olacaktır.
+
+                        CV’niz yalnızca sizin için hazırlanır ve bilgileriniz hiçbir şekilde üçüncü kişilerle paylaşılmaz.
+                        Fotoğraf eklemek zorunlu değildir; eklerseniz yalnızca PDF oluşturulurken kullanılır ve sonrasında
+                        sistemden silinir.
+
+                        Eksik bırakılan alanlar CV’nizde boş olarak görünebilir. Daha etkili bir CV için tüm alanları
+                        doldurmanız tavsiye edilir.</p>
 
                 @if(session('success'))
                     <p class="success-message">{{ session('success') }}</p>
