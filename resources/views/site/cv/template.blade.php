@@ -9,21 +9,26 @@
         @page { margin: 18mm 16mm; }
 
         /* DomPDF'de local font için @font-face */
-        @font-face {
-            font-family: 'Montserrat';
-            src: url('{{ public_path('fonts/Montserrat-Regular.ttf') }}') format('truetype');
-            font-weight: 400; font-style: normal;
-        }
-        @font-face {
-            font-family: 'Montserrat';
-            src: url('{{ public_path('fonts/Montserrat-Bold.ttf') }}') format('truetype');
-            font-weight: 700; font-style: normal;
-        }
-        @font-face {
-            font-family: 'Open Sans';
-            src: url('{{ public_path('fonts/OpenSans-Regular.ttf') }}') format('truetype');
-            font-weight: 400; font-style: normal;
-        }
+       @font-face {
+        font-family: 'Montserrat';
+        src: url('{{ 'file://'.public_path('site/assets/fonts/Montserrat-Regular.ttf') }}') format('truetype');
+        font-weight: 400;
+        font-style: normal;
+    }
+    @font-face {
+        font-family: 'Montserrat';
+        src: url('{{ 'file://'.public_path('site/assets/fonts/Montserrat-Bold.ttf') }}') format('truetype');
+        font-weight: 700;
+        font-style: normal;
+    }
+    @font-face {
+        font-family: 'Open Sans';
+        src: url('{{ 'file://'.public_path('site/assets/fonts/OpenSans-Regular.ttf') }}') format('truetype');
+        font-weight: 400;
+        font-style: normal;
+    }
+
+        
 
         :root {
             --yellow: #f1c40f;
@@ -34,7 +39,7 @@
         }
 
         body {
-            font-family: 'Open Sans', DejaVu Sans, sans-serif;
+            font-family: 'Open Sans', Montserrat, sans-serif;
             color: var(--ink);
             font-size: 12px;
             line-height: 1.45;
@@ -50,13 +55,13 @@
         /* Üst başlık alanı */
         .top-wrap { position: relative; height: 190px; }
         .name { font-family: 'Montserrat'; font-weight: 700; font-size: 28px; letter-spacing: 1px; margin: 0; }
-        .subtitle { margin-top: 6px; font-size: 12px; color: #444; }
+        .subtitle { margin-top: 6px; font-size: 12px; color: #444; max-width: 300px;}
         .line { height: 1px; background: var(--line); margin: 16px 0 0; width: 120px; }
 
         /* Sağdaki sarı CV kutusu + foto çerçevesi (tasarım korunuyor) */
         .cv-box { position: absolute; right: 0; top: 0; width: 50%; height: 200px; background: var(--yellow); z-index: -1; }
         .cv-text { position: absolute; right: 24px; top: 24px; font-family: 'Montserrat'; font-weight: 700; font-size: 44px; letter-spacing: 2px; color: var(--ink); }
-        .photo-wrap { position: absolute; right: 50px; top: 14px; width: 165px; height: 165px; background: #fff; border: 1.5px solid #bbb; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+        .photo-wrap { position: absolute; right: 50px; top: 14px; width: 165px; height: 165px; background: #fff; border: 1.5px solid #bbb; border-radius: 8px; display: flex; align-items: center; justify-content: center;position: absolute; right:20px;  }
         .photo-wrap img { max-width: 100%; max-height: 100%; border-radius: 6px; }
         .photo-ph { font-size: 12px; color: #777; display:flex; justify-content: end; margin-right: 10px; }
 
@@ -81,7 +86,7 @@
         /* ------- EKLENEN KÜÇÜK YARDIMCI SINIFLAR ------- */
         .logo { position:absolute; left:0; top:0; }
         .logo img { height:50px; }               /* logonun boyu */
-        .name-wrap { margin-left:72px; padding-top:42px; } /* isim bloğunu biraz aşağı/sağa al */
+        .name-wrap { margin-top:50px; padding-top:42px; } /* isim bloğunu biraz aşağı/sağa al */
         .footer { margin-top:24px; padding-top:10px; border-top:1px solid var(--soft); color:#555; font-size:10px; }
     </style>
 </head>
@@ -94,7 +99,7 @@
         <!-- LOGO (sol üst) -->
         <div class="logo">
             <!-- kendi yolunu koy: images/logo.png -->
-            <img src="{{ asset('site/assets/logo.png') }}" alt="Logo" style="height:50px;">
+            <img src="{{ public_path('site/assets/logo.png') }}" alt="Logo" style="height:50px;">
 
         </div>
 
@@ -102,8 +107,8 @@
         <div class="name-wrap">
             <h1 class="name">{{ mb_strtoupper($cv->name) }}</h1>
             <div class="subtitle">
-                {{ $cv->title ?? 'İBB Bilgi İşlem Dairesi Başkanlığı' }}<br>
-                {{ $cv->subtitle ?? 'Bilgi Teknolojileri Şube Müdürlüğü — Bilgisayar Programlama Elemanı' }}
+                {{ $cv->title ?? '' }}<br>
+                {{ $cv->subtitle ?? '' }}
             </div>
             <div class="line"></div>
         </div>
@@ -111,7 +116,7 @@
         <!-- Fotoğraf aynı yerde kalıyor -->
         <div class="photo-wrap">
             @if (!empty($cv->photo_path))
-                <img src="{{ public_path('public/' . ltrim($cv->photo_path, '/')) }}" alt="Photo">
+                <img src="{{ public_path(  ltrim($cv->photo_path, '/')) }}" alt="Photo">
             @else
                 <span class="photo-ph">Photo</span>
             @endif

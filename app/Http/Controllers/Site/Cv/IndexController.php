@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CvSubmission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class IndexController extends Controller
@@ -40,7 +41,6 @@ class IndexController extends Controller
             // Education items
             'education.*.school' => ['nullable', 'string', 'max:255'],
             'education.*.department' => ['nullable', 'string', 'max:255'],
-            // 2018-2022 veya tek yıl 2022 gibi kabul et
             'education.*.year' => ['nullable', 'string', 'max:25', 'regex:/^(\d{4})(\s*-\s*\d{4})?$/'],
 
             // Experience items
@@ -58,95 +58,36 @@ class IndexController extends Controller
             'certificates.*.year' => ['nullable', 'string', 'max:25', 'regex:/^\d{4}$/'],
         ];
 
-        // ---- Özel mesajlar (Türkçe)
+        // ---- Özel mesajlar (özet)
         $messages = [
-            // Basit alanlar
             'name.required' => 'Ad Soyad alanı zorunludur.',
-            'name.max' => 'Ad Soyad en fazla :max karakter olabilir.',
             'email.required' => 'E-posta alanı zorunludur.',
             'email.email' => 'Geçerli bir e-posta adresi girin.',
             'phone.required' => 'Telefon alanı zorunludur.',
             'phone.regex' => 'Telefon numarası yalnızca rakam, boşluk ve - ( ) + içerebilir.',
-            'phone.max' => 'Telefon en fazla :max karakter olabilir.',
-            'birth_date.date' => 'Doğum tarihi geçerli bir tarih olmalıdır.',
-
-            'photo.image' => 'Yüklenen dosya bir görsel olmalıdır.',
-            'photo.mimes' => 'Fotoğraf yalnızca: :values formatlarında olmalıdır.',
-            'photo.max' => 'Fotoğraf boyutu en fazla :max KB olabilir.',
-            'photo.dimensions' => 'Fotoğraf en az 200x200 piksel olmalıdır.',
-
-            'career_goal.max' => 'Kariyer hedefi en fazla :max karakter olabilir.',
-            'hobbies.max' => 'Hobiler en fazla :max karakter olabilir.',
-            'references.max' => 'Referanslar en fazla :max karakter olabilir.',
-
-            // Repeater kökleri
-            'education.array' => 'Eğitim bilgileri geçersiz biçimde gönderildi.',
-            'experience.array' => 'İş deneyimleri geçersiz biçimde gönderildi.',
-            'languages.array' => 'Yabancı diller geçersiz biçimde gönderildi.',
-            'certificates.array' => 'Sertifikalar geçersiz biçimde gönderildi.',
-
-            // Education items
-            'education.*.school.max' => 'Okul adı en fazla :max karakter olabilir.',
-            'education.*.department.max' => 'Bölüm/Program en fazla :max karakter olabilir.',
-            'education.*.year.regex' => 'Yıl alanı "2020" veya "2018-2022" formatında olmalıdır.',
-            'education.*.year.max' => 'Yıl en fazla :max karakter olabilir.',
-
-            // Experience items
-            'experience.*.company.max' => 'Şirket adı en fazla :max karakter olabilir.',
-            'experience.*.position.max' => 'Pozisyon en fazla :max karakter olabilir.',
-            'experience.*.year.regex' => 'Yıl alanı "2020" veya "2018-2022" formatında olmalıdır.',
-            'experience.*.year.max' => 'Yıl en fazla :max karakter olabilir.',
-            'experience.*.desc.max' => 'Görev/Açıklama en fazla :max karakter olabilir.',
-
-            // Language items
-            'languages.*.name.max' => 'Dil adı en fazla :max karakter olabilir.',
-            'languages.*.level.max' => 'Dil seviyesi en fazla :max karakter olabilir.',
-
-            // Certificates items
-            'certificates.*.name.max' => 'Sertifika/Kurs adı en fazla :max karakter olabilir.',
-            'certificates.*.year.regex' => 'Sertifika yılı dört haneli olmalıdır (örn. 2023).',
-            'certificates.*.year.max' => 'Sertifika yılı en fazla :max karakter olabilir.',
         ];
 
-        // ---- Alan adları (güzel görünen)
+        // ---- Alan adları (kısa)
         $attributes = [
             'name' => 'Ad Soyad',
             'email' => 'E-posta',
             'phone' => 'Telefon',
-            'birth_date' => 'Doğum Tarihi',
-            'photo' => 'Fotoğraf',
-            'career_goal' => 'Kariyer Hedefi',
-            'hobbies' => 'Hobiler',
-            'references' => 'Referanslar',
-
-            // Dinamikler
-            'education.*.school' => 'Okul Adı',
-            'education.*.department' => 'Bölüm/Program',
-            'education.*.year' => 'Yıl',
-
-            'experience.*.company' => 'Şirket Adı',
-            'experience.*.position' => 'Pozisyon',
-            'experience.*.year' => 'Yıl',
-            'experience.*.desc' => 'Görevler / Açıklama',
-
-            'languages.*.name' => 'Dil',
-            'languages.*.level' => 'Seviye',
-
-            'certificates.*.name' => 'Sertifika/Kurs Adı',
-            'certificates.*.year' => 'Sertifika Yılı',
         ];
 
-        // Doğrulama (hata olursa otomatik back()->withErrors()->withInput())
         $validated = $request->validate($rules, $messages, $attributes);
 
-        // Boş/undefined repeaterları diziye çevir (null gelirse patlamasın)
+        // Repeater’lar null gelirse boş dizi yap
         foreach (['education', 'experience', 'languages', 'certificates'] as $field) {
             $validated[$field] = $validated[$field] ?? [];
         }
 
-        // Fotoğraf yükleme
+        // FOTOĞRAF: uploads diski -> public/uploads
+        // config/filesystems.php içinde 'uploads' root'u public_path('uploads') olmalı.
         if ($request->hasFile('photo')) {
-            $validated['photo_path'] = $request->file('photo')->store('cv/photos', 'public');
+            // Sonuç: "cv/photos/abc.jpg" (uploads köküne göre relatif)
+            $stored = $request->file('photo')->store('cv/photos', 'uploads');
+            // DB’ye public kökten göre kaydedelim: "uploads/cv/photos/abc.jpg"
+            $validated['photo_path'] = 'uploads/' . ltrim($stored, '/');
         }
 
         $cv = CvSubmission::create($validated);
@@ -158,11 +99,30 @@ class IndexController extends Controller
 
     public function download(CvSubmission $cv)
     {
-        $pdf = Pdf::loadView('site.cv.template', compact('cv'))
-            ->setPaper('A4', 'portrait');
+        // Blade içinde kullanman için "file://" mutlak yolları hazırlayalım:
+        $logoPublicRel = 'site/assets/logo.png'; // public/site/assets/logo.png
+        $photoPublicRel = $cv->photo_path ?: null; // "uploads/..." şeklinde
+
+        $logoFileUrl = $this->toFileUrl(public_path($logoPublicRel));
+        $photoFileUrl = $photoPublicRel ? $this->toFileUrl(public_path($photoPublicRel)) : null;
+
+        // DomPDF seçenekleri: yerelden okuma, html5 parser, dpi, default font
+        $pdf = Pdf::setOptions([
+            'isRemoteEnabled' => true,
+            'isHtml5ParserEnabled' => true,
+            'dpi' => 96,
+            'defaultFont' => 'Montserrat',
+            'chroot' => public_path(), // güvenli kök
+        ])
+            ->loadView('site.cv.template', [
+                'cv' => $cv,
+                // Blade’te <img src="{{ $logoFileUrl }}"> gibi kullan
+                'logoFileUrl' => $logoFileUrl,
+                'photoFileUrl' => $photoFileUrl,
+            ])
+            ->setPaper('a4', 'portrait');
 
         $fileName = 'cv-' . Str::slug($cv->name) . '.pdf';
-
         return $pdf->download($fileName);
     }
 
@@ -170,7 +130,20 @@ class IndexController extends Controller
     {
         $page_title = 'CV Şablonu';
         $page_description = 'CV şablonunu görüntüleme sayfası.';
-        $cv = CvSubmission::first();
-        return view('site.cv.template', compact('page_title', 'page_description', 'cv'));
+        $cv = CvSubmission::latest()->first();
+
+        $logoPublicRel = 'site/assets/logo.png';
+        $photoPublicRel = $cv?->photo_path;
+
+        $logoFileUrl = $this->toFileUrl(public_path($logoPublicRel));
+        $photoFileUrl = $photoPublicRel ? $this->toFileUrl(public_path($photoPublicRel)) : null;
+
+        return view('site.cv.template', compact('page_title', 'page_description', 'cv', 'logoFileUrl', 'photoFileUrl'));
+    }
+
+    /** PDF için mutlak file:// yolu üretir (Dompdf en stabil bunu sever) */
+    private function toFileUrl(string $absPath): ?string
+    {
+        return is_file($absPath) ? ('file://' . $absPath) : null;
     }
 }
