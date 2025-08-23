@@ -23,6 +23,8 @@
     @if (!empty($settings['SEO_KEYWORDS']))
         <meta name="keywords" content="{{ strip_tags($settings['SEO_KEYWORDS']) }}">
     @endif
+    <link rel="manifest" href="{{asset('/manifest.json')}}">
+    <meta name="theme-color" content="#ffffff">
 
     {{-- Google Analytics --}}
     @if (!empty($settings['GOOGLE_ANALYTICS_ID']))
