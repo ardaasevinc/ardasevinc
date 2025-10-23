@@ -105,6 +105,6 @@ route::get('/test', function () {
 
 
 
-
-
-
+Route::fallback(function () {
+    return redirect('/');
+});
