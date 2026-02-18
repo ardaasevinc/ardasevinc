@@ -19,6 +19,7 @@ class HeroResource extends Resource
     protected static ?string $model = Hero::class;
     protected static ?string $navigationIcon = 'heroicon-o-presentation-chart-line';
     protected static ?string $navigationLabel = 'Banner Yönetimi';
+    protected static ?string $pluralModelLabel = 'Bannerlar';
 
     public static function form(Forms\Form $form): Forms\Form
     {
@@ -39,15 +40,16 @@ class HeroResource extends Resource
 
                     // Görseller ve Yayın Durumu
                     Section::make('Görseller & Durum')->columnSpan(4)->schema([
-                        FileUpload::make('img1')->label('Resim 1')->disk('uploads')->directory('hero')->toWebp()->image(),
-                        FileUpload::make('img2')->label('Resim 2')->disk('uploads')->directory('hero')->toWebp()->image(),
-                        FileUpload::make('img3')->label('Resim 3')->disk('uploads')->directory('hero')->toWebp()->image(),
-                        FileUpload::make('img4')->label('Resim 4')->disk('uploads')->directory('hero')->toWebp()->image(),
-                        FileUpload::make('img5')->label('Resim 5')->disk('uploads')->directory('hero')->toWebp()->image(),
+                        // Her formatta resim yüklemeyi sağlayan ortak fonksiyonu kullandık
+                        static::getHeroImageUpload('img1', 'Resim 1'),
+                        static::getHeroImageUpload('img2', 'Resim 2'),
+                        static::getHeroImageUpload('img3', 'Resim 3'),
+                        static::getHeroImageUpload('img4', 'Resim 4'),
+                        static::getHeroImageUpload('img5', 'Resim 5'),
                         
                         Toggle::make('is_published')
                             ->label('Yayınla')
-                            ->helperText('Aktif edilirse diğerleri pasif olur.')
+                            ->helperText('Aktif edilirse diğer bannerlar otomatik olarak pasif hale gelir.')
                             ->live()
                             ->afterStateUpdated(function ($state, $record) {
                                 if ($state && $record) {
@@ -59,12 +61,30 @@ class HeroResource extends Resource
             ]);
     }
 
+    /**
+     * Resim yükleme alanlarını standartlaştıran ve tüm formatları kabul eden yardımcı metod.
+     */
+    protected static function getHeroImageUpload(string $name, string $label): FileUpload
+    {
+        return FileUpload::make($name)
+            ->label($label)
+            ->disk('uploads')
+            ->directory('hero')
+            ->toWebp() // AppServiceProvider içindeki makro: Görseli WebP yapar, SVG'yi korur.
+            ->image() // Resim dosyası olduğunu doğrular
+            ->imageEditor() // Kesme/Düzenleme imkanı verir
+            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml', 'image/gif']) // Tüm formatları kabul et
+            ->maxSize(5120) // Maksimum 5MB
+            ->live()
+            ->dehydrated(fn ($state) => filled($state));
+    }
+
     public static function table(Tables\Table $table): Tables\Table
     {
         return $table
             ->columns([
                 Tables\Columns\ImageColumn::make('img1')->label('Görsel 1')->disk('uploads'),
-                Tables\Columns\TextColumn::make('top_text')->label('Başlık'),
+                Tables\Columns\TextColumn::make('top_text')->label('Başlık')->searchable(),
                 Tables\Columns\ToggleColumn::make('is_published')->label('Yayın Durumu'),
             ])
             ->actions([
