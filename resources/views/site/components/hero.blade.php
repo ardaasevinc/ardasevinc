@@ -1,4 +1,4 @@
-@if($hero && ($hero->word1 || $hero->word2))
+@if($hero)
     <div class="mil-hero-1 mil-up" id="top">
         <div class="container mil-hero-main mil-relative mil-aic">
             <div class="mil-hero-text mil-scale-img" data-value-1="1.3" data-value-2="0.95">

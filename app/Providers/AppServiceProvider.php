@@ -25,31 +25,38 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // 1. MAKRO TANIMI
-        FileUpload::macro('toWebp', function () {
-            /** @var FileUpload $this */
-            return $this->saveUploadedFileUsing(function ($file, $component) {
-                $extension = strtolower($file->getClientOriginalExtension());
-                $directory = $component->getDirectory(); 
-                $filename = Str::random(40);
-                
-                $uploadFolder = public_path('uploads/' . $directory . '/');
+    FileUpload::macro('toWebp', function () {
+    /** @var FileUpload $this */
+    return $this->saveUploadedFileUsing(function ($file, $component) {
+        $extension = strtolower($file->getClientOriginalExtension());
+        // Directory null gelirse boş string yerine 'files' gibi bir varsayılan atayalım
+        $directory = $component->getDirectory() ?? 'general'; 
+        $filename = Str::random(40);
+        
+        // public/uploads/hero/
+        $uploadFolder = public_path('uploads/' . $directory . '/');
 
-                if (!file_exists($uploadFolder)) {
-                    mkdir($uploadFolder, 0775, true);
-                }
+        if (!file_exists($uploadFolder)) {
+            mkdir($uploadFolder, 0775, true);
+        }
 
-                if ($extension === 'svg') {
-                    $finalName = $filename . '.svg';
-                    copy($file->getRealPath(), $uploadFolder . $finalName);
-                } else {
-                    $finalName = $filename . '.webp';
-                    $img = Image::read($file);
-                    $img->toWebp(80)->save($uploadFolder . $finalName);
-                }
+        if ($extension === 'svg') {
+            $finalName = $filename . '.svg';
+            copy($file->getRealPath(), $uploadFolder . $finalName);
+        } else {
+            $finalName = $filename . '.webp';
+            // Intervention Image v3
+            Image::read($file)
+                ->toWebp(80)
+                ->save($uploadFolder . $finalName);
+        }
 
-                return $directory . '/' . $finalName;
-            });
-        });
+        // DİKKAT: Burası veritabanına yazılan kısımdır. 
+        // uploads diskinin root'u zaten public/uploads olduğu için
+        // sadece 'directory/filename.webp' dönmeliyiz.
+        return $directory . '/' . $finalName;
+    });
+});
 
         // Locale Ayarları
         Carbon::setLocale('tr');
