@@ -56,34 +56,34 @@ class AdminPanelProvider extends PanelProvider
             ->profile()
             ->passwordReset()
             ->authGuard('web')
-            
 
-        
+
+
             /*
             |--------------------------------------------------------------------------
             | BRANDING
             |--------------------------------------------------------------------------
             */
-           ->brandName($settings?->site_name ?? 'Karakter360')
-->darkModeBrandLogo(function () {
-    $settings = Setting::first();
-    return ($settings && $settings->logo_light) 
-        ? asset('uploads/' . $settings->logo_light) 
-        : asset('logo.svg');
-})
-->BrandLogo(function () {
-    $settings = Setting::first();
-    return ($settings && $settings->logo_dark) 
-        ? asset('uploads/' . $settings->logo_dark) 
-        : asset('logo.svg');
-})
-->favicon(function () {
-    $settings = Setting::first();
-    return ($settings && $settings->favicon) 
-        ? asset('uploads/' . $settings->favicon) 
-        : asset('favicon.svg');
-})
-->brandLogoHeight('40px')
+            ->brandName($settings?->site_name ?? 'Karakter360')
+            ->darkModeBrandLogo(function () {
+                $settings = Setting::first();
+                return ($settings && $settings->logo_light)
+                    ? asset('uploads/' . $settings->logo_light)
+                    : asset('logo.svg');
+            })
+            ->BrandLogo(function () {
+                $settings = Setting::first();
+                return ($settings && $settings->logo_dark)
+                    ? asset('uploads/' . $settings->logo_dark)
+                    : asset('logo.svg');
+            })
+            ->favicon(function () {
+                $settings = Setting::first();
+                return ($settings && $settings->favicon)
+                    ? asset('uploads/' . $settings->favicon)
+                    : asset('favicon.svg');
+            })
+            ->brandLogoHeight('40px')
 
             /*
             |--------------------------------------------------------------------------
@@ -111,12 +111,12 @@ class AdminPanelProvider extends PanelProvider
             */
             ->colors([
                 'primary' => '#202124',
-                'gray'    => '#202124',
-                'danger'  => '#B4244A',
+                'gray' => '#202124',
+                'danger' => '#B4244A',
                 'warning' => '#F59E0B',
-                'info'    => '#3B82F6',
+                'info' => '#3B82F6',
                 'success' => '#5BEB00',
-                'badge'  => '#B4244A',
+                'badge' => '#B4244A',
             ])
 
             /*
@@ -201,8 +201,8 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 // FilamentShieldPlugin::make(),
-               
-                
+
+
             ])
 
             /*
@@ -214,9 +214,9 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
 
-             ->renderHook(
-            PanelsRenderHook::BODY_END,
-            fn () => view('filament.pages.footer')
-        );
+            ->renderHook(
+                PanelsRenderHook::BODY_END,
+                fn() => view('filament.pages.footer')
+            );
     }
 }
