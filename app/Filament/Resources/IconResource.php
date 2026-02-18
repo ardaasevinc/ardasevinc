@@ -11,22 +11,27 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Group;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\TernaryFilter;
 use Illuminate\Support\Str;
 use Filament\Forms\Set;
 
 class IconResource extends Resource
 {
     protected static ?string $model = Icon::class;
-    protected static ?string $navigationLabel = 'Reklam İkonları (3lü)';
-    protected static ?string $navigationIcon = 'heroicon-o-newspaper';
+    protected static ?string $navigationLabel = 'Reklam İkonları';
+    protected static ?string $navigationIcon = 'heroicon-o-squares-plus'; // Daha uygun bir ikon
     protected static ?string $pluralModelLabel = 'Reklam İkonları (3lü)';
     protected static ?string $navigationGroup = 'Site Yönetimi';
-    protected static ?string $modelLabel = 'Reklam';
+    protected static ?string $modelLabel = 'Reklam İkonu';
+
+    // Global Search: Başlık veya açıklama üzerinden arama yapılabilir
+    protected static ?string $recordTitleAttribute = 'title';
 
     public static function form(Forms\Form $form): Forms\Form
     {
@@ -34,46 +39,61 @@ class IconResource extends Resource
             ->schema([
                 Grid::make(12)
                     ->schema([
-                        // Sol tarafta ikon yükleme alanı (columnSpan 4)
-                        Section::make('İkon')
+                        // Sol taraf: Görsel ve Yayın Ayarları (columnSpan 4)
+                        Group::make()
                             ->schema([
-                                FileUpload::make('icon')
-                                    ->label('İkon')
-                                    ->image()
-                                    ->helperText('İkon boyutu 100x100 piksel olmalıdır.')
-                                    ->directory('icons')
-                                    ->nullable(),
+                                Section::make('Görsel')
+                                    ->schema([
+                                        FileUpload::make('icon')
+                                            ->label('İkon / Resim')
+                                            ->image()
+                                            ->helperText('Önerilen boyut: 100x100 piksel.')
+                                            ->directory('icons')
+                                            ->disk('uploads')
+                                            ->imageEditor()
+                                            ->required(),
+                                    ]),
+                                
+                                Section::make('Durum ve Sıra')
+                                    ->schema([
+                                        TextInput::make('sort_order')
+                                            ->label('Görüntüleme Sırası')
+                                            ->numeric()
+                                            ->default(0),
+
+                                        Toggle::make('is_published')
+                                            ->label('Yayına Al')
+                                            ->default(true)
+                                            ->onColor('success'),
+                                    ]),
                             ])
                             ->columnSpan(4),
 
-                        // Sağ tarafta metin alanları (columnSpan 8)
-                        Section::make('Metin Alanları')
+                        // Sağ taraf: Metin İçerikleri (columnSpan 8)
+                        Section::make('İçerik Detayları')
+                            ->description('İkonun başlık, slug ve açıklama metinlerini düzenleyin.')
                             ->schema([
                                 TextInput::make('title')
                                     ->label('Başlık')
                                     ->required()
+                                     ->toWebp()
+                                    ->image()
+                                    ->imageEditor()
                                     ->live(onBlur: true)
                                     ->afterStateUpdated(function (Set $set, $state) {
-                                        if (!filled($set('slug'))) {
-                                            $set('slug', Str::slug((string) $state));
-                                        }
+                                        $set('slug', Str::slug((string) $state));
                                     }),
 
                                 TextInput::make('slug')
-                                    ->label('Slug')
-                                    ->helperText('Başlıktan otomatik oluşur, istersen düzenleyebilirsin.')
-                                    ->rule('alpha_dash')
-                                    ->unique(table: Icon::class, column: 'slug', ignorable: fn($record) => $record)
-                                    ->dehydrateStateUsing(fn($state) => Str::slug((string) $state))
-                                    ->nullable(),
+                                    ->label('URL Uzantısı (Slug)')
+                                    ->required()
+                                    ->unique(ignoreRecord: true)
+                                    ->helperText('Başlıktan otomatik oluşturulur.'),
 
                                 Textarea::make('desc')
-                                    ->label('Açıklama')
+                                    ->label('Kısa Açıklama')
+                                    ->rows(4)
                                     ->nullable(),
-
-                                Toggle::make('is_published')
-                                    ->label('Yayın Durumu')
-                                    ->default(true),
                             ])
                             ->columnSpan(8),
                     ]),
@@ -84,55 +104,60 @@ class IconResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('sort_order')
+                    ->label('Sıra')
+                    ->sortable(),
+
                 ImageColumn::make('icon')
                     ->label('İkon')
-                    ->size(50)
-                    ->disk('uploads')
-                    ->toggleable(),
+                   
+                    ->circular()
+                    ->disk('uploads'),
 
                 TextColumn::make('title')
                     ->label('Başlık')
                     ->sortable()
-                    ->searchable()
-                    ->toggleable(),
+                    ->searchable(),
 
                 TextColumn::make('slug')
                     ->label('Slug')
-                    ->sortable()
                     ->searchable()
-                    ->toggleable(),
-
-                TextColumn::make('desc')
-                    ->label('Açıklama')
-                    ->limit(50)
-                    ->wrap()
-                    ->searchable()
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 ToggleColumn::make('is_published')
                     ->label('Yayın Durumu')
-                    ->toggleable(),
+                    ->sortable(),
 
                 TextColumn::make('created_at')
                     ->label('Oluşturulma')
-                    ->dateTime('d.m.Y H:i')
+                    ->dateTime('d.m.Y')
                     ->sortable()
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([])
+            ->defaultSort('sort_order', 'asc') // Varsayılan sıralama
+            ->filters([
+                TernaryFilter::make('is_published')
+                    ->label('Yayın Durumu'),
+            ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
-            ]);
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                    // Toplu yayınlama aksiyonu
+                    Tables\Actions\BulkAction::make('publish')
+                        ->label('Seçilenleri Yayınla')
+                        ->icon('heroicon-o-check-circle')
+                        ->color('success')
+                        ->action(fn ($records) => $records->each->update(['is_published' => true])),
+                ]),
+            ])
+            ->emptyStateHeading('Henüz bir reklam ikonu eklenmemiş.');
     }
 
-    public static function getRelations(): array
-    {
-        return [];
-    }
+
 
     public static function getPages(): array
     {

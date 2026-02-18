@@ -14,53 +14,80 @@ class BlogPost extends Model
 
     protected $fillable = [
         'blog_category_id',
+        'title',
+        'slug',
         'img1',
         'img2',
-        'title',
         'desc',
+        'sort_order',
         'is_published',
-        'slug',
     ];
 
+    protected $casts = [
+        'is_published' => 'boolean',
+        'sort_order' => 'integer',
+        'blog_category_id' => 'integer',
+    ];
+
+    /**
+     * Model Boot İşlemleri
+     */
     protected static function booted(): void
     {
+        // Kayıt oluşturulurken slug boşsa otomatik üret
         static::creating(function (BlogPost $post) {
             if (empty($post->slug)) {
-                $post->slug = static::uniqueSlug($post->title);
+                $post->slug = self::generateUniqueSlug($post->title);
             }
         });
 
+        // Güncellenirken başlık değişmişse ve yeni slug verilmemişse güncelle
         static::updating(function (BlogPost $post) {
-            // Başlık değişmiş ve slug boş/manuel değilse yeniden üretmek istersen:
-            if ($post->isDirty('title') && empty($post->slug)) {
-                $post->slug = static::uniqueSlug($post->title, $post->id);
+            if ($post->isDirty('title') && !$post->isDirty('slug')) {
+                $post->slug = self::generateUniqueSlug($post->title, $post->id);
             }
         });
     }
 
-    protected static function uniqueSlug(string $title, ?int $ignoreId = null): string
+    /**
+     * Benzersiz Slug Üretici
+     */
+    public static function generateUniqueSlug(string $title, ?int $ignoreId = null): string
     {
-        $base = Str::slug($title) ?: 'yazi';
-        $slug = $base;
-        $i = 1;
+        $slug = Str::slug($title) ?: 'blog-post';
+        $originalSlug = $slug;
+        $count = 1;
 
-        while (static::query()
+        while (static::where('slug', $slug)
             ->when($ignoreId, fn($q) => $q->where('id', '!=', $ignoreId))
-            ->where('slug', $slug)
             ->exists()) {
-            $slug = $base.'-'.$i++;
+            $slug = $originalSlug . '-' . $count++;
         }
 
         return $slug;
     }
 
+    /**
+     * İlişki: Blog Kategorisi
+     */
     public function category(): BelongsTo
     {
         return $this->belongsTo(BlogCategory::class, 'blog_category_id');
     }
 
+    /**
+     * İlişki: Galeri Resimleri (Sıralı)
+     */
     public function media(): HasMany
     {
-        return $this->hasMany(BlogMedia::class, 'blog_post_id', 'id');
+        return $this->hasMany(BlogMedia::class, 'blog_post_id')->orderBy('sort_order', 'asc');
+    }
+
+    /**
+     * Scope: Sadece yayında olanlar
+     */
+    public function scopePublished($query)
+    {
+        return $query->where('is_published', true)->orderBy('sort_order', 'asc');
     }
 }

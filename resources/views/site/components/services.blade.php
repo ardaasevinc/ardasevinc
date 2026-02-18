@@ -1,3 +1,5 @@
+@if($service->count()> 0)
+
 <!-- services -->
 <div class="">
     <div class="container">
@@ -60,3 +62,4 @@
     </div>
 </div>
 <!-- services end -->
+@endif

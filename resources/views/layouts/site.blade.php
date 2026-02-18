@@ -1,110 +1,48 @@
 <!DOCTYPE html>
-<html lang="zxx">
-
+<html lang="tr">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     {{-- SEO Ayarları --}}
-    <title>
-        {{ !empty($settings['SEO_TITLE']) ? html_entity_decode(strip_tags($settings['SEO_TITLE'])) : config('app.name') }}
-    </title>
-
-
-    @if (!empty($settings['SEO_DESCRIPTION']))
-        <meta name="description" content="{{ strip_tags($settings['SEO_DESCRIPTION']) }}">
+    <title>{{ $settings?->meta_title ?? $settings?->site_name ?? config('app.name') }}</title>
+    
+    @if($settings?->meta_desc)
+        <meta name="description" content="{{ $settings->meta_desc }}">
     @endif
 
-    @if (!empty($settings['SEO_KEYWORDS']))
-        <meta name="keywords" content="{{ strip_tags($settings['SEO_KEYWORDS']) }}">
+    @if($settings?->meta_keywords)
+        <meta name="keywords" content="{{ $settings->meta_keywords }}">
     @endif
-    <link rel="manifest" href="{{asset('/manifest.json')}}">
-    <meta name="theme-color" content="#ffffff">
+
+    {{-- Favicon --}}
+    <link rel="icon" href="{{ $settings?->favicon ? asset('storage/' . $settings->favicon) : asset('site/assets/img/favicon.svg') }}" type="image/x-icon">
+
+    {{-- Sosyal Medya Önizleme (OG Image) --}}
+    @if($settings?->og_image)
+        <meta property="og:image" content="{{ asset('storage/' . $settings->og_image) }}">
+    @endif
 
     {{-- Google Analytics --}}
-    @if (!empty($settings['GOOGLE_ANALYTICS_ID']))
-        <script async
-            src="https://www.googletagmanager.com/gtag/js?id={{ strip_tags($settings['GOOGLE_ANALYTICS_ID']) }}"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag() { dataLayer.push(arguments); }
-            gtag('js', new Date());
-            gtag('config', '{{ strip_tags($settings['GOOGLE_ANALYTICS_ID']) }}');
-        </script>
+    @if($settings?->google_analytics_code)
+        {!! $settings->google_analytics_code !!}
     @endif
-
-    {{-- Google Tag Manager --}}
-    @if (!empty($settings['GOOGLE_TAG_MANAGER_ID']))
-        <script>(function (w, d, s, l, i) {
-                w[l] = w[l] || []; w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-                var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
-                j.async = true; j.src = 'https://www.googletagmanager.com/gtm.js?id=' + strip_tags($settings['GOOGLE_TAG_MANAGER_ID']) + dl;
-                f.parentNode.insertBefore(j, f);
-            })(window, document, 'script', 'dataLayer', '{{ strip_tags($settings['GOOGLE_TAG_MANAGER_ID']) }}');</script>
-    @endif
-
-    {{-- Google reCAPTCHA --}}
-    @if (!empty($settings['GOOGLE_RECAPTCHA_SITE_KEY']))
-        <script
-            src="https://www.google.com/recaptcha/api.js?render={{ strip_tags($settings['GOOGLE_RECAPTCHA_SITE_KEY']) }}"></script>
-    @endif
-
-    {{-- Google Maps API --}}
-    @if (!empty($settings['GOOGLE_MAPS_API_KEY']))
-        <script async defer
-            src="https://maps.googleapis.com/maps/api/js?key={{ strip_tags($settings['GOOGLE_MAPS_API_KEY']) }}"></script>
-    @endif
-
-
-    <link rel="icon" href="{{asset('site/assets/img/favicon.svg')}}" type="image/x-icon">
 
     {{-- Facebook Pixel --}}
-    @if (!empty($settings['FACEBOOK_PIXEL_ID']))
-        <script>
-            !function (f, b, e, v, n, t, s) {
-                if (f.fbq) return; n = f.fbq = function () {
-                    n.callMethod ?
-                        n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-                };
-                if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
-                n.queue = []; t = b.createElement(e); t.async = !0;
-                t.src = v; s = b.getElementsByTagName(e)[0];
-                s.parentNode.insertBefore(t, s)
-            }(window, document, 'script',
-                'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '{{ strip_tags($settings['FACEBOOK_PIXEL_ID']) }}');
-            fbq('track', 'PageView');
-        </script>
+    @if($settings?->facebook_pixel_code)
+        {!! $settings->facebook_pixel_code !!}
     @endif
 
-    {{-- Özel CSS Dosyası --}}
-    @if (!empty($settings['CUSTOM_CSS']))
-        <link rel="stylesheet" href="{{ asset(strip_tags($settings['CUSTOM_CSS'])) }}">
+    {{-- Panelden Eklenen Özel Head Scriptleri (CSS vb.) --}}
+    @if($settings?->header_scripts)
+        {!! $settings->header_scripts !!}
     @endif
 
-    {{-- Özel JS Dosyası --}}
-    @if (!empty($settings['CUSTOM_JS']))
-        <script src="{{ asset(strip_tags($settings['CUSTOM_JS'])) }}" defer></script>
-    @endif
-
-
-    <!-- grid css -->
     <link rel="stylesheet" href="{{ asset('site/assets/css/plugins/bootstrap-grid.css') }}">
-    <!-- font awesome css -->
     <link rel="stylesheet" href="{{ asset('site/assets/css/plugins/fontawesome.min.css') }}">
-    <!-- swiper css -->
     <link rel="stylesheet" href="{{ asset('site/assets/css/plugins/swiper.min.css') }}">
-    <!-- okai css -->
     <link rel="stylesheet" href="{{ asset('site/assets/css/style-friendly.css') }}">
-
-    <!-- page title -->
-    <title>Pixy</title>
-
 </head>
 @include('site.components.success')
 <body>
@@ -136,6 +74,7 @@
                 <div id="smooth-content" class="mil-content">
                    
                     @yield('content')
+                    @include('site.components.whatsapp')
                     @include('site.components.footer')
                 </div>
                 <!-- content -->

@@ -14,46 +14,61 @@ class PortfolioPost extends Model
 
     protected $fillable = [
         'portfolio_category_id',
+        'title',
+        'slug',
         'img1',
         'img2',
-        'title',
         'desc',
+        'sort_order',
         'is_published',
-        'slug', // 🔥
     ];
 
-    // Route Model Binding için slug kullan
+    protected $casts = [
+        'is_published' => 'boolean',
+        'sort_order' => 'integer',
+        'portfolio_category_id' => 'integer',
+    ];
+
+    /**
+     * URL'lerde ID yerine slug kullanılması için
+     */
     public function getRouteKeyName(): string
     {
         return 'slug';
     }
 
+    /**
+     * Model Olayları (Boot)
+     */
     protected static function booted(): void
     {
-        static::creating(function (PortfolioPost $m) {
-            if (empty($m->slug)) {
-                $m->slug = static::uniqueSlug($m->title);
+        static::creating(function (PortfolioPost $post) {
+            if (empty($post->slug)) {
+                $post->slug = self::generateUniqueSlug($post->title);
             }
         });
 
-        static::updating(function (PortfolioPost $m) {
-            if ($m->isDirty('title') && empty($m->slug)) {
-                $m->slug = static::uniqueSlug($m->title, $m->id);
+        static::updating(function (PortfolioPost $post) {
+            // Başlık değişmişse ve kullanıcı elle slug girmemişse slug'ı güncelle
+            if ($post->isDirty('title') && !$post->isDirty('slug')) {
+                $post->slug = self::generateUniqueSlug($post->title, $post->id);
             }
         });
     }
 
-    protected static function uniqueSlug(string $title, ?int $ignoreId = null): string
+    /**
+     * Benzersiz Slug Oluşturucu
+     */
+    public static function generateUniqueSlug(string $title, ?int $ignoreId = null): string
     {
-        $base = Str::slug($title) ?: 'portfolio';
+        $base = Str::slug($title) ?: 'portfolio-item';
         $slug = $base;
         $i = 1;
 
-        while (
-            static::query()
-                ->when($ignoreId, fn($q) => $q->where('id', '!=', $ignoreId))
-                ->where('slug', $slug)
-                ->exists()
+        while (static::query()
+            ->when($ignoreId, fn($q) => $q->where('id', '!=', $ignoreId))
+            ->where('slug', $slug)
+            ->exists()
         ) {
             $slug = "{$base}-{$i}";
             $i++;
@@ -62,16 +77,28 @@ class PortfolioPost extends Model
         return $slug;
     }
 
- public function category()
-{
-    return $this->belongsTo(\App\Models\PortfolioCategory::class, 'portfolio_category_id');
-}
-
-
-    public function media(): HasMany
+    /**
+     * İlişki: Portfolyo Kategorisi
+     */
+    public function category(): BelongsTo
     {
-        return $this->hasMany(PortfolioMedia::class, 'portfolio_post_id');
+        return $this->belongsTo(PortfolioCategory::class, 'portfolio_category_id');
     }
 
+    /**
+     * İlişki: Proje Galerisi (Sıralı)
+     */
+    public function media(): HasMany
+    {
+        return $this->hasMany(PortfolioMedia::class, 'portfolio_post_id')
+                    ->orderBy('sort_order', 'asc');
+    }
 
+    /**
+     * Scope: Sadece yayında olanları sıralı getir
+     */
+    public function scopePublished($query)
+    {
+        return $query->where('is_published', true)->orderBy('sort_order', 'asc');
+    }
 }

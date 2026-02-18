@@ -2,63 +2,105 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\{File, Log, Cache, Artisan};
 
 class Setting extends Model
 {
-    use HasFactory;
+    protected $guarded = ['id'];
 
+    /**
+     * Veri tipi dönüşümleri
+     */
     protected $casts = [
-        'value' => 'array', // `value` alanı artık JSON olarak saklanacak ve `array` olarak işlenecek.
+        'app_debug' => 'boolean',
+        'maintenance_mode' => 'boolean',
     ];
 
-
-
-    protected $fillable = ['key', 'value'];
-
-    /**
-     * Verilen ayarı getir.
-     */
-    public static function get(string $key, $default = null)
+    protected static function booted()
     {
-        return self::where('key', $key)->value('value') ?? $default;
+        static::saved(function ($setting) {
+            // .env mapping: Veritabanı sütun isimleri soldaki ENV anahtarlarına atanır
+            $envMapping = [
+                'APP_URL'               => $setting->app_url,
+                'APP_ENV'               => $setting->app_env,
+                'APP_DEBUG'             => $setting->app_debug ? 'true' : 'false',
+                'MAIL_MAILER'           => $setting->mail_mailer ?? 'smtp',
+                'MAIL_HOST'             => $setting->mail_host,
+                'MAIL_PORT'             => $setting->mail_port,
+                'MAIL_USERNAME'         => $setting->mail_username,
+                'MAIL_PASSWORD'         => $setting->mail_password,
+                'MAIL_ENCRYPTION'       => $setting->mail_encryption,
+                'MAIL_FROM_ADDRESS'     => $setting->mail_from_address,
+                'MAIL_FROM_NAME'        => $setting->mail_from_name,
+                'FACEBOOK_PIXEL_ID'     => $setting->facebook_pixel_code,
+                'GOOGLE_ANALYTICS_ID'   => $setting->google_analytics_code,
+                'INSTAGRAM_ACCESS_TOKEN'=> $setting->instagram_access_token,
+            ];
+
+            try {
+                $envPath = base_path('.env');
+                if (File::exists($envPath)) {
+                    $content = File::get($envPath);
+
+                    foreach ($envMapping as $key => $value) {
+                        $value = $value ?? '';
+                        // Değeri tırnak içine al ve tırnakları kaçır
+                        $safeValue = '"' . str_replace('"', '\"', $value) . '"';
+                        
+                        $pattern = "/^{$key}=.*/m";
+
+                        if (preg_match($pattern, $content)) {
+                            $content = preg_replace($pattern, "{$key}={$safeValue}", $content);
+                        } else {
+                            // Eğer anahtar yoksa, dosyanın sonuna yeni satırla ekle
+                            $content = rtrim($content) . "\n{$key}={$safeValue}";
+                        }
+                    }
+
+                    File::put($envPath, rtrim($content) . "\n");
+
+                    // KRİTİK: Config cache varsa temizle, yoksa yeni .env değerleri okunmaz
+                    if (app()->environment() !== 'local') {
+                        Artisan::call('config:clear');
+                    }
+                }
+            } catch (\Exception $e) {
+                Log::error("Setting Model - ENV Yazım Hatası: " . $e->getMessage());
+            }
+        });
     }
 
     /**
-     * Ayarı güncelle ve .env dosyasına yansıt
+     * Instagram gönderilerini çeker.
+     * file_get_contents yerine daha profesyonel olan Http Client (Guzzle) önerilir 
+     * ancak basitlik adına bu yapıyı optimize ettik.
      */
-    public static function set(string $key, $value): void
+    public function getInstagramPosts($limit = 6)
     {
-        self::updateOrCreate(['key' => $key], ['value' => $value]);
-        self::updateEnv($key, $value);
-    }
+        // Önce veritabanına bak, yoksa config'e (env) bak
+        $token = $this->instagram_access_token ?: config('services.instagram.token');
 
-    /**
-     * .env dosyasını güncelle ve Laravel config'lerini temizle
-     */
-    private static function updateEnv($key, $value)
-    {
-        $envPath = base_path('.env');
-        $envContent = file_get_contents($envPath);
-
-        // Eğer key varsa güncelle, yoksa ekle
-        if (strpos($envContent, "{$key}=") !== false) {
-            $envContent = preg_replace("/^{$key}=.*/m", "{$key}=\"{$value}\"", $envContent);
-        } else {
-            $envContent .= "\n{$key}=\"{$value}\"";
+        if (!$token) {
+            return [];
         }
 
-        file_put_contents($envPath, $envContent);
+        return Cache::remember('insta_posts', 3600, function () use ($token, $limit) {
+            try {
+                $url = "https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,permalink,thumbnail_url,timestamp&access_token={$token}";
+                
+                $response = @file_get_contents($url);
+                
+                if ($response === false) {
+                    return [];
+                }
 
-        // Laravel önbelleğini temizle ve yeni config'leri yükle
-        Artisan::call('config:clear');
-        Artisan::call('config:cache');
-
-        // Yeni ayarları Laravel'e yansıt
-        $_ENV[$key] = $value;
-        putenv("{$key}={$value}");
-        config(["app.{$key}" => $value]);
+                $data = json_decode($response, true);
+                return array_slice($data['data'] ?? [], 0, $limit);
+            } catch (\Exception $e) {
+                Log::warning("Instagram API Hatası: " . $e->getMessage());
+                return [];
+            }
+        });
     }
 }

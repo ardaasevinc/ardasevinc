@@ -9,7 +9,7 @@ use App\Http\Controllers\Site\Services\IndexController as ServicesController;
 use App\Http\Controllers\Site\Subscribe\IndexController as SubscribeController;
 
 use App\Http\Controllers\Site\Kvkk\IndexController as KvkkController;
-use App\Http\Controllers\Site\Cv\IndexController as CvController;
+use Intervention\Image\Laravel\Facades\Image;
 
 //sitemap
 use Spatie\Sitemap\Sitemap;
@@ -17,7 +17,7 @@ use Spatie\Sitemap\Tags\Url;
 use App\Models\BlogPost;
 use App\Models\PortfolioPost;
 use App\Models\Service;
-use App\Models\About;
+
 
 
 
@@ -42,13 +42,7 @@ Route::get('/kvkk-metni', [KvkkController::class, 'index'])->name('site.kvkk');
 Route::post('/haberdar-ol', [SubscribeController::class, 'store'])->name('subscribe.store');
 
 
-Route::prefix('cv')->name('site.cv.')->group(function () {
-  
-    Route::get('/', [CvController::class, 'index'])->name('index'); 
-    Route::post('/submit', [CvController::class, 'submit'])->name('submit');
-    Route::get('/{cv}/download', [CvController::class, 'download'])->name('download');
-    Route::get('/template', [CvController::class, 'show'])->name('template');
-});
+
 
 
 
@@ -99,12 +93,21 @@ Route::get('/sitemap.xml', function () {
 });
 
 
-route::get('/test', function () {
-    return view('site.test');
-});
 
 
 
 Route::fallback(function () {
     return redirect('/');
+});
+
+Route::get('/image-test', function () {
+    try {
+        // Boş bir tuval (canvas) oluşturup WebP olarak encode etmeyi deneyelim
+        $image = Image::create(100, 100)->fill('ff5500');
+        $webp = $image->toWebp();
+        
+        return response($webp)->header('Content-Type', 'image/webp');
+    } catch (\Exception $e) {
+        return "Hata: " . $e->getMessage();
+    }
 });

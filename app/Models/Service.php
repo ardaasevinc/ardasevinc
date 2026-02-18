@@ -12,40 +12,57 @@ class Service extends Model
 
     protected $fillable = [
         'title',
+        'slug',
+        'icon',           // Görsel veya ikon sınıfı için
         'desc',
-        'item1','item2','item3','item4',
-        'desc1','desc2','desc3',
-        'number','number_title',
+        'item1', 'item2', 'item3', 'item4',
+        'desc1', 'desc2', 'desc3',
+        'number',         // Hizmet istatistiği (Örn: 100% Memnuniyet)
+        'number_title',
+        'sort_order',     // Sıralama
         'is_published',
-        'slug', // 🔥
     ];
 
-    // Route Model Binding için slug kullan
+    protected $casts = [
+        'is_published' => 'boolean',
+        'sort_order' => 'integer',
+    ];
+
+    /**
+     * URL'lerde ID yerine slug kullanılması için
+     */
     public function getRouteKeyName(): string
     {
         return 'slug';
     }
 
+    /**
+     * Model Olayları (Boot)
+     */
     protected static function booted(): void
     {
-        static::creating(function (Service $m) {
-            if (empty($m->slug)) {
-                $m->slug = static::uniqueSlug($m->title);
+        static::creating(function (Service $service) {
+            if (empty($service->slug)) {
+                $service->slug = self::generateUniqueSlug($service->title);
             }
         });
 
-        static::updating(function (Service $m) {
-            // Başlık değiştiyse ve manuel slug verilmemişse yeniden üret
-            if ($m->isDirty('title') && empty($m->slug)) {
-                $m->slug = static::uniqueSlug($m->title, $m->id);
+        static::updating(function (Service $service) {
+            // Başlık değişmişse ve kullanıcı elle slug girmemişse slug'ı güncelle
+            if ($service->isDirty('title') && !$service->isDirty('slug')) {
+                $service->slug = self::generateUniqueSlug($service->title, $service->id);
             }
         });
     }
 
-    protected static function uniqueSlug(string $title, ?int $ignoreId = null): string
+    /**
+     * Benzersiz Slug Oluşturucu
+     */
+    public static function generateUniqueSlug(string $title, ?int $ignoreId = null): string
     {
-        $base = Str::slug($title) ?: 'service';
-        $slug = $base; $i = 1;
+        $base = Str::slug($title) ?: 'hizmet';
+        $slug = $base;
+        $i = 1;
 
         while (static::query()
             ->when($ignoreId, fn($q) => $q->where('id', '!=', $ignoreId))
@@ -56,5 +73,13 @@ class Service extends Model
         }
 
         return $slug;
+    }
+
+    /**
+     * Scope: Sadece yayında olan hizmetleri sıralı getir
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_published', true)->orderBy('sort_order', 'asc');
     }
 }

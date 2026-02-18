@@ -10,6 +10,7 @@ return new class extends Migration {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
             $table->string('title')->nullable();
+              $table->string('slug')->nullable();
             $table->text('desc')->nullable();
             $table->string('item1')->nullable();
             $table->string('item2')->nullable();
@@ -21,6 +22,8 @@ return new class extends Migration {
             $table->integer('number')->nullable();
             $table->string('number_title')->nullable();
             $table->boolean('is_published')->default(false); // Birden fazla kayıt aktif olabilir
+          
+            $table->unique('slug');
             $table->timestamps();
         });
     }

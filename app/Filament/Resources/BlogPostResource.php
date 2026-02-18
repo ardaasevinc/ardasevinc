@@ -14,6 +14,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Group;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
@@ -21,96 +22,117 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Illuminate\Support\Str;
 use Filament\Forms\Set;
+use Illuminate\Database\Eloquent\Builder;
 
 class BlogPostResource extends Resource
 {
     protected static ?string $model = BlogPost::class;
 
-    protected static ?string $navigationLabel = 'Bloglar';
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
-    protected static ?string $pluralModelLabel = 'Bloglar';
+    protected static ?string $navigationLabel = 'Haberler & Blog';
+    protected static ?string $navigationIcon = 'heroicon-o-newspaper';
+    protected static ?string $pluralModelLabel = 'Blog Yazıları';
     protected static ?string $navigationGroup = 'Haber Yönetimi';
-    protected static ?string $modelLabel = 'Blog';
+    protected static ?string $modelLabel = 'Blog Yazısı';
+
+    // Global Search: Başlık veya kategori üzerinden arama yapabilirsin
+    protected static ?string $recordTitleAttribute = 'title';
 
     public static function form(Forms\Form $form): Forms\Form
     {
         return $form->schema([
             Grid::make(12)->schema([
-                Section::make('Blog Görselleri')
-                    ->schema([
-                        FileUpload::make('img1')
-                            ->label('Ana Resim')
-                            ->image()
-                            ->disk('uploads')
-                            ->directory('blog')
-                            ->nullable(),
-
-                        FileUpload::make('img2')
-                            ->label('İkincil Resim')
-                            ->image()
-                            ->disk('uploads')
-                            ->directory('blog')
-                            ->nullable(),
-                    ])
-                    ->columnSpan(4),
-
-                Section::make('Blog Bilgileri')
-                    ->schema([
-                        Select::make('blog_category_id')
-                            ->label('Kategori')
-                            ->options(fn() => BlogCategory::where('is_published', true)->pluck('name', 'id'))
-                            ->searchable()
-                            ->required(),
-
-                        TextInput::make('title')
-                            ->label('Başlık')
-                            ->nullable()
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(function (Set $set, $state) {
-                                if (!filled($state))
-                                    return;
-                                $set('slug', Str::slug($state));
-                            }),
-
-                        TextInput::make('slug')
-                            ->label('Slug')
-                            ->helperText('Başlıktan otomatik oluşur, istersen düzenleyebilirsin.')
-                            ->rules(['alpha_dash'])
-                            ->unique(ignoreRecord: true)
-                            ->dehydrateStateUsing(fn($state) => Str::slug((string) $state))
-                            ->nullable(),
-
-                        RichEditor::make('desc')
-                            ->label('İçerik')
-                            ->fileAttachmentsDisk('uploads')
-                            ->fileAttachmentsDirectory('blog/richeditor')
-                            ->nullable(),
-
-                        Toggle::make('is_published')
-                            ->label('Yayınlandı mı?')
-                            ->default(false),
-                    ])
-                    ->columnSpan(8),
-            ]),
-
-            Section::make('Galeri Resimleri')
-                ->schema([
-                    Repeater::make('images')
-                        ->label('Galeri Resimleri')
-                        ->relationship('media')
+                Group::make()->schema([
+                    Section::make('İçerik Editörü')
                         ->schema([
-                            FileUpload::make('image')
-                                ->label('Resim')
-                                ->image()
-                                ->disk('uploads')
-                                ->directory('blog/media')
+                            TextInput::make('title')
+                                ->label('Başlık')
+                                ->required()
+                                ->live(onBlur: true)
+                                ->afterStateUpdated(function (Set $set, $state) {
+                                    $set('slug', Str::slug($state));
+                                }),
+
+                            TextInput::make('slug')
+                                ->label('URL Uzantısı (Slug)')
+                                ->required()
+                                ->unique(ignoreRecord: true)
+                                ->helperText('Başlıktan otomatik üretilir.'),
+
+                            RichEditor::make('desc')
+                                ->label('Yazı İçeriği')
+                                ->required()
+                                ->fileAttachmentsDisk('uploads')
+                                ->fileAttachmentsDirectory('blog/editor')
+                                ->columnSpanFull(),
+                        ]),
+
+                    Section::make('Galeri Resimleri')
+                        ->schema([
+                            Repeater::make('images')
+                                ->relationship('media')
+                                ->schema([
+                                    FileUpload::make('image')
+                                        ->label('Görsel')
+                                        ->image()
+                                        ->imageEditor()
+                                            ->toWebp()
+                                        ->disk('uploads')
+                                        ->directory('blog/media')
+                                        ->required(),
+                                    TextInput::make('sort_order')
+                                        ->label('Sıra')
+                                        ->numeric()
+                                        ->default(0),
+                                ])
+                                ->columns(2)
+                                ->reorderable('sort_order')
+                                ->collapsible()
+                                ->itemLabel(fn (array $state): ?string => "Resim " . ($state['sort_order'] ?? '')),
+                        ]),
+                ])->columnSpan(8),
+
+                Group::make()->schema([
+                    Section::make('Yayın ve Kategori')
+                        ->schema([
+                            Select::make('blog_category_id')
+                                ->label('Kategori Seçin')
+                                ->relationship('category', 'name')
+                                ->searchable()
+                                ->preload()
                                 ->required(),
-                        ])
-                        ->defaultItems(0)
-                        ->minItems(0)
-                        ->maxItems(10),
-                ])
-                ->collapsible(),
+
+                            TextInput::make('sort_order')
+                                ->label('Genel Sıralama')
+                                ->numeric()
+                                ->default(0),
+
+                            Toggle::make('is_published')
+                                ->label('Yayına Al')
+                                ->onColor('success')
+                                ->default(false),
+                        ]),
+
+                    Section::make('Kapak Görselleri')
+                        ->schema([
+                            FileUpload::make('img1')
+                                ->label('Ana Görsel')
+                                ->image()
+                                
+                                            ->toWebp()
+                                ->disk('uploads')
+                                ->directory('blog')
+                                ->imageEditor(),
+
+                            FileUpload::make('img2')
+                                ->label('Alternatif Görsel')
+                                ->image()
+                                ->imageEditor()
+                                ->toWebp()
+                                ->disk('uploads')
+                                ->directory('blog'),
+                        ]),
+                ])->columnSpan(4),
+            ]),
         ]);
     }
 
@@ -118,60 +140,67 @@ class BlogPostResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('sort_order')
+                    ->label('Sıra')
+                    ->sortable(),
+
                 ImageColumn::make('img1')
-                    ->label('Ana Resim')
+                    ->label('Kapak')
                     ->disk('uploads')
-                    ->circular()
-                    ->toggleable(),
+                    ->circular(),
 
                 TextColumn::make('title')
                     ->label('Başlık')
-                    ->sortable()
                     ->searchable()
-                    ->toggleable(),
-
-                TextColumn::make('slug')
-                    ->label('Slug')
                     ->sortable()
-                    ->searchable()
-                    ->toggleable(),
+                    ->wrap(),
 
                 TextColumn::make('category.name')
                     ->label('Kategori')
-                    ->sortable()
+                    ->badge()
+                    ->color('info')
                     ->searchable()
-                    ->formatStateUsing(fn($state) => $state ?? 'Kategori Yok')
-                    ->toggleable(),
-
-                TextColumn::make('desc')
-                    ->label('İçerik')
-                    ->limit(50)
-                    ->wrap()
-                    ->searchable()
-                    ->toggleable(),
+                    ->sortable(),
 
                 ToggleColumn::make('is_published')
                     ->label('Yayın Durumu')
-                    ->toggleable(),
+                    ->sortable(),
 
                 TextColumn::make('created_at')
-                    ->label('Oluşturulma')
-                    ->dateTime('d.m.Y H:i')
+                    ->label('Tarih')
+                    ->dateTime('d.m.Y')
                     ->sortable()
                     ->toggleable(),
             ])
+            ->defaultSort('sort_order', 'asc')
+            ->filters([
+                Tables\Filters\SelectFilter::make('blog_category_id')
+                    ->label('Kategoriye Göre')
+                    ->relationship('category', 'name'),
+                
+                Tables\Filters\TernaryFilter::make('is_published')
+                    ->label('Yayın Durumu'),
+            ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\BulkAction::make('publish')
+                        ->label('Seçilenleri Yayınla')
+                        ->icon('heroicon-o-check-circle')
+                        ->color('success')
+                        ->action(fn ($records) => $records->each->update(['is_published' => true])),
+                ]),
             ]);
     }
 
-    public static function getRelations(): array
+    public static function getGloballySearchableAttributes(): array
     {
-        return [];
+        return ['title', 'slug', 'category.name'];
     }
 
     public static function getPages(): array

@@ -2,37 +2,97 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use App\Models\Setting;
 use App\Models\BlogPost;
-use Illuminate\Support\Facades\View;
+use App\Models\Hero;
+use App\Models\Setting;
 use Carbon\Carbon;
+use Filament\Forms\Components\FileUpload;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
+use Intervention\Image\Laravel\Facades\Image;
+use Illuminate\Support\Str;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
-       
+        // 1. MAKRO TANIMI
+        FileUpload::macro('toWebp', function () {
+            /** @var FileUpload $this */
+            return $this->saveUploadedFileUsing(function ($file, $component) {
+                $extension = strtolower($file->getClientOriginalExtension());
+                $directory = $component->getDirectory(); 
+                $filename = Str::random(40);
+                
+                $uploadFolder = public_path('uploads/' . $directory . '/');
 
+                if (!file_exists($uploadFolder)) {
+                    mkdir($uploadFolder, 0775, true);
+                }
+
+                if ($extension === 'svg') {
+                    $finalName = $filename . '.svg';
+                    copy($file->getRealPath(), $uploadFolder . $finalName);
+                } else {
+                    $finalName = $filename . '.webp';
+                    $img = Image::read($file);
+                    $img->toWebp(80)->save($uploadFolder . $finalName);
+                }
+
+                return $directory . '/' . $finalName;
+            });
+        });
+
+        // Locale Ayarları
         Carbon::setLocale('tr');
-    App::setLocale('tr');
+        App::setLocale('tr');
 
-        $settings = Setting::pluck('value', 'key')->toArray();
-        View::share('settings', $settings);
+        // Console (migration, refresh vs.) sırasında veritabanı sorgularını çalıştırma
+        if (App::runningInConsole()) {
+            return;
+        }
 
-        $blog_menu = BlogPost::Where('is_published',1)->paginate(5);
-        View::share('blog_menu',$blog_menu);
+        try {
+            /**
+             * SETTINGS - Cache Kaldırıldı
+             */
+            if (Schema::hasTable('settings')) {
+                $settings = Setting::first() ?? new Setting();
+                View::share('settings', $settings);
+            }
+
+            /**
+             * HERO (BANNER) - Cache Kaldırıldı
+             */
+            if (Schema::hasTable('heroes')) {
+                $hero = Hero::where('is_published', true)->orderBy('id', 'desc')->first();
+                View::share('hero', $hero);
+            }
+
+            /**
+             * BLOG MENU - Cache Kaldırıldı
+             */
+            if (Schema::hasTable('blog_posts')) {
+                $blogMenu = BlogPost::query()
+                    ->select(['id', 'title', 'slug', 'created_at', 'is_published', 'sort_order'])
+                    ->where('is_published', true)
+                    ->orderBy('sort_order', 'asc')
+                    ->latest()
+                    ->limit(5)
+                    ->get();
+                View::share('blog_menu', $blogMenu);
+            }
+
+        } catch (\Exception $e) {
+            Log::warning("AppServiceProvider veritabanı yükleme hatası: " . $e->getMessage());
+        }
     }
 }
