@@ -51,7 +51,7 @@
                     @endif
 
                     {{-- Blog yazısı varsa göster --}}
-                    @if($blog_menu && $blog_menu->count() > 0)
+                    @if(\App\Models\BlogPost::where('is_published',1)->count()>0)
                         <li class="mil {{ request()->routeIs('site.blog*') ? 'mil-active' : '' }}">
                             <a href="{{ route('site.blog') }}">HABERLER</a>
                         </li>
