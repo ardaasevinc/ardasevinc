@@ -13,6 +13,8 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Tabs;
+use Filament\Forms\Set;
+use Illuminate\Support\Str;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
@@ -36,20 +38,23 @@ class ServiceResource extends Resource
         return $form->schema([
             Grid::make(12)->schema([
 
-                // SOL PANEL
+                // SOL PANEL (İçerik)
                 Group::make()->schema([
+                    Section::make('Hizmet Bilgileri')->schema([
+                        Grid::make(2)->schema([
+                            TextInput::make('title')
+                                ->label('Hizmet Başlığı')
+                                ->required()
+                                ->live(onBlur: true) // Odak kalktığında slug'ı tetikler
+                                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
 
-                    Section::make('Hizmet İçeriği')->schema([
-
-                        TextInput::make('title')
-                            ->label('Hizmet Başlığı')
-                            ->required()
-                            ->maxLength(255),
-
-                        TextInput::make('slug')
-                            ->label('URL Uzantısı (Slug)')
-                            ->unique(ignoreRecord: true)
-                            ->helperText('Boş bırakırsanız otomatik oluşturulur.'),
+                            TextInput::make('slug')
+                                ->label('URL Uzantısı')
+                                ->required()
+                                ->unique(ignoreRecord: true)
+                                ->dehydrated(true) // Kayıt sırasında gönderilmesini sağlar
+                                ->helperText('Başlığa göre otomatik oluşturulur, manuel değiştirebilirsiniz.'),
+                        ]),
 
                         RichEditor::make('desc')
                             ->label('Ana Açıklama')
@@ -57,7 +62,6 @@ class ServiceResource extends Resource
                     ]),
 
                     Tabs::make('Detaylı İçerikler')->tabs([
-
                         Tabs\Tab::make('Özellik Listesi')
                             ->icon('heroicon-o-list-bullet')
                             ->schema([
@@ -72,49 +76,35 @@ class ServiceResource extends Resource
                         Tabs\Tab::make('Ek Açıklamalar')
                             ->icon('heroicon-o-document-plus')
                             ->schema([
-                                RichEditor::make('desc1')
-                                    ->label('Ek İçerik 1')
-                                    ->fileAttachmentsDisk('uploads')
-                                    ->fileAttachmentsDirectory('services/editor')
-                                    ->columnSpanFull(),
-
-                                RichEditor::make('desc2')
-                                    ->label('Ek İçerik 2')
-                                    ->fileAttachmentsDisk('uploads')
-                                    ->fileAttachmentsDirectory('services/editor')
-                                    ->columnSpanFull(),
-
-                                RichEditor::make('desc3')
-                                    ->label('Ek İçerik 3')
-                                    ->fileAttachmentsDisk('uploads')
-                                    ->fileAttachmentsDirectory('services/editor')
-                                    ->columnSpanFull(),
+                                RichEditor::make('desc1')->label('Ek İçerik 1')->columnSpanFull(),
+                                RichEditor::make('desc2')->label('Ek İçerik 2')->columnSpanFull(),
+                                RichEditor::make('desc3')->label('Ek İçerik 3')->columnSpanFull(),
                             ]),
 
-                        Tabs\Tab::make('İstatistik (Deneyim)')
+                        Tabs\Tab::make('İstatistik & Deneyim')
                             ->icon('heroicon-o-chart-pie')
                             ->schema([
                                 Grid::make(2)->schema([
-                                    TextInput::make('number')
-                                        ->label('Sayısal Veri')
-                                        ->numeric()
-                                        ->minValue(0)
-                                        ->placeholder('Örn: 99'),
-
-                                    TextInput::make('number_title')
-                                        ->label('Veri Başlığı')
-                                        ->placeholder('Örn: Başarılı Proje'),
+                                    TextInput::make('number')->label('Sayısal Veri')->numeric(),
+                                    TextInput::make('number_title')->label('Veri Başlığı'),
                                 ]),
+                            ]),
+
+                        Tabs\Tab::make('SEO Ayarları')
+                            ->icon('heroicon-o-magnifying-glass')
+                            ->schema([
+                                TextInput::make('meta_title')->label('SEO Başlığı'),
+                                TextInput::make('meta_keywords')->label('Anahtar Kelimeler'),
+                                Forms\Components\Textarea::make('meta_description')
+                                    ->label('SEO Açıklaması')
+                                    ->columnSpanFull(),
                             ]),
                     ]),
                 ])->columnSpan(8),
 
-
-                // SAĞ PANEL
+                // SAĞ PANEL (Görsel ve Durum)
                 Group::make()->schema([
-
-                    Section::make('Görsel ve Durum')->schema([
-
+                    Section::make('Yayın Ayarları')->schema([
                         FileUpload::make('icon')
                             ->label('Hizmet İkonu')
                             ->image()
@@ -122,21 +112,18 @@ class ServiceResource extends Resource
                             ->toWebp()
                             ->disk('uploads')
                             ->directory('services')
-                            ->visibility('public')
-                            ->nullable(),
+                            ->columnSpanFull(),
 
                         TextInput::make('sort_order')
-                            ->label('Görüntüleme Sırası')
+                            ->label('Sıralama')
                             ->numeric()
                             ->default(0),
 
                         Toggle::make('is_published')
-                            ->label('Yayına Al')
+                            ->label('Yayında mı?')
                             ->onColor('success')
                             ->default(true),
-
                     ]),
-
                 ])->columnSpan(4),
             ]),
         ]);
@@ -152,9 +139,7 @@ class ServiceResource extends Resource
 
                 ImageColumn::make('icon')
                     ->label('İkon')
-                    ->circular()
-                    ->disk('uploads')
-                    ->defaultImageUrl(url('/images/placeholder.webp')),
+                    ->disk('uploads'),
 
                 TextColumn::make('title')
                     ->label('Hizmet Adı')
@@ -167,8 +152,7 @@ class ServiceResource extends Resource
                     ->sortable(),
 
                 ToggleColumn::make('is_published')
-                    ->label('Durum')
-                    ->sortable(),
+                    ->label('Durum'),
 
                 TextColumn::make('created_at')
                     ->label('Tarih')
@@ -182,23 +166,7 @@ class ServiceResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-
-                    Tables\Actions\BulkAction::make('publish')
-                        ->label('Seçilenleri Yayınla')
-                        ->icon('heroicon-o-check-circle')
-                        ->color('success')
-                        ->action(fn ($records) => $records->each->update(['is_published' => true])),
-                ]),
             ]);
-    }
-
-    public static function getGloballySearchableAttributes(): array
-    {
-        return ['title', 'slug', 'item1', 'item2', 'item3', 'item4'];
     }
 
     public static function getPages(): array
