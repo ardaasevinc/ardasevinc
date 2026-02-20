@@ -17,7 +17,7 @@
                         <li><a href="{{ route('site.index') }}">ANASAYFA</a></li>
                         <li><a href="{{ route('site.services') }}">HİZMETLERİMİZ</a></li>
                         <li><a href="{{ route('site.portfolio') }}">PROJELERİMİZ</a></li>
-                        <li><a href="{{ route('site.blog') }}">HABERLER</a></li>
+                        <li><a href="{{ route('site.blog') }}">BLOGLAR</a></li>
                         <li><a href="{{ route('site.contact') }}">BİZE ULAŞIN</a></li>
                     </ul>
                     <ul class="mil-social mil-c-gone">

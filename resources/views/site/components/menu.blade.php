@@ -53,7 +53,7 @@
                     {{-- Blog yazısı varsa göster --}}
                     @if($blog)
                         <li class="mil {{ request()->routeIs('site.blog*') ? 'mil-active' : '' }}">
-                            <a href="{{ route('site.blog') }}">HABERLER</a>
+                            <a href="{{ route('site.blog') }}">BLOGLAR</a>
                         </li>
                     @endif
 
