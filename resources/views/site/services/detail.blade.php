@@ -29,15 +29,15 @@
         <!-- hero end -->
 
         <!-- title -->
-        <div class="container mil-relative">
+        {{-- <div class="container mil-relative">
             <div class="row mil-jcc">
             @if(!empty($service->desc))
                 <div class="col-md-10">
-                    <h1 class="mil-head2 mil-tac mil-mb160 mil-up"><span class="mil-a2">UI/UX</span> {!! strip_tags($service->desc) !!} <span class="mil-a2"></span> </h1>
+                    <h1 class="mil-head2 mil-tac mil-mb160 mil-up"><span class="mil-a2">UI/UX</span> {!! strip_tags($service->title) !!} <span class="mil-a2"></span> </h1>
                 </div>
                 @endif
             </div>
-        </div>
+        </div> --}}
         <!-- title end -->
 
         @include('site.components.iconboxes')

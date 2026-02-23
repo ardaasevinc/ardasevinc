@@ -14,7 +14,7 @@
                         <a href="#.">{{ $page_title }}</a>
                     </li>
                 </ul>
-                {{-- <h1 class="mil-display3 mil-rubber">{{$blog->title}}</h1> --}}
+                <h1 class="mil-display3 mil-rubber">{{$blog->title}}</h1>
             </div>
             <div class="mil-shapes mil-scale-img" data-value-1=".7" data-value-2="1.11">
                 <div class="mil-s-2"><img src="{{ asset('site/assets/img/shapes/2.png') }}" alt="shape"></div>
