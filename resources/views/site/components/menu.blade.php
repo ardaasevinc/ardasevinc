@@ -51,7 +51,7 @@
                     @endif
 
                     {{-- Blog yazısı varsa göster --}}
-                    @if($blog->count()>0)
+                    @if(\App\Models\BlogPost::where('is_published', true)->exists())
                         <li class="mil {{ request()->routeIs('site.blog*') ? 'mil-active' : '' }}">
                             <a href="{{ route('site.blog') }}">BLOGLAR</a>
                         </li>
