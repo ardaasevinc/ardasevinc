@@ -51,7 +51,7 @@
                     @endif
 
                     {{-- Blog yazısı varsa göster --}}
-                    @if($blog)
+                    @if($blog->count()>0)
                         <li class="mil {{ request()->routeIs('site.blog*') ? 'mil-active' : '' }}">
                             <a href="{{ route('site.blog') }}">BLOGLAR</a>
                         </li>
