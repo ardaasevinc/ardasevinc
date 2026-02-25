@@ -81,31 +81,27 @@
                         </div>
 
                         <div class="swiper-container mil-blog-slider-sm">
-                            <div class="swiper-wrapper">
-                                {{-- @foreach öncesi değişkenin boş olmadığını ve döngüye uygun olduğunu kontrol edin --}}
-                                @if(isset($blog) && is_iterable($blog))
-                                    @foreach($blog as $item)
-                                        <div class="swiper-slide">
-                                            {{-- $item bir nesne mi kontrolü --}}
-                                            <a href="{{ is_object($item) ? route('site.blog.detail', ['slug' => $item->slug]) : '#' }}"
-                                                class="mil-blog-card-sm mil-c-gone">
-                                                <div class="mil-cover">
-                                                    <div class="mil-hover-frame">
-                                                        <img src="{{ (!empty($item->img1)) ? asset('uploads/' . $item->img1) : asset('site/assets/img/placeholder.jpg') }}"
-                                                            alt="{{ $item->title ?? 'Blog' }}">
-                                                    </div>
-                                                </div>
-                                                <div class="mil-text-frame">
-                                                    <h4 class="mil-head6 mil-max-1row-text">{{ Str::limit($item->title ?? '', 25) }}
-                                                    </h4>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    @endforeach
-                               
-                                @endif
+    <div class="swiper-wrapper">
+        {{-- Değişken adını blog_menu olarak güncelledik --}}
+        @if(isset($blog_menu) && is_iterable($blog_menu))
+            @foreach($blog_menu as $item)
+                <div class="swiper-slide">
+                    <a href="{{ route('site.blog.detail', ['slug' => $item->slug]) }}" class="mil-blog-card-sm mil-c-gone">
+                        <div class="mil-cover">
+                            <div class="mil-hover-frame">
+                                {{-- ServiceProvider'da 'directory/filename.webp' döndüğün için asset kullanımına dikkat --}}
+                                <img src="{{ $item->img1 ? asset('uploads/' . $item->img1) : asset('site/assets/img/placeholder.jpg') }}" alt="{{ $item->title }}">
                             </div>
                         </div>
+                        <div class="mil-text-frame">
+                            <h4 class="mil-head6 mil-max-1row-text">{{ Str::limit($item->title, 25) }}</h4>
+                        </div>
+                    </a>
+                </div>
+            @endforeach
+        @endif
+    </div>
+</div>
                     </div>
                 @endif
 
