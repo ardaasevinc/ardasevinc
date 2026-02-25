@@ -118,7 +118,7 @@ class PortfolioPostResource extends Resource
                                 ->imageEditor(),
 
                             FileUpload::make('img2')
-                                ->label('İkincil Görsel')
+                                ->label('Detay sayfasında gözükecek görsel')
                                 ->image()
                                 ->disk('uploads')
                                 ->directory('portfolio')
