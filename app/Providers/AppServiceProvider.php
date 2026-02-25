@@ -25,38 +25,38 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // 1. MAKRO TANIMI
-    FileUpload::macro('toWebp', function () {
-    /** @var FileUpload $this */
-    return $this->saveUploadedFileUsing(function ($file, $component) {
-        $extension = strtolower($file->getClientOriginalExtension());
-        // Directory null gelirse boş string yerine 'files' gibi bir varsayılan atayalım
-        $directory = $component->getDirectory() ?? 'general'; 
-        $filename = Str::random(40);
-        
-        // public/uploads/hero/
-        $uploadFolder = public_path('uploads/' . $directory . '/');
+        FileUpload::macro('toWebp', function () {
+            /** @var FileUpload $this */
+            return $this->saveUploadedFileUsing(function ($file, $component) {
+                $extension = strtolower($file->getClientOriginalExtension());
+                // Directory null gelirse boş string yerine 'files' gibi bir varsayılan atayalım
+                $directory = $component->getDirectory() ?? 'general';
+                $filename = Str::random(40);
 
-        if (!file_exists($uploadFolder)) {
-            mkdir($uploadFolder, 0775, true);
-        }
+                // public/uploads/hero/
+                $uploadFolder = public_path('uploads/' . $directory . '/');
 
-        if ($extension === 'svg') {
-            $finalName = $filename . '.svg';
-            copy($file->getRealPath(), $uploadFolder . $finalName);
-        } else {
-            $finalName = $filename . '.webp';
-            // Intervention Image v3
-            Image::read($file)
-                ->toWebp(80)
-                ->save($uploadFolder . $finalName);
-        }
+                if (!file_exists($uploadFolder)) {
+                    mkdir($uploadFolder, 0775, true);
+                }
 
-        // DİKKAT: Burası veritabanına yazılan kısımdır. 
-        // uploads diskinin root'u zaten public/uploads olduğu için
-        // sadece 'directory/filename.webp' dönmeliyiz.
-        return $directory . '/' . $finalName;
-    });
-});
+                if ($extension === 'svg') {
+                    $finalName = $filename . '.svg';
+                    copy($file->getRealPath(), $uploadFolder . $finalName);
+                } else {
+                    $finalName = $filename . '.webp';
+                    // Intervention Image v3
+                    Image::read($file)
+                        ->toWebp(80)
+                        ->save($uploadFolder . $finalName);
+                }
+
+                // DİKKAT: Burası veritabanına yazılan kısımdır. 
+                // uploads diskinin root'u zaten public/uploads olduğu için
+                // sadece 'directory/filename.webp' dönmeliyiz.
+                return $directory . '/' . $finalName;
+            });
+        });
 
         // Locale Ayarları
         Carbon::setLocale('tr');
@@ -89,11 +89,11 @@ class AppServiceProvider extends ServiceProvider
              */
             if (Schema::hasTable('blog_posts')) {
                 $blogMenu = BlogPost::query()
-    ->select(['id', 'title', 'slug', 'img1', 'created_at', 'is_published', 'sort_order']) // img1 buraya eklendi!
-    ->where('is_published', true)
-    ->orderBy('sort_order', 'asc')
-    ->limit(5)
-    ->get();
+                    ->select(['id', 'title', 'slug', 'img1', 'created_at', 'is_published', 'sort_order']) // img1 buraya eklendi!
+                    ->where('is_published', 1)
+                    ->orderBy('sort_order', 'asc')
+                    ->limit(5)
+                    ->get();
                 View::share('blog_menu', $blogMenu);
             }
 

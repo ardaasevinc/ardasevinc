@@ -86,7 +86,7 @@
                 {{-- BURASI DÜZELTİLDİ: $blog yerine $blog_menu kullanıldı --}}
                 @foreach($blog_menu as $item)
                     <div class="swiper-slide">
-                        <a href="{{ route('site.blog.detail', ['slug' => $item->slug]) }}" class="mil-blog-card-sm mil-c-gone">
+                        <a href="{{ route('site.blog.detail', ['slug' => $item?->slug]) }}" class="mil-blog-card-sm mil-c-gone">
                             <div class="mil-cover">
                                 <div class="mil-hover-frame">
                                     {{-- img1 kontrolü ve asset yolu --}}
