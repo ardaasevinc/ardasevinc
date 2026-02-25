@@ -16,7 +16,7 @@
                     </li>
                 </ul>
                 <div class="mil-word-frame">
-                    <h1 class="mil-display2 mil-rubber">EN<span class="mil-a2">İŞLERİMİZ</span></h1>
+                    <h1 class="mil-display2 mil-rubber">EN<span class="mil-a2"> İŞLERİMİZ</span></h1>
                     <div class="mil-s-4"><img src="site/assets/img/shapes/4.png" alt="shape"></div>
                 </div>
             </div>
