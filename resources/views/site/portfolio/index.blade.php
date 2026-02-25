@@ -40,8 +40,8 @@
                             <div class="mil-work-card mil-mb30">
                                 <div class="mil-cover mil-port mil-up">
                                     <div class="mil-hover-frame">
-                                        @if (!empty($item->img2))
-                                            <img src="{{ asset('uploads/' . $item->img2) }}" alt="cover"
+                                        @if (!empty($item->img1))
+                                            <img src="{{ asset('uploads/' . $item->img1) }}" alt="cover"
                                                 class="mil-scale-img" data-value-1="1.15" data-value-2="1">
                                         @else
                                             <img src="{{ asset('uploads/default.jpg') }}" alt="cover"
