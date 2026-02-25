@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PortfolioPostResource\Pages;
 use App\Models\PortfolioPost;
-use App\Models\PortfolioCategory;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
@@ -32,13 +31,13 @@ class PortfolioPostResource extends Resource
     protected static ?string $navigationGroup = 'Portfolyo Yönetimi';
     protected static ?string $modelLabel = 'Proje';
 
-    // Global Search: Proje adı veya kategori adı üzerinden arama
     protected static ?string $recordTitleAttribute = 'title';
 
     public static function form(Forms\Form $form): Forms\Form
     {
         return $form->schema([
             Grid::make(12)->schema([
+                // SOL KOLON (Detaylar ve Galeri)
                 Group::make()->schema([
                     Section::make('Proje Detayları')
                         ->schema([
@@ -67,7 +66,8 @@ class PortfolioPostResource extends Resource
                             Repeater::make('media')
                                 ->relationship('media')
                                 ->schema([
-                                    FileUpload::make('image') // Migration'daki sütun adıyla eşleşmeli
+                                    // HATA BURADAYDI: 'image' yerine 'media_path' yapıldı
+                                    FileUpload::make('media_path') 
                                         ->label('Galeri Resmi')
                                         ->image()
                                         ->imageEditor()
@@ -75,6 +75,7 @@ class PortfolioPostResource extends Resource
                                         ->disk('uploads')
                                         ->directory('portfolio/media')
                                         ->required(),
+                                        
                                     TextInput::make('sort_order')
                                         ->label('Sıra')
                                         ->numeric()
@@ -87,6 +88,7 @@ class PortfolioPostResource extends Resource
                         ]),
                 ])->columnSpan(8),
 
+                // SAĞ KOLON (Kategori, Yayın ve Kapak)
                 Group::make()->schema([
                     Section::make('Kategori ve Yayın')
                         ->schema([
@@ -118,7 +120,7 @@ class PortfolioPostResource extends Resource
                                 ->imageEditor(),
 
                             FileUpload::make('img2')
-                                ->label('Detay sayfasında gözükecek görsel')
+                                ->label('Detay Sayfası Görseli')
                                 ->image()
                                 ->disk('uploads')
                                 ->directory('portfolio')
