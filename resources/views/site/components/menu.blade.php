@@ -83,7 +83,7 @@
 
                         <div class="swiper-container mil-blog-slider-sm">
                             <div class="swiper-wrapper">
-                                @foreach($blog_menu as $item)
+                                @foreach($blog as $item)
                                     <div class="swiper-slide">
                                         <a href="{{ route('site.blog.detail', ['slug' => $item->slug]) }}" class="mil-blog-card-sm mil-c-gone">
                                             <div class="mil-cover">
