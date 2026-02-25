@@ -56,7 +56,7 @@
                 Yıllardır edindiğimiz deneyimle, çeşitliliğimizi ve yetkinliğimizi yansıtan bir portföy oluşturduk. Her
                 projede yenilikçi çözümler üreterek müşterilerimize değer katmayı hedefliyoruz.
             </p>
-            <span class="mil-up"><a href="portfolio-1-frl.html" class="mil-btn mil-a2 mil-c-gone">Portföyü
+            <span class="mil-up"><a href="{{ route('site.portfolio') }}" class="mil-btn mil-a2 mil-c-gone">Portföyü
                     Görüntüle</a></span>
         </div>
     </div>
