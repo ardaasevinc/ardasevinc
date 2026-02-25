@@ -17,7 +17,7 @@
     @endif
 
     {{-- Favicon --}}
-    <link rel="icon" href="{{ $settings?->favicon ? asset('storage/' . $settings->favicon) : asset('site/assets/img/favicon.svg') }}" type="image/x-icon">
+    <link rel="icon" href="{{ $settings?->favicon ? asset('uploads/' . $settings->favicon) : asset('site/assets/img/favicon.svg') }}" type="image/x-icon">
 
     {{-- Sosyal Medya Önizleme (OG Image) --}}
     @if($settings?->og_image)
