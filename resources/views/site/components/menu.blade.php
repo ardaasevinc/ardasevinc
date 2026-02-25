@@ -37,7 +37,12 @@
                     </li>
 
                     {{-- Hizmetler verisi varsa göster --}}
-                    @if(\App\Models\Service::where('is_published', true)->exists())
+                    @if(\App\Models\About::where('is_published', true)->exists())
+                        <li class="mil {{ request()->routeIs('site.abouts*') ? 'mil-active' : '' }}">
+                            <a href="{{ route('site.about') }}">HAKKIMIZDA</a>
+                        </li>
+                    @endif
+                       @if(\App\Models\Service::where('is_published', true)->exists())
                         <li class="mil {{ request()->routeIs('site.services*') ? 'mil-active' : '' }}">
                             <a href="{{ route('site.services') }}">HİZMETLERİMİZ</a>
                         </li>
