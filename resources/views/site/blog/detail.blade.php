@@ -51,8 +51,7 @@
                                 </div>
                             @endforeach
                         </div>
-                    @else
-                        <p>Henüz resim eklenmemiş.</p>
+                   
                     @endif
 
 
