@@ -12,7 +12,6 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Group;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -37,7 +36,7 @@ class PortfolioPostResource extends Resource
     {
         return $form->schema([
             Grid::make(12)->schema([
-                // SOL KOLON (Detaylar ve Galeri)
+                // SOL KOLON: İçerik ve Galeri
                 Group::make()->schema([
                     Section::make('Proje Detayları')
                         ->schema([
@@ -62,33 +61,25 @@ class PortfolioPostResource extends Resource
                         ]),
 
                     Section::make('Proje Galerisi')
+                        ->description('Fotoğrafları topluca sürükleyip bırakabilir ve sıralayabilirsiniz.')
                         ->schema([
-                            Repeater::make('media')
-                                ->relationship('media')
-                                ->schema([
-                                    // HATA BURADAYDI: 'image' yerine 'media_path' yapıldı
-                                    FileUpload::make('media_path') 
-                                        ->label('Galeri Resmi')
-                                        ->image()
-                                        ->imageEditor()
-                                        ->toWebp()
-                                        ->disk('uploads')
-                                        ->directory('portfolio/media')
-                                        ->required(),
-                                        
-                                    TextInput::make('sort_order')
-                                        ->label('Sıra')
-                                        ->numeric()
-                                        ->default(0),
-                                ])
-                                ->columns(2)
-                                ->reorderable('sort_order')
-                                ->collapsible()
-                                ->itemLabel(fn (array $state): ?string => "Galeri Resmi " . ($state['sort_order'] ?? '')),
+                            FileUpload::make('media') // Modeldeki 'media' ilişkisini kullanır
+                                ->relationship('media', 'media_path') // İlişki adı ve kaydedilecek sütun
+                                ->label('Galeri Resimleri')
+                                ->multiple() // Çoklu yükleme aktif
+                                ->reorderable() // Sürükle-bırak sıralama aktif
+                                ->appendFiles() // Yeni eklenenleri sona ekler
+                                ->image()
+                                ->imageEditor()
+                                ->toWebp()
+                                ->disk('uploads')
+                                ->directory('portfolio/media')
+                                ->orderColumn('sort_order') // Sıralama bilgisini bu sütuna yazar
+                                ->columnSpanFull(),
                         ]),
                 ])->columnSpan(8),
 
-                // SAĞ KOLON (Kategori, Yayın ve Kapak)
+                // SAĞ KOLON: Ayarlar ve Kapak Görselleri
                 Group::make()->schema([
                     Section::make('Kategori ve Yayın')
                         ->schema([
@@ -174,25 +165,14 @@ class PortfolioPostResource extends Resource
                 Tables\Filters\TernaryFilter::make('is_published')->label('Yayın Durumu'),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\BulkAction::make('publish')
-                        ->label('Seçilenleri Yayınla')
-                        ->icon('heroicon-o-check-circle')
-                        ->color('success')
-                        ->action(fn ($records) => $records->each->update(['is_published' => true])),
                 ]),
             ]);
-    }
-
-    public static function getGloballySearchableAttributes(): array
-    {
-        return ['title', 'slug', 'category.name'];
     }
 
     public static function getPages(): array
