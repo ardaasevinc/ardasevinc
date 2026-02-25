@@ -69,6 +69,13 @@
                         <p class="mil-stylized mil-m1 mil-mb15 mil-up">
                             {!! nl2br(e($settings?->address)) !!}
                         </p>
+                        <p>
+                            @if($settings?->map_link)
+                                <a href="{{ $settings->map_link }}" target="_blank" rel="noopener noreferrer">
+                                    Haritada Gör
+                                </a>
+                            @endif
+                        </p>
                     </div>
                 </div>
             </div>
