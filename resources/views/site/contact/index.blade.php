@@ -35,8 +35,16 @@
                         @if($settings?->phone)
                             <p class="mil-stylized mil-m1 mil-mb15 mil-up">
                                 <a href="tel:{{ $settings->phone }}" class="mil-c-gone">
-                                    {{ $settings->phone_formatted ?? $settings->phone }}
+                                    Telefon: {{ $settings?->phone }}
                                 </a>
+                            </p>
+                            <p class="mil-stylized mil-m1 mil-mb15 mil-up">
+                                @if($settings?->whatsapp)
+                                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings->whatsapp) }}" target="_blank"
+                                        class="mil-c-gone">
+                                        Whatsapp: {{ $settings?->whatsapp }}
+                                    </a>
+                                @endif
                             </p>
                         @endif
                         <p class="mil-stylized mil-m1 mil-up">{{ $settings?->work_time }}</p>
@@ -51,7 +59,7 @@
                                 <a href="mailto:{{ $settings->email }}" class="mil-c-gone">{{ $settings->email }}</a>
                             </p>
                         @endif
-                        <p class="mil-m1 mil-up">{{ $settings?->slogan }}</p>
+
                     </div>
                 </div>
                 <div class="col-sm-8 col-lg-4">
@@ -70,7 +78,7 @@
         <div class="mil-half-container mil-up">
             <div class="mil-text-box mil-g-m1 mil-p-160-160">
                 <h2 class="mil-display3 mil-rubber mil-mb60 mil-m4 mil-up">BİZE <span class="mil-a1">ULAŞIN.</span></h2>
-                
+
                 @if(session('success'))
                     <div class="mil-mb30 mil-up">
                         <p class="mil-text-sm mil-a1">{{ session('success') }}</p>
@@ -90,7 +98,8 @@
                             <textarea name="message" placeholder="PROJENİZ HAKKINDA BİLGİ VERİNİZ." required></textarea>
                         </div>
                         <div class="col-md-6 mil-mb30">
-                            <p class="mil-text-sm mil-up">*Kişisel bilgilerinizin üçüncü taraflarla paylaşılmayacağına söz veriyoruz.</p>
+                            <p class="mil-text-sm mil-up">*Kişisel bilgilerinizin üçüncü taraflarla paylaşılmayacağına söz
+                                veriyoruz.</p>
                         </div>
                         <div class="col-md-6 mil-mb30 mil-768-mb0 mil-jce mil-768-jcc mil-up">
                             <button type="submit" class="mil-btn mil-a2 mil-c-gone">Gönder</button>
@@ -106,7 +115,8 @@
                         {!! $settings->map_iframe !!}
                     @else
                         {{-- Harita kodu yoksa varsayılan boş bir görsel veya placeholder --}}
-                        <img src="{{ asset('uploads/' . (App\Models\PortfolioPost::where('is_published', 1)->first()?->img1)) }}" alt="İletişim">
+                        <img src="{{ asset('uploads/' . (App\Models\PortfolioPost::where('is_published', 1)->first()?->img1)) }}"
+                            alt="İletişim">
                     @endif
                     <div class="mil-overlay"></div>
                 </div>
@@ -126,4 +136,4 @@
             </div>
         </div>
     </div>
-    @endsection
+@endsection
