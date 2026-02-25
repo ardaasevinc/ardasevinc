@@ -12,6 +12,7 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Group;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -36,7 +37,7 @@ class PortfolioPostResource extends Resource
     {
         return $form->schema([
             Grid::make(12)->schema([
-                // SOL KOLON: İçerik ve Galeri
+                // SOL KOLON
                 Group::make()->schema([
                     Section::make('Proje Detayları')
                         ->schema([
@@ -61,25 +62,63 @@ class PortfolioPostResource extends Resource
                         ]),
 
                     Section::make('Proje Galerisi')
-                        ->description('Fotoğrafları topluca sürükleyip bırakabilir ve sıralayabilirsiniz.')
+                        ->headerActions([
+                            // Bu buton sayesinde toplu yükleme yapabilirsin
+                            Forms\Components\Actions\Action::make('topluYukle')
+                                ->label('Toplu Görsel Yükle')
+                                ->icon('heroicon-m-plus')
+                                ->color('info')
+                                ->form([
+                                    FileUpload::make('temp_media')
+                                        ->label('Görselleri Sürükle veya Seç')
+                                        ->multiple()
+                                        ->image()
+                                        ->disk('uploads')
+                                        ->directory('portfolio/media')
+                                        ->required(),
+                                ])
+                                ->action(function (array $data, Repeater $component): void {
+                                    // Seçilen her görseli Repeater'a yeni satır olarak ekler
+                                    foreach ($data['temp_media'] as $path) {
+                                        $newUuid = (string) Str::uuid();
+                                        $component->state([
+                                            ...$component->getState(),
+                                            $newUuid => [
+                                                'media_path' => $path,
+                                                'sort_order' => 0,
+                                            ],
+                                        ]);
+                                    }
+                                }),
+                        ])
                         ->schema([
-                            FileUpload::make('media') // Modeldeki 'media' ilişkisini kullanır
-                                ->relationship('media', 'media_path') // İlişki adı ve kaydedilecek sütun
-                                ->label('Galeri Resimleri')
-                                ->multiple() // Çoklu yükleme aktif
-                                ->reorderable() // Sürükle-bırak sıralama aktif
-                                ->appendFiles() // Yeni eklenenleri sona ekler
-                                ->image()
-                                ->imageEditor()
-                                ->toWebp()
-                                ->disk('uploads')
-                                ->directory('portfolio/media')
-                                ->orderColumn('sort_order') // Sıralama bilgisini bu sütuna yazar
-                                ->columnSpanFull(),
+                            Repeater::make('media')
+                                ->relationship('media')
+                                ->schema([
+                                    FileUpload::make('media_path')
+                                        ->label('Görsel')
+                                        ->image()
+                                        ->imageEditor()
+                                        ->toWebp()
+                                        ->disk('uploads')
+                                        ->directory('portfolio/media')
+                                        ->required(),
+
+                                    // Sıralama için gizli veya küçük bir alan
+                                    TextInput::make('sort_order')
+                                        ->label('Sıra')
+                                        ->numeric()
+                                        ->default(0),
+                                ])
+                                ->grid(3) // Yan yana 3'lü göstererek sürükle-bırak alanını daraltır
+                                ->reorderable('sort_order') // Sürükleyerek yer değiştirme özelliği
+                                ->collapsible()
+                                ->cloneable()
+                                ->itemLabel(fn(array $state): ?string => "Galeri Ögesi"),
                         ]),
                 ])->columnSpan(8),
 
-                // SAĞ KOLON: Ayarlar ve Kapak Görselleri
+                // SAĞ KOLON
                 Group::make()->schema([
                     Section::make('Kategori ve Yayın')
                         ->schema([
@@ -126,42 +165,16 @@ class PortfolioPostResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('sort_order')
-                    ->label('Sıra')
-                    ->sortable(),
-
-                ImageColumn::make('img1')
-                    ->label('Kapak')
-                    ->disk('uploads')
-                    ->circular(),
-
-                TextColumn::make('title')
-                    ->label('Proje Adı')
-                    ->searchable()
-                    ->sortable()
-                    ->wrap(),
-
-                TextColumn::make('category.name')
-                    ->label('Kategori')
-                    ->badge()
-                    ->color('info')
-                    ->sortable(),
-
-                ToggleColumn::make('is_published')
-                    ->label('Durum')
-                    ->sortable(),
-
-                TextColumn::make('created_at')
-                    ->label('Tarih')
-                    ->dateTime('d.m.Y')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('sort_order')->label('Sıra')->sortable(),
+                ImageColumn::make('img1')->label('Kapak')->disk('uploads')->circular(),
+                TextColumn::make('title')->label('Proje Adı')->searchable()->sortable()->wrap(),
+                TextColumn::make('category.name')->label('Kategori')->badge()->color('info')->sortable(),
+                ToggleColumn::make('is_published')->label('Durum'),
+                TextColumn::make('created_at')->label('Tarih')->dateTime('d.m.Y')->sortable()->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('sort_order', 'asc')
             ->filters([
-                Tables\Filters\SelectFilter::make('portfolio_category_id')
-                    ->label('Kategori Filtresi')
-                    ->relationship('category', 'name'),
+                Tables\Filters\SelectFilter::make('portfolio_category_id')->label('Kategori')->relationship('category', 'name'),
                 Tables\Filters\TernaryFilter::make('is_published')->label('Yayın Durumu'),
             ])
             ->actions([
