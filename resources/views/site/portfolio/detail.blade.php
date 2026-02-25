@@ -42,9 +42,6 @@
                     @if(!empty($portfolio->desc))
                         <p class="mil-text-xl mil-m1 mil-mb60 mil-up">{!! $portfolio->desc !!}</p>
                     @endif
-
-
-
                 </div>
             </div>
         </div>
@@ -54,7 +51,7 @@
 
 
     @if ($portfolio->media && $portfolio->media->isNotEmpty())
-        <div class="mil-p-0-130">
+        <div class="mil-p-0-130" style="margin-top:100px;">
             <div class="container">
                 <div class="row mil-mb60">
                     @foreach($portfolio->media as $image)
