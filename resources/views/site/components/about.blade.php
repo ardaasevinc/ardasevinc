@@ -13,7 +13,7 @@
                     </p>
                 </div>
                 <div class="col-lg-7">
-                    <p class="mil-text-md mil-mb30 mil-up">{!! $about?->desc2 !!}</p>
+                    <p class="mil-text-md mil-mb30 mil-up">{!! $about?->desc2 !!}  <a href="{{ route('site.about') }}"><underline>devamını gör...</underline></a></p>
                 </div>
             </div>
         </div>
