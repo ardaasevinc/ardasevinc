@@ -27,7 +27,7 @@
 
 
     <!-- publication -->
-    <div class="mil-p-0">
+    <div class="mil-p-0-160">
         <div class="container">
             <div class="row mil-jcc mil-aic">
                 <div class="col-lg-12">
