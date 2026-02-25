@@ -2,9 +2,8 @@
     <div class="mil-top-panel">
         <div class="mil-left-side">
             <a href="{{ route('site.index') }}" class="mil-logo mil" data-no-swup>
-                <img src="{{ asset('uploads/' . $settings?->logo_light) }}" 
-                     alt="{{ $settings->site_name ?? 'Logo' }}" 
-                     style="height: 75px;">
+                <img src="{{ asset('uploads/' . $settings?->logo_light) }}" alt="{{ $settings->site_name ?? 'Logo' }}"
+                    style="height: 75px;">
             </a>
         </div>
         <div class="mil-buttons-tp-frame mil-c-gone">
@@ -42,7 +41,7 @@
                             <a href="{{ route('site.about') }}">HAKKIMIZDA</a>
                         </li>
                     @endif
-                       @if(\App\Models\Service::where('is_published', true)->exists())
+                    @if(\App\Models\Service::where('is_published', true)->exists())
                         <li class="mil {{ request()->routeIs('site.services*') ? 'mil-active' : '' }}">
                             <a href="{{ route('site.services') }}">HİZMETLERİMİZ</a>
                         </li>
@@ -62,13 +61,13 @@
                         </li>
                     @endif
 
-                   
+
                     <li class="mil {{ request()->routeIs('site.contact') ? 'mil-active' : '' }}">
                         <a href="{{ route('site.contact') }}">BİZE ULAŞIN</a>
                     </li>
                 </ul>
             </div>
-            
+
             <div class="mil-bottom">
                 {{-- Blog Slaytı - Sadece blog_menu verisi gelmişse gösterilir --}}
                 @if($blog_menu && $blog_menu->count() > 0)
@@ -83,20 +82,28 @@
 
                         <div class="swiper-container mil-blog-slider-sm">
                             <div class="swiper-wrapper">
-                                @foreach($blog as $item)
-                                    <div class="swiper-slide">
-                                        <a href="{{ route('site.blog.detail', ['slug' => $item->slug]) }}" class="mil-blog-card-sm mil-c-gone">
-                                            <div class="mil-cover">
-                                                <div class="mil-hover-frame">
-                                                    <img src="{{ $item->img1 ? asset('uploads/' . $item->img1) : asset('site/assets/img/placeholder.jpg') }}" alt="{{ $item->title }}">
+                                {{-- @foreach öncesi değişkenin boş olmadığını ve döngüye uygun olduğunu kontrol edin --}}
+                                @if(isset($blog) && is_iterable($blog))
+                                    @foreach($blog as $item)
+                                        <div class="swiper-slide">
+                                            {{-- $item bir nesne mi kontrolü --}}
+                                            <a href="{{ is_object($item) ? route('site.blog.detail', ['slug' => $item->slug]) : '#' }}"
+                                                class="mil-blog-card-sm mil-c-gone">
+                                                <div class="mil-cover">
+                                                    <div class="mil-hover-frame">
+                                                        <img src="{{ (!empty($item->img1)) ? asset('uploads/' . $item->img1) : asset('site/assets/img/placeholder.jpg') }}"
+                                                            alt="{{ $item->title ?? 'Blog' }}">
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="mil-text-frame">
-                                                <h4 class="mil-head6 mil-max-1row-text">{{ Str::limit($item->title, 25) }}</h4>
-                                            </div>
-                                        </a>
-                                    </div>
-                                @endforeach
+                                                <div class="mil-text-frame">
+                                                    <h4 class="mil-head6 mil-max-1row-text">{{ Str::limit($item->title ?? '', 25) }}
+                                                    </h4>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    @endforeach
+                               
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -105,19 +112,24 @@
                 <div class="mil-social-section">
                     <ul class="mil-social mil-c-gone">
                         @if($settings->twitter_url)
-                            <li><a href="{{ $settings->twitter_url }}" target="_blank" data-no-swup title="Twitter"><i class="fab fa-twitter"></i></a></li>
+                            <li><a href="{{ $settings->twitter_url }}" target="_blank" data-no-swup title="Twitter"><i
+                                        class="fab fa-twitter"></i></a></li>
                         @endif
                         @if($settings->instagram_access_token)
-                            <li><a href="{{ $settings->instagram_access_token }}" target="_blank" data-no-swup title="Instagram"><i class="fab fa-instagram"></i></a></li>
+                            <li><a href="{{ $settings->instagram_access_token }}" target="_blank" data-no-swup
+                                    title="Instagram"><i class="fab fa-instagram"></i></a></li>
                         @endif
                         @if($settings->linkedin_url)
-                            <li><a href="{{ $settings->linkedin_url }}" target="_blank" data-no-swup title="LinkedIn"><i class="fab fa-linkedin-in"></i></a></li>
+                            <li><a href="{{ $settings->linkedin_url }}" target="_blank" data-no-swup title="LinkedIn"><i
+                                        class="fab fa-linkedin-in"></i></a></li>
                         @endif
                         @if($settings->youtube_url)
-                            <li><a href="{{ $settings->youtube_url }}" target="_blank" data-no-swup title="YouTube"><i class="fab fa-youtube"></i></a></li>
+                            <li><a href="{{ $settings->youtube_url }}" target="_blank" data-no-swup title="YouTube"><i
+                                        class="fab fa-youtube"></i></a></li>
                         @endif
                         @if($settings->facebook_url)
-                            <li><a href="{{ $settings->facebook_url }}" target="_blank" data-no-swup title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
+                            <li><a href="{{ $settings->facebook_url }}" target="_blank" data-no-swup title="Facebook"><i
+                                        class="fab fa-facebook-f"></i></a></li>
                         @endif
                     </ul>
                 </div>
