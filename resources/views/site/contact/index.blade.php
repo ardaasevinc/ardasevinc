@@ -30,7 +30,7 @@
                 <div class="col-sm-8 col-lg-4">
                     <div class="mil-iconbox mil-tac mil-mb60">
                         <i class="fal fa-mobile mil-mb30 mil-up"></i>
-                        <h4 class="mil-head4 mil-mb30 mil-up">Ara</h4>
+                        <h4 class="mil-head4 mil-mb30 mil-up">Bize Yaz</h4>
                         {{-- Tıklanabilir ve formatlı telefon numarası --}}
                         @if($settings?->phone)
                             <p class="mil-stylized mil-m1 mil-mb15 mil-up">
@@ -45,7 +45,7 @@
                 <div class="col-sm-8 col-lg-4">
                     <div class="mil-iconbox mil-mb60">
                         <i class="fal fa-comment-alt-edit mil-mb30 mil-up"></i>
-                        <h4 class="mil-head4 mil-mb30 mil-up">Yaz</h4>
+                        <h4 class="mil-head4 mil-mb30 mil-up">Fikrini Paylaş</h4>
                         @if($settings?->email)
                             <p class="mil-m1 mil-mb15 mil-up">
                                 <a href="mailto:{{ $settings->email }}" class="mil-c-gone">{{ $settings->email }}</a>
