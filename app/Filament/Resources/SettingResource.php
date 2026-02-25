@@ -85,7 +85,7 @@ class SettingResource extends Resource
                                         TextInput::make('twitter_url')->label('X / Twitter URL')->url(),
                                         TextInput::make('linkedin_url')->label('LinkedIn URL')->url(),
                                         TextInput::make('youtube_url')->label('YouTube URL')->url(),
-                                        TextInput::make('instagram_access_token')->label('Instagram Access Token'),
+                                        TextInput::make('instagram_access_token')->label('Instagram URL'),
                                     ]),
                                 ]),
                             ]),
