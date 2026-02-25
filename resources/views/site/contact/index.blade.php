@@ -106,7 +106,7 @@
                         {!! $settings->map_iframe !!}
                     @else
                         {{-- Harita kodu yoksa varsayılan boş bir görsel veya placeholder --}}
-                        <img src="{{ asset('uploads/' . (App\Models\Portfolio::where('is_published', 1)->first()?->img1)) }}" alt="İletişim">
+                        <img src="{{ asset('uploads/' . (App\Models\PortfolioPost::where('is_published', 1)->first()?->img1)) }}" alt="İletişim">
                     @endif
                     <div class="mil-overlay"></div>
                 </div>
