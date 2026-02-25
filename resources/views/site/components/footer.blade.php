@@ -7,7 +7,7 @@
                     <h6 class="mil-footer-link mil-rubber mil-m1">{{ $settings?->slogan ?? 'ŞİMDİ ARA!' }}</h6>
                     <span class="mil-stylized-btn mil-c-gone">
                         <i class="fal fa-arrow-up"></i>
-                        <span>{{ $settings?->phone_formatted ?? $settings?->phone ?? 'Bize Ulaşın' }}</span>
+                        <span>Bize Ulaşın</span>
                     </span>
                 </a>
             </div>
