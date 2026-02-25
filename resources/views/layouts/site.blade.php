@@ -74,10 +74,11 @@
                 <div id="smooth-content" class="mil-content">
                    
                     @yield('content')
-                    @include('site.components.whatsapp')
+                    
                     @include('site.components.footer')
                 </div>
                 <!-- content -->
+                @include('site.components.whatsapp')
 
 
             </div>
