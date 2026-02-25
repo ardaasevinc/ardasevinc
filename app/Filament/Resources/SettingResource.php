@@ -57,9 +57,9 @@ class SettingResource extends Resource
                                     Section::make('İletişim Bilgileri')->columnSpan(8)->schema([
                                         Grid::make(2)->schema([
                                             TextInput::make('email')->email()->label('E-Posta Adresi'),
-                                            TextInput::make('phone')->label('Telefon (Ham)'),
-                                            TextInput::make('phone_formatted')->label('Telefon (Görünen)')->placeholder('Örn: +90 (5xx) xxx xx xx'),
-                                            TextInput::make('whatsapp')->label('WhatsApp Numarası')->placeholder('905xxxxxxxxx'),
+                                            TextInput::make('phone')->label('Telefon')->helpeText('905326379944 şeklinde telefon numarası giriniz.'),
+                                           
+                                            TextInput::make('whatsapp')->label('WhatsApp Numarası')->placeholder('905xxxxxxxxx . Bu telefon numarası whatsapp aramaları için kullanılacaktır.'),
                                         ]),
                                         Textarea::make('address')->label('Adres Bilgisi')->rows(3),
                                         RichEditor::make('work_time')->label('Çalışma Saatleri'),
