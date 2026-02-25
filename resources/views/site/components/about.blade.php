@@ -10,7 +10,7 @@
                     <h2 class="mil-head1 mil-mb60 mil-up">{{ $about?->title }} <span class="mil-a2"></span></h2>
                     <p class="mil-text-sm mil-deco-text mil-mb60 mil-up">
                         {!! Str::limit(strip_tags($about?->desc1),200) !!}<br>
-                        <a href="{{ route('site.about') }}"><underline>devamını gör...</underline></a>
+                        <a href="{{ route('site.about') }}" style="text-decoration: underline;"><span>Devamını gör</span></a>
                     </p>
                 </div>
                 <div class="col-lg-7">
