@@ -90,7 +90,7 @@
                             <div class="mil-cover">
                                 <div class="mil-hover-frame">
                                     {{-- img1 kontrolü ve asset yolu --}}
-                                    <img src="{{ $item->img1 ? asset('uploads/' . $item->img1) : asset('site/assets/img/placeholder.jpg') }}" alt="{{ $item->title }}">
+                                    <img src="{{ asset('uploads/' . $item->img1) }}" alt="{{ $item->title }}">
                                 </div>
                             </div>
                             <div class="mil-text-frame">
