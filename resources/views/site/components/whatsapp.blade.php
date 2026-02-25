@@ -14,7 +14,7 @@
             align-items: center;
             text-decoration: none !important;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            
         }
 
         .wp-float-btn:hover {
