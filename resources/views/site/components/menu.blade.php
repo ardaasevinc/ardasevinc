@@ -115,7 +115,7 @@
                         @endif
                         @if($settings->youtube_url)
                             <li><a href="{{ $settings->youtube_url }}" target="_blank" data-no-swup title="YouTube"><i class="fab fa-youtube"></i></a></li>
-                        @endifv
+                        @endif
                         @if($settings->facebook_url)
                             <li><a href="{{ $settings->facebook_url }}" target="_blank" data-no-swup title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
                         @endif
