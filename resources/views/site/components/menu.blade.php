@@ -107,15 +107,15 @@
                         @if($settings->twitter_url)
                             <li><a href="{{ $settings->twitter_url }}" target="_blank" data-no-swup title="Twitter"><i class="fab fa-twitter"></i></a></li>
                         @endif
-                        @if($settings->instagram_url)
-                            <li><a href="{{ $settings->instagram_url }}" target="_blank" data-no-swup title="Instagram"><i class="fab fa-instagram"></i></a></li>
+                        @if($settings->instagram_access_token)
+                            <li><a href="{{ $settings->instagram_access_token }}" target="_blank" data-no-swup title="Instagram"><i class="fab fa-instagram"></i></a></li>
                         @endif
                         @if($settings->linkedin_url)
                             <li><a href="{{ $settings->linkedin_url }}" target="_blank" data-no-swup title="LinkedIn"><i class="fab fa-linkedin-in"></i></a></li>
                         @endif
                         @if($settings->youtube_url)
                             <li><a href="{{ $settings->youtube_url }}" target="_blank" data-no-swup title="YouTube"><i class="fab fa-youtube"></i></a></li>
-                        @endif
+                        @endifv
                         @if($settings->facebook_url)
                             <li><a href="{{ $settings->facebook_url }}" target="_blank" data-no-swup title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
                         @endif
