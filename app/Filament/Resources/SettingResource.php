@@ -55,7 +55,7 @@ class SettingResource extends Resource
                                         FileUpload::make('og_image')->label('Sosyal Medya Paylaşım Görseli (OG)')->disk('uploads')->directory('settings')->image()->toWebp(),
                                     ]),
                                     Section::make('İletişim Bilgileri')->columnSpan(8)->schema([
-                                        Grid::make(2)->schema([
+                                        Grid::make(1)->schema([
                                             TextInput::make('email')->email()->label('E-Posta Adresi'),
                                             TextInput::make('phone')->label('Telefon')->helperText('905326379944 şeklinde telefon numarası giriniz.'),
                                            
