@@ -56,7 +56,7 @@
                         <h4 class="mil-head4 mil-mb30 mil-up">Fikrini Paylaş</h4>
                         @if($settings?->email)
                             <p class="mil-m1 mil-mb15 mil-up">
-                                <a href="mailto:{{ $settings->email }}" class="mil-c-gone">{{ $settings->email }}</a>
+                                <a href="mailto:{{ $settings->email }}" class="mil-m1">{{ $settings->email }}</a>
                             </p>
                         @endif
 
