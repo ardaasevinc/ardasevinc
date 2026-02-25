@@ -106,7 +106,7 @@
                         {!! $settings->map_iframe !!}
                     @else
                         {{-- Harita kodu yoksa varsayılan boş bir görsel veya placeholder --}}
-                        <img src="{{ asset('site/assets/img/photo/contact.jpg') }}" alt="İletişim">
+                        <img src="{{ asset('site/assets/img/works/9/1-s.jpg') }}" alt="İletişim">
                     @endif
                     <div class="mil-overlay"></div>
                 </div>
