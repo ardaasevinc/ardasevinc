@@ -7,6 +7,8 @@ use App\Http\Controllers\Site\Contact\IndexController as ContactController;
 use App\Http\Controllers\Site\Portfolio\IndexController as PortfolioController;
 use App\Http\Controllers\Site\Services\IndexController as ServicesController;
 use App\Http\Controllers\Site\Subscribe\IndexController as SubscribeController;
+use App\Http\Controllers\Site\About\IndexController as AboutController;
+
 
 use App\Http\Controllers\Site\Kvkk\IndexController as KvkkController;
 use Intervention\Image\Laravel\Facades\Image;
@@ -40,6 +42,8 @@ Route::get('/hizmetler/{slug}', [ServicesController::class, 'detail'])->name('si
 Route::get('/kvkk-metni', [KvkkController::class, 'index'])->name('site.kvkk');
 
 Route::post('/haberdar-ol', [SubscribeController::class, 'store'])->name('subscribe.store');
+
+Route::get('/hakkimizda',[AboutController::class,'index'])->name('site.about');
 
 
 
