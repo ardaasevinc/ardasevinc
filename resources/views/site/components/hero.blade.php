@@ -46,11 +46,11 @@
             @if($hero->img1 || $hero->img2 || $hero->img3)
                 <div class="mil-shapes mil-scale-img" data-value-1=".7" data-value-2="1.11">
                     @if($hero->img1)
-                        <div class="mil-s-1"><img src="{{ asset('uploads/' . $hero->img1) }}" alt="shape"></div>
+                        <div class="mil-s-1"><img src="{{ asset('uploads/' . $hero->img2) }}" alt="shape"></div>
                     @endif
                     
                     @if($hero->img2)
-                        <div class="mil-s-2"><img src="{{ asset('uploads/' . $hero->img2) }}" alt="shape"></div>
+                        <div class="mil-s-2"><img src="{{ asset('uploads/' . $hero->img5) }}" alt="shape"></div>
                     @endif
                     
                     @if($hero->img3)
