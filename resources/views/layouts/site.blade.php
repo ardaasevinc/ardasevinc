@@ -65,6 +65,7 @@
         <!-- scroll progress end -->
 
         @include('site.components.menu')
+         @include('site.components.whatsapp')
 
         <!-- page transition -->
         <div class="mil-transition-fade" id="swup">
@@ -78,7 +79,7 @@
                     @include('site.components.footer')
                 </div>
                 <!-- content -->
-                @include('site.components.whatsapp')
+               
 
 
             </div>
