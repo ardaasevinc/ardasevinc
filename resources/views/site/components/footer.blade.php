@@ -3,7 +3,7 @@
         <div class="row mil-no-g">
             <div class="col-lg-6 mil-up">
                 {{-- Telefon varsa ara, yoksa iletişim sayfasına git --}}
-                <a href="{{ $settings?->phone ? 'tel:' . $settings->phone : route('site.contact') }}" class="mil-footer-contact mil-mb90">
+                <a href="{{ route('site.contact') }}" class="mil-footer-contact mil-mb90">
                     <h6 class="mil-footer-link mil-rubber mil-m1">{{ $settings?->slogan ?? 'ŞİMDİ ARA!' }}</h6>
                     <span class="mil-stylized-btn mil-c-gone">
                         <i class="fal fa-arrow-up"></i>
