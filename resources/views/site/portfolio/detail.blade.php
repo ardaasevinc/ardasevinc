@@ -31,9 +31,9 @@
         <div class="container">
             <div class="row mil-jcc mil-aic">
                 <div class="col-lg-12">
-                    @if(!empty($portfolio->img1))
+                    @if(!empty($portfolio->img2))
                         <div class="mil-project-img mil-land mil-up">
-                            <img src="{{ asset('uploads/' . $portfolio->img1) }}" alt="project" class="mil-scale-img"
+                            <img src="{{ asset('uploads/' . $portfolio->img2) }}" alt="project" class="mil-scale-img"
                                 data-value-1="1.15" data-value-2="1">
                         </div>
                     @endif
