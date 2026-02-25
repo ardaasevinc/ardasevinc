@@ -89,12 +89,11 @@ class AppServiceProvider extends ServiceProvider
              */
             if (Schema::hasTable('blog_posts')) {
                 $blogMenu = BlogPost::query()
-                    ->select(['id', 'title', 'slug', 'created_at', 'is_published', 'sort_order'])
-                    ->where('is_published', true)
-                    ->orderBy('sort_order', 'asc')
-                    ->latest()
-                    ->limit(5)
-                    ->get();
+    ->select(['id', 'title', 'slug', 'img1', 'created_at', 'is_published', 'sort_order']) // img1 buraya eklendi!
+    ->where('is_published', true)
+    ->orderBy('sort_order', 'asc')
+    ->limit(5)
+    ->get();
                 View::share('blog_menu', $blogMenu);
             }
 
