@@ -13,7 +13,7 @@ public function up(): void
 {
     Schema::table('services', function (Blueprint $table) {
         // Resim yollarını JSON olarak saklayacağız
-        $table->json('images')->nullable()->after('desc');
+        $table->json('images')->nullable();
     });
 }
 
