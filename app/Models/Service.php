@@ -14,6 +14,7 @@ class Service extends Model
         'slug',
         'icon',
         'desc',
+        'images', // Galeri görselleri için eklenen alan
         'item1', 'item2', 'item3', 'item4',
         'desc1', 'desc2', 'desc3',
         'number',
@@ -31,9 +32,14 @@ class Service extends Model
         'is_published' => 'boolean',
         'sort_order' => 'integer',
         'number' => 'integer',
+        'images' => 'array', // CRITICAL: JSON veriyi diziye çevirir, Filament için şarttır.
     ];
 
     /**
      * Route model binding için slug kullanmaya devam ediyoruz.
      */
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 }

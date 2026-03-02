@@ -60,6 +60,8 @@
         {!! $settings->header_scripts !!}
     @endif
 
+    @yield('css')
+
     <link rel="stylesheet" href="{{ asset('site/assets/css/plugins/bootstrap-grid.css') }}">
     <link rel="stylesheet" href="{{ asset('site/assets/css/plugins/fontawesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('site/assets/css/plugins/swiper.min.css') }}">
@@ -109,7 +111,7 @@
 
     </div>
     <!-- wrapper end -->
-
+@yield('js')
     <!-- swup js -->
     <script src="{{ asset('site/assets/js/plugins/swup.min.js') }}"></script>
     <!-- gsap js -->

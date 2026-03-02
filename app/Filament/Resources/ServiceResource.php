@@ -45,14 +45,14 @@ class ServiceResource extends Resource
                             TextInput::make('title')
                                 ->label('Hizmet Başlığı')
                                 ->required()
-                                ->live(onBlur: true) // Odak kalktığında slug'ı tetikler
+                                ->live(onBlur: true)
                                 ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
 
                             TextInput::make('slug')
                                 ->label('URL Uzantısı')
                                 ->required()
                                 ->unique(ignoreRecord: true)
-                                ->dehydrated(true) // Kayıt sırasında gönderilmesini sağlar
+                                ->dehydrated(true)
                                 ->helperText('Başlığa göre otomatik oluşturulur, manuel değiştirebilirsiniz.'),
                         ]),
 
@@ -102,7 +102,7 @@ class ServiceResource extends Resource
                     ]),
                 ])->columnSpan(8),
 
-                // SAĞ PANEL (Görsel ve Durum)
+                // SAĞ PANEL (Görsel, Galeri ve Durum)
                 Group::make()->schema([
                     Section::make('Yayın Ayarları')->schema([
                         FileUpload::make('icon')
@@ -110,8 +110,8 @@ class ServiceResource extends Resource
                             ->image()
                             ->imageEditor()
                             ->toWebp()
-                            ->disk('uploads')
-                            ->directory('services')
+                            ->disk('public') // Laravel default disk genelde 'public'tir, 'uploads' ise config ayarınıza göre değişir
+                            ->directory('services/icons')
                             ->columnSpanFull(),
 
                         TextInput::make('sort_order')
@@ -123,6 +123,25 @@ class ServiceResource extends Resource
                             ->label('Yayında mı?')
                             ->onColor('success')
                             ->default(true),
+                    ]),
+
+                    // 🔥 YENİ: GALERİ ALANI
+                    Section::make('Hizmet Galerisi')->schema([
+                        FileUpload::make('images')
+                            ->label('Proje Görselleri')
+                            ->multiple() // Çoklu yükleme
+                            ->reorderable() // Sürükle-bırak sıralama
+                            ->appendFiles() // Yeni yüklenenleri sona ekle
+                            ->image()
+                            ->imageEditor()
+                            ->toWebp()
+                            ->disk('uploads')
+                            ->visibility('public')
+                            ->directory('services/gallery')
+                            ->downloadable()
+                            ->previewable(true)
+                            ->helperText('Görselleri sürükleyerek sıralayabilirsiniz.')
+                            ->columnSpanFull(),
                     ]),
                 ])->columnSpan(4),
             ]),
@@ -139,17 +158,17 @@ class ServiceResource extends Resource
 
                 ImageColumn::make('icon')
                     ->label('İkon')
-                    ->disk('uploads'),
+                    ->disk('public'),
 
                 TextColumn::make('title')
                     ->label('Hizmet Adı')
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('number')
-                    ->label('Veri')
-                    ->description(fn (Service $record): string => $record->number_title ?? '')
-                    ->sortable(),
+                // Tabloda kaç resim olduğunu gösteren küçük bir bilgi (Opsiyonel)
+                TextColumn::make('images')
+                    ->label('Galeri')
+                    ->formatStateUsing(fn($state) => is_array($state) ? count($state) . ' Resim' : '0 Resim'),
 
                 ToggleColumn::make('is_published')
                     ->label('Durum'),
