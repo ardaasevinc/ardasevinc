@@ -43,12 +43,7 @@
 
         <p class="mil-stylized mil-m2 mil-mb60 mil-tac mil-up">Uzmanlığımızı Keşfedin</p>
         <h2 class="mil-head1 mil-rubber mil-tac mil-mb60 mil-up">
-            Biz, yazılım geliştirme ekibiyiz;
-            fikirleri güçlü dijital çözümlere dönüştürüyoruz.
-            Web uygulamalarından
-            mobil uygulamalara kadar, ölçeklenebilir, güvenli ve kullanıcı odaklı projeler
-            üretiyor,
-            markaların dijitalde daha güçlü olmasını sağlıyoruz.
+            Biz, yazılım geliştirme ekibiyiz; fikirleri güçlü dijital çözümlere dönüştürüyoruz. Web uygulamalarından üretiyor, markaların dijitalde daha güçlü olmasını sağlıyoruz.
             Bizi tercih edin, çünkü biz geleceği inşa ediyoruz!
         </h2>
         <div class="mil-text-with-button mil-mb60">
