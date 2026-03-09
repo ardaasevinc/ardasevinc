@@ -46,7 +46,7 @@ class HeroResource extends Resource
                         static::getHeroImageUpload('img3', 'Resim 3'),
                         static::getHeroImageUpload('img4', 'Resim 4'),
                         static::getHeroImageUpload('img5', 'Resim 5'),
-                        
+
                         Toggle::make('is_published')
                             ->label('Yayınla')
                             ->helperText('Aktif edilirse diğer bannerlar otomatik olarak pasif hale gelir.')
@@ -70,6 +70,7 @@ class HeroResource extends Resource
             ->label($label)
             ->disk('uploads')
             ->directory('hero')
+            ->downloadable()
             ->toWebp() // AppServiceProvider içindeki makro: Görseli WebP yapar, SVG'yi korur.
             ->image() // Resim dosyası olduğunu doğrular
             ->imageEditor() // Kesme/Düzenleme imkanı verir

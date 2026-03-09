@@ -31,27 +31,28 @@
                 <div class="col-lg-7">
                     <div class="rich-content mil-up">
                         @if ($service->desc)
-                            <div class="mil-text-md mil-mb30" style="font-weight: 500; color: #111;">{!! $service->desc !!}</div>
+                            <div class="mil-text-md mil-mb30" style="font-weight: 500; color: #111;">{!! $service->desc !!}
+                            </div>
                         @endif
-                            @if ($service->desc1)
-                            <div class="mil-text-sm mil-mb30">{!! $service->desc1 !!}</div> @endif
-                            @if ($service->desc2)
-                            <div class="mil-text-sm mil-mb30">{!! $service->desc2 !!}</div> @endif
-                            @if ($service->desc3)
-                            <div class="mil-text-sm mil-mb30">{!! $service->desc3 !!}</div> @endif
+                        @if ($service->desc1)
+                        <div class="mil-text-sm mil-mb30">{!! $service->desc1 !!}</div> @endif
+                        @if ($service->desc2)
+                        <div class="mil-text-sm mil-mb30">{!! $service->desc2 !!}</div> @endif
+                        @if ($service->desc3)
+                        <div class="mil-text-sm mil-mb30">{!! $service->desc3 !!}</div> @endif
 
-                            {{-- BADGE ALANI (Itemlar buraya geldi) --}}
-                            <div class="mil-service-badges mil-up mil-mt60">
-                                @if($service->item1) <span class="mil-badge">{{ $service->item1 }}</span> @endif
-                                @if($service->item2) <span class="mil-badge">{{ $service->item2 }}</span> @endif
-                                @if($service->item3) <span class="mil-badge">{{ $service->item3 }}</span> @endif
-                                @if($service->item4) <span class="mil-badge">{{ $service->item4 }}</span> @endif
-                            </div>
-                            </div>
-                            </div>
+                        {{-- BADGE ALANI (Itemlar buraya geldi) --}}
+                        <div class="mil-service-badges mil-up mil-mt60">
+                            @if($service->item1) <span class="mil-badge">{{ $service->item1 }}</span> @endif
+                            @if($service->item2) <span class="mil-badge">{{ $service->item2 }}</span> @endif
+                            @if($service->item3) <span class="mil-badge">{{ $service->item3 }}</span> @endif
+                            @if($service->item4) <span class="mil-badge">{{ $service->item4 }}</span> @endif
+                        </div>
+                    </div>
+                </div>
 
                 {{-- SAĞ KOLON: Sadece Iframe --}}
-                <div class="col-lg-4">
+                <div class="col-lg-4" loading="lazy">
                     @if (!empty($service->iframe))
                         <div class="mil-iframe-frame mil-up">
                             <div class="mil-iframe-content">
@@ -60,36 +61,36 @@
                         </div>
                     @endif
                 </div>
-                </div>
+            </div>
 
-                <div class="space"></div>
+            <div class="space"></div>
 
-                {{-- GALERİ ALANI --}}
-                @if($service->images && count($service->images) > 0)
-                    <div class="mil-p-0-100">
-                        <div class="row">
-                            @foreach($service->images as $image)
-                                <div class="col-md-4 col-sm-6 mil-mb30">
-                                    <div class="mil-gallery-item mil-up">
-                                        <img src="{{ asset('uploads/' . $image) }}" alt="Proje Görseli"
-                                            style="width: 100%; height: auto; object-fit: cover;">
-                                    </div>
+            {{-- GALERİ ALANI --}}
+            @if($service->images && count($service->images) > 0)
+                <div class="mil-p-0-100">
+                    <div class="row">
+                        @foreach($service->images as $image)
+                            <div class="col-md-4 col-sm-6 mil-mb30">
+                                <div class="mil-gallery-item mil-up">
+                                    <img src="{{ asset('uploads/' . $image) }}" alt="Proje Görseli"
+                                        style="width: 100%; height: auto; object-fit: cover;">
                                 </div>
-                            @endforeach
-                        </div>
+                            </div>
+                        @endforeach
                     </div>
-                @endif
                 </div>
+            @endif
+        </div>
 
-                @include('site.components.calltoaction')
-                </div>
+    </div>
 
-                {{-- CSS Düzenlemeleri --}}
-                <style>
-                    .space {
-                        margin-bottom: 100px;
+    {{-- CSS Düzenlemeleri --}}
+    <style>
+        .space {
+            margin-bottom: 100px;
 
-                    }
+        }
+
         /* Badge Tasarımı */
         .mil-service-badges {
             display: flex;
@@ -97,6 +98,7 @@
             gap: 12px;
             margin-top: 40px;
         }
+
         .mil-badge {
             background: #f8f8f8;
             color: #af9455;
@@ -107,6 +109,7 @@
             border: 1px solid #eee;
             transition: all 0.3s ease;
         }
+
         .mil-badge:hover {
             background: #af9455;
             color: #fff;
@@ -119,18 +122,23 @@
             position: relative;
             transition: transform 0.4s ease;
             width: 100%;
-            max-width: 400px; /* Story genişliği için ideal sınır */
+            max-width: 400px;
+            /* Story genişliği için ideal sınır */
             margin: 0 auto;
         }
+
         .mil-iframe-content {
             position: relative;
             width: 100%;
-            padding-top: 177.77%; /* 9:16 Ratio */
-            border-radius: 30px; /* Daha yumuşak köşeler */
+            padding-top: 177.77%;
+            /* 9:16 Ratio */
+            border-radius: 30px;
+            /* Daha yumuşak köşeler */
             overflow: hidden;
             background: #111;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
+
         .mil-iframe-content iframe {
             position: absolute;
             top: 0;
@@ -139,13 +147,19 @@
             height: 100% !important;
             border: none;
         }
+
         .mil-iframe-frame:hover {
             transform: translateY(-10px);
         }
 
         @media (max-width: 991px) {
-            .mil-iframe-frame { margin-top: 60px; }
-            .mil-service-badges { justify-content: center; }
+            .mil-iframe-frame {
+                margin-top: 60px;
+            }
+
+            .mil-service-badges {
+                justify-content: center;
+            }
         }
     </style>
 @endsection
