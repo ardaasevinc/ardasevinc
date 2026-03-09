@@ -96,29 +96,54 @@
                 margin: 0 auto;
             }
         </style>
-        <style>
-        /* Iframe Responsive Kapsayıcı */
-        .mil-iframe-content iframe {
-            width: 100% !important;
-            height: auto !important; /* Standart yükseklik */
-            border: none;
-            display: block;
-        }
+<style>
+    /* Iframe Dış Çerçevesi */
+    .mil-iframe-frame {
+        position: relative;
+        transition: transform 0.4s ease;
+        width: 100%; /* Bulunduğu kolonun genişliğine yayılır */
+        max-width: 450px; /* Story formatı çok genişlemesin diye opsiyonel sınır */
+        margin: 0 auto; /* Ortalamak için */
+    }
 
+    /* 9:16 Oranını Sağlayan Kapsayıcı (Story Formatı) */
+    .mil-iframe-content {
+        position: relative;
+        width: 100%;
+        padding-top: 177.77%; /* (1920 / 1080) * 100 = 177.77% */
+        border-radius: 20px;
+        overflow: hidden;
+        background: #f0f0f0; /* İçerik yüklenene kadar gri alan */
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    }
+
+    /* Iframe'i Kapsayıcıya Tam Oturtma */
+    .mil-iframe-content iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100% !important;
+        height: 100% !important;
+        border: none;
+    }
+
+    .mil-iframe-frame:hover {
+        transform: translateY(-8px);
+    }
+
+    /* Tasarım Detayı: Üstteki Küçük Çizgi */
+    .mil-divider-lg {
+        width: 60px;
+        height: 3px;
+        background: #af9455;
+        margin: 0 auto;
+    }
+
+    /* Mobilde Kolon Arası Boşluk */
+    @media (max-width: 991px) {
         .mil-iframe-frame {
-            position: relative;
-            transition: transform 0.4s ease;
+            margin-top: 50px;
         }
-
-        .mil-iframe-frame:hover {
-            transform: translateY(-5px);
-        }
-
-        .mil-divider-lg {
-            width: 60px;
-            height: 3px;
-            background: #af9455;
-            margin: 0 auto;
-        }
-    </style>
+    }
+</style>
 @endsection
