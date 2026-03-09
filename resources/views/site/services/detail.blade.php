@@ -44,14 +44,15 @@
 
                 {{-- İstatistikler --}}
                 <div class="col-lg-4">
-                    @if (!empty($service->number))
-                        <div class="mil-counter-item mil-up mil-mb60">
-                            <h4 class="mil-up">{{ $service->number }}<span class="mil-a2">+</span></h4>
-                            <div class="mil-counter-text">
-                                <h5 class="mil-head4 mil-m1 mil-up">{{ $service->number_title }}</h5>
+                    @if (!empty($service->iframe))
+                        <div class="mil-iframe-frame mil-up mil-mb60">
+                            <div class="mil-iframe-content shadow-lg"
+                                style="border-radius: 20px; overflow: hidden; line-height: 0;">
+                                {!! $service->iframe !!}
                             </div>
                         </div>
                     @endif
+
                     <ul class="mil-list mil-up">
                         @if($service->item1)
                         <li>{{ $service->item1 }}</li> @endif
@@ -95,4 +96,29 @@
             margin: 0 auto;
         }
     </style>
+    <style>
+    /* Iframe Responsive Kapsayıcı */
+    .mil-iframe-content iframe {
+        width: 100% !important;
+        height: 350px !important; /* Standart yükseklik */
+        border: none;
+        display: block;
+    }
+
+    .mil-iframe-frame {
+        position: relative;
+        transition: transform 0.4s ease;
+    }
+
+    .mil-iframe-frame:hover {
+        transform: translateY(-5px);
+    }
+
+    .mil-divider-lg {
+        width: 60px;
+        height: 3px;
+        background: #af9455;
+        margin: 0 auto;
+    }
+</style>
 @endsection

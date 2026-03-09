@@ -9,34 +9,47 @@ class Service extends Model
 {
     use HasFactory;
 
+    /**
+     * Toplu atama yapılabilecek alanlar.
+     * * @var array
+     */
     protected $fillable = [
         'title',
         'slug',
         'icon',
         'desc',
-        'images', // Galeri görselleri için eklenen alan
-        'item1', 'item2', 'item3', 'item4',
-        'desc1', 'desc2', 'desc3',
-        'number',
-        'number_title',
+        'images', // Galeri görselleri (JSON/Array)
+        'item1',
+        'item2',
+        'item3',
+        'item4',
+        'desc1',
+        'desc2',
+        'desc3',
+        'iframe', // Yeni eklenen iframe alanı
         'sort_order',
         'is_published',
 
-        // SEO
+        // SEO Alanları
         'meta_title',
         'meta_description',
         'meta_keywords',
     ];
 
+    /**
+     * Veritabanından gelen verilerin otomatik dönüştürüleceği tipler.
+     * * @var array
+     */
     protected $casts = [
         'is_published' => 'boolean',
         'sort_order' => 'integer',
-        'number' => 'integer',
-        'images' => 'array', // CRITICAL: JSON veriyi diziye çevirir, Filament için şarttır.
+        'images' => 'array', // JSON veriyi otomatik diziye çevirir
     ];
 
     /**
-     * Route model binding için slug kullanmaya devam ediyoruz.
+     * Route model binding için ID yerine slug kullanılması.
+     * Örn: /hizmet/web-tasarim
+     * * @return string
      */
     public function getRouteKeyName()
     {

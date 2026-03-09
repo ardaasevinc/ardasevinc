@@ -10,6 +10,7 @@ use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Tabs;
@@ -81,13 +82,16 @@ class ServiceResource extends Resource
                                 RichEditor::make('desc3')->label('Ek İçerik 3')->columnSpanFull(),
                             ]),
 
-                        Tabs\Tab::make('İstatistik & Deneyim')
-                            ->icon('heroicon-o-chart-pie')
+                        // 🔥 GÜNCELLENEN ALAN: İstatistik yerine Iframe
+                        Tabs\Tab::make('Harita & Video (Iframe)')
+                            ->icon('heroicon-o-code-bracket')
                             ->schema([
-                                Grid::make(2)->schema([
-                                    TextInput::make('number')->label('Sayısal Veri')->numeric(),
-                                    TextInput::make('number_title')->label('Veri Başlığı'),
-                                ]),
+                                Textarea::make('iframe')
+                                    ->label('Iframe Kodu')
+                                    ->placeholder('<iframe src="..."></iframe>')
+                                    ->rows(5)
+                                    ->helperText('Google Haritalar, YouTube veya 3D Model iframe kodunu buraya yapıştırın.')
+                                    ->columnSpanFull(),
                             ]),
 
                         Tabs\Tab::make('SEO Ayarları')
@@ -95,7 +99,7 @@ class ServiceResource extends Resource
                             ->schema([
                                 TextInput::make('meta_title')->label('SEO Başlığı'),
                                 TextInput::make('meta_keywords')->label('Anahtar Kelimeler'),
-                                Forms\Components\Textarea::make('meta_description')
+                                Textarea::make('meta_description')
                                     ->label('SEO Açıklaması')
                                     ->columnSpanFull(),
                             ]),
@@ -110,7 +114,7 @@ class ServiceResource extends Resource
                             ->image()
                             ->imageEditor()
                             ->toWebp()
-                            ->disk('public') // Laravel default disk genelde 'public'tir, 'uploads' ise config ayarınıza göre değişir
+                            ->disk('public')
                             ->directory('services/icons')
                             ->columnSpanFull(),
 
@@ -125,13 +129,12 @@ class ServiceResource extends Resource
                             ->default(true),
                     ]),
 
-                    // 🔥 YENİ: GALERİ ALANI
                     Section::make('Hizmet Galerisi')->schema([
                         FileUpload::make('images')
                             ->label('Proje Görselleri')
-                            ->multiple() // Çoklu yükleme
-                            ->reorderable() // Sürükle-bırak sıralama
-                            ->appendFiles() // Yeni yüklenenleri sona ekle
+                            ->multiple()
+                            ->reorderable()
+                            ->appendFiles()
                             ->image()
                             ->imageEditor()
                             ->toWebp()
@@ -165,7 +168,6 @@ class ServiceResource extends Resource
                     ->searchable()
                     ->sortable(),
 
-                // Tabloda kaç resim olduğunu gösteren küçük bir bilgi (Opsiyonel)
                 TextColumn::make('images')
                     ->label('Galeri')
                     ->formatStateUsing(fn($state) => is_array($state) ? count($state) . ' Resim' : '0 Resim'),
