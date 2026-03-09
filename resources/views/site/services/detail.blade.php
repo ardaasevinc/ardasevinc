@@ -62,7 +62,7 @@
                 </div>
                 </div>
 
-                <hr class="space">
+                <div class="space"></div>
 
                 {{-- GALERİ ALANI --}}
                 @if($service->images && count($service->images) > 0)
