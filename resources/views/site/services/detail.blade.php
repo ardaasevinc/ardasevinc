@@ -62,28 +62,34 @@
                 </div>
                 </div>
 
-            {{-- GALERİ ALANI --}}
-            @if($service->images && count($service->images) > 0)
-                <div class="mil-p-0-100">
-                    <div class="row">
-                        @foreach($service->images as $image)
-                            <div class="col-md-4 col-sm-6 mil-mb30">
-                                <div class="mil-gallery-item mil-up">
-                                    <img src="{{ asset('uploads/' . $image) }}" alt="Proje Görseli"
-                                        style="width: 100%; height: auto; object-fit: cover;">
+                <hr class="space">
+
+                {{-- GALERİ ALANI --}}
+                @if($service->images && count($service->images) > 0)
+                    <div class="mil-p-0-100">
+                        <div class="row">
+                            @foreach($service->images as $image)
+                                <div class="col-md-4 col-sm-6 mil-mb30">
+                                    <div class="mil-gallery-item mil-up">
+                                        <img src="{{ asset('uploads/' . $image) }}" alt="Proje Görseli"
+                                            style="width: 100%; height: auto; object-fit: cover;">
+                                    </div>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
                     </div>
+                @endif
                 </div>
-            @endif
-            </div>
 
-        @include('site.components.calltoaction')
-        </div>
+                @include('site.components.calltoaction')
+                </div>
 
-    {{-- CSS Düzenlemeleri --}}
-    <style>
+                {{-- CSS Düzenlemeleri --}}
+                <style>
+                    .space {
+                        margin-bottom: 100px;
+
+                    }
         /* Badge Tasarımı */
         .mil-service-badges {
             display: flex;
